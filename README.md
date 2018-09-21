@@ -11,10 +11,9 @@ Pero, ¡ten cuidado! El mundo del futuro es (AÚN) peor que el actual, y quizá 
 
 - Perspectiva cenital.
 - Sistema de juego en tiempo real.
-- Gráficos sencillos.
+- Gráficos retro.
 - Simulación (sencilla) de la sociedad.
-- 
 
-Aún no contamos con imágenes del proyecto, pero sí tenemos diversas referencias que ofrecer con el fin de dar una idea básica de la apariencia del juego. 
+Aún no contamos con imágenes del proyecto, pero sí tenemos diversas referencias (The Settlers, Frostpunk, Anno, Fallout) que ofrecer con el fin de dar una idea básica de la apariencia del juego. 
 
-<img src="" />
+<img src="https://i.ytimg.com/vi/fZKBqOqPs6Y/maxresdefault.jpg" />
