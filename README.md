@@ -16,4 +16,4 @@ Pero, ¡ten cuidado! El mundo del futuro es (AÚN) peor que el actual, y quizá 
 
 Aún no contamos con imágenes del proyecto, pero sí tenemos diversas referencias (The Settlers, Frostpunk, Anno, Fallout) que ofrecer con el fin de dar una idea básica de la apariencia del juego. 
 
-<img src="https://i.ytimg.com/vi/fZKBqOqPs6Y/maxresdefault.jpg" />
+<img src="https://www.freegameempire.com/Img/Cache/Games/Settlers-2/Screenshot-5.png" />
