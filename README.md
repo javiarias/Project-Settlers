@@ -12,10 +12,9 @@ Pero, ¡ten cuidado! El mundo del futuro es (AÚN) peor que el actual, y quizá 
 - Perspectiva cenital.
 - Sistema de juego en tiempo real.
 - Gráficos sencillos.
-- <s>Resurgimiento del comunismo.</s>
 - Simulación (sencilla) de la sociedad.
 - 
 
 Aún no contamos con imágenes del proyecto, pero sí tenemos diversas referencias que ofrecer con el fin de dar una idea básica de la apariencia del juego. 
 
-<img src="https://images-na.ssl-images-amazon.com/images/I/31lYULAQ0bL.jpg" />
+<img src="" />
