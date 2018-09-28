@@ -1,11 +1,11 @@
-# Project-Settlers
+# Project Settlers
 
 <p align="center"> <a href = "#ENG"> English :uk: </a> | <a href = "#ESP"> Español :es: </a> </p>
 
 
 ## <a name="ENG"> Project Settlers </a>
 
-"Project Settlers" (WIP) is a project to create a real-time resource management game.
+**Project Settlers** (WIP) is a project to create a real-time resource management game.
 To deal with a possible global nuclear catastrophe, the government has developed a simulator through which citizens of the future like you will be ready and able to cope with anything that slows down the resurgence of the human race.
 
 Your objective will be to rebuild human society, starting from a small population and a limited amount of resources. You will have to keep your citizens healthy and happy by providing food and clean water, generating energy, monitoring radiation levels and keeping your city clean and safe. To do this, you will have access to blueprints of various facilities such as farms, decorative structures, water filters, roads, hospitals...
@@ -27,7 +27,7 @@ We don't have any images from the project yet, but we do have several references
 
 ## <a name="ESP"> Project Settlers </a>
 
-"Project Settlers" (nombre provisional) es un proyecto para crear un videojuego de gestión de recursos en tiempo real.
+**Project Settlers** (nombre provisional) es un proyecto para crear un videojuego de gestión de recursos en tiempo real.
 Para hacer frente a una posible catástrofe nuclear a nivel mundial, el gobierno ha desarrollado un simulador gracias al cual los ciudadanos del futuro como tú podrán estar preparados y hacer frente a todo aquello que frene el resurgimiento de la raza humana.
 
 Tu objetivo será reconstruir la sociedad humana, partiendo de una población reducida y una cantidad limitada de recursos. Deberás mantener a tus ciudadanos sanos y contentos produciendo alimentos, potabilizando agua, generando energía, vigilando los niveles de radiación y manteniendo tu ciudad limpia y segura. Para ello, contarás con los planos de diversas instalaciones tales como granjas, decoraciones, filtros de agua, caminos, hospitales...
