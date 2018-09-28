@@ -1,6 +1,6 @@
 # Project-Settlers
 
-<p align="center"> <a href = "ENG"> English :uk: </a> | <a href = "ESP"> Español :es: </a> </p>
+<p align="center"> <a href = "#ENG"> English :uk: </a> | <a href = "#ESP"> Español :es: </a> </p>
 
 
 ## <a name="ENG"> Project Settlers </a>
