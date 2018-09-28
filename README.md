@@ -1,5 +1,9 @@
 # Project-Settlers
 
+[Español](#ESP)
+
+
+## <a name="ESP"> Project Settlers </a>
 "Project Settlers" (nombre provisional) es un proyecto para crear un videojuego de gestión de recursos en tiempo real.
 Para hacer frente a una posible catástrofe nuclear a nivel mundial, el gobierno ha desarrollado un simulador gracias al cual los ciudadanos del futuro como tú podrán estar preparados y hacer frente a todo aquello que frene el resurgimiento de la raza humana.
 
