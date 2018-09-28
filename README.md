@@ -1,9 +1,9 @@
-# Project Settlers
+<h1 align="center"> Project Settlers </h1>
 
 <p align="center"> <a href = "#ENG"> English :uk: </a> | <a href = "#ESP"> Español :es: </a> </p>
 
 
-## <a name="ENG"> Project Settlers </a>
+## <a name="ENG"> :uk: </a>
 
 **Project Settlers** (WIP) is a project to create a real-time resource management game.
 To deal with a possible global nuclear catastrophe, the government has developed a simulator through which citizens of the future like you will be ready and able to cope with anything that slows down the resurgence of the human race.
@@ -25,7 +25,7 @@ We don't have any images from the project yet, but we do have several references
 (Source: www.freegameempire.com)
 
 
-## <a name="ESP"> Project Settlers </a>
+## <a name="ESP"> :es: </a>
 
 **Project Settlers** (nombre provisional) es un proyecto para crear un videojuego de gestión de recursos en tiempo real.
 Para hacer frente a una posible catástrofe nuclear a nivel mundial, el gobierno ha desarrollado un simulador gracias al cual los ciudadanos del futuro como tú podrán estar preparados y hacer frente a todo aquello que frene el resurgimiento de la raza humana.
