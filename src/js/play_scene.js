@@ -3,7 +3,7 @@
 var timeScale = 0;
 var currentTime = { "hour": 0, "buffer": 0};
 
-  var PlayScene = {
+var PlayScene = {
   create: function () {
     var logo = this.game.add.sprite(
       this.game.world.centerX, this.game.world.centerY, 'logo');
@@ -53,6 +53,50 @@ var currentTime = { "hour": 0, "buffer": 0};
       //console.log("waiting..."); 
     }
   }
+};
+
+var Tile = {
+  create: function(terrainType, Resource, Contains){
+    var terrain = terrainType; //integer value. 0 = water, 1 = soil, 2 = purified soil, 3 = mountain/obstacle
+    var resource = Resource; //string that defines the resource contained within the tile (if the terrain is water, the resource will be water.
+                             //If it's an obstacle, it will be empty)
+    var contains = Contains; //string that defines the building on top of that tile
+  }
+};
+
+var BiArray = {
+  create: function(sizeX){
+    var x = [];
+    for(var i = 0; i < sizeX; i++)
+      x[i] = [];
+  },
+  get: function(coordX, coordY){
+    return x[coordX][coordY];
+  },
+  set: function(obj, coordX, coordY){
+    x[coordX][coordY] = obj;
+  }
+};
+
+var Map = {
+  create: function(size){
+    var mapArray = BiArray.create(size);
+  }
+};
+
+var GameManager = {
+  create: function(){
+
+  }
+};
+
+var Building = {
+/* Splice method to remove two elements starting from position three (zero based index):
+
+
+var array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+array.splice(2,2);
+array = [1, 2, 5, 6, 7, 8, 9, 0];*/
 };
 
 module.exports = PlayScene;
