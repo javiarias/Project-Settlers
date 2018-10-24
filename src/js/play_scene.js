@@ -55,8 +55,8 @@ var PlayScene = {
   }
 };
 
-var Tile = {
-  create: function(terrainType, Resource, Contains){
+var Tile = {  //mainly for sprite related purposes
+  create: function(terrainType, Resource, Contains){ 
     var terrain = terrainType; //integer value. 0 = water, 1 = soil, 2 = purified soil, 3 = mountain/obstacle
     var resource = Resource; //string that defines the resource contained within the tile (if the terrain is water, the resource will be water.
                              //If it's an obstacle, it will be empty)
@@ -64,6 +64,7 @@ var Tile = {
   }
 };
 
+//revisar si necesitamos esto
 var BiArray = {
   create: function(sizeX){
     var x = [];
@@ -98,5 +99,15 @@ var array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 array.splice(2,2);
 array = [1, 2, 5, 6, 7, 8, 9, 0];*/
 };
+
+var House = {};
+
+var Producer = {};
+
+var Cleaner = {};
+
+var Decor = {};
+
+var Citizen = {}; 
 
 module.exports = PlayScene;
