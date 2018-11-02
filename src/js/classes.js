@@ -40,13 +40,16 @@ BiArray.prototype.set = function(obj, coordX, coordY){
 
 
 function Map(size) {
+    this.mapSize = size;
     this.mapArray = new BiArray(size);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-function Building() {
+function Building(x, y) {
+    this.x = x;
+    this.y = y;
 /* Splice method to remove two elements starting from position three (zero based index):
 
 
@@ -58,13 +61,44 @@ array = [1, 2, 5, 6, 7, 8, 9, 0];*/
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-function House() {}
+function House(x, y, map) {
+    Building.apply(this, x, y);
+    this.coziness = _calculateCoziness(x, y, map);
+}
 
-function Producer() {}
+House.prototype._calculateCoziness = function(x, y, map) {
+    var coziness = 0;
 
-function Cleaner() {}
+    for(i = -1; i <= 1; i++)
+        for(j = -1; j <= 1; j++)
+            if (x + i >= 0 && x + i < map.mapSize && y + j >= 0 && y + j < map.mapSize){
+                var aux = map.mapArray.get(x + i, y + j);
+                if(aux.terrain == 0 || aux.terrain == 3)
+                    coziness += 1;
+                else if(aux.terrain == 2)
+                    coziness += 2;
+                //CHECK IF THERE ARE DECORATIONS NEARBY (BUILDING ARRAY IN GAMEMANAGER)
+            }
 
-function Decor() {}
+    return coziness;
+};
+
+function Producer(x, y, amount, map) {
+    Building.apply(this, x, y);
+    this.resource = map.mapArray.get(x, y).resource;
+    this.amount = amount;
+}
+
+//NOTE: I'm assuming we're using an object with properties related to each type of resource, each of them containing an array of those kinds of producers
+//that way, to update the resource amount it'd be a matter of going through each array with each resource amount variable
+//example: var producers = {wood: [producera, producerb], coal: []};
+Producer.prototype.tick = function(resourceVar){
+    resourceVar += this.amount;
+};
+
+function Cleaner() {} //i'd leave the code for this for when we have a bunch of the game made. It'd probably be mid/late-game stuff and we need an algorithm to process stuff around it
+
+function Decor() {} //i'd leave the code for this for when we have a bunch of the game made, too
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
