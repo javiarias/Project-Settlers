@@ -1,88 +1,34 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-function GameManager(mapSize){
-    this.map = new Map(mapSize);
+function GameManager(){
+
 }
-
-GameManager.prototype.birth = function(building, buildingArray, freeArray) {
-    if(this.contains.building === undefined){
-        if(freeArray[0] != undefined){
-            this.contains.building = building;
-            this.contains.arrayIndex = freeArray[0];
-            buildingArray[freeArray[0]] = building;
-            freeArray.splice(0, 1);
-        }
-        else{
-            this.contains.building = building;
-            this.contains.arrayIndex = buildingArray.length;
-            buildingArray.push(building);
-        }
-    }
-
-    return (contains.building !== undefined);
-};
-
-GameManager.prototype.death = function(buildingArray, freeArray) {
-    if(this.contains.building !== undefined){
-        this.contains.building = undefined;
-        buildingArray[this.contains.arrayIndex] = undefined;
-        freeArray.push(arrayIndex);
-        this.contains.arrayIndex = -1;
-    }
-
-    return (contains.building === undefined);
-};
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-function Tile(terrainType, Resource) {  //mainly for sprite related purposes
+function BaseTile(x, y, img, terrainType) {
     phaser.Sprite.apply(this, game, x, y, img);
     this.terrain = terrainType; //integer value. 0 = water, 1 = soil, 2 = purified soil, 3 = mountain/obstacle
-    this.resource = Resource; //string that defines the resource contained within the tile (if the terrain is water, the resource will be water.
-                               //If it's an obstacle, it will be empty)
-    this.contains = {arrayIndex: -1, building: undefined}; //string that defines the building on top of that tile
 }
 
-Tile.prototype.build = function(building, buildingArray, freeArray) {
-    if(this.contains.building === undefined){
-        if(freeArray[0] != undefined){
-            this.contains.building = building;
-            this.contains.arrayIndex = freeArray[0];
-            buildingArray[freeArray[0]] = building;
-            freeArray.splice(0, 1);
-        }
-        else{
-            this.contains.building = building;
-            this.contains.arrayIndex = buildingArray.length;
-            buildingArray.push(building);
-        }
-    }
-
-    return (contains.building !== undefined);
-};
-
-Tile.prototype.bulldoze = function(buildingArray, freeArray) {
-    if(this.contains.building !== undefined){
-        this.contains.building = undefined;
-        buildingArray[this.contains.arrayIndex] = undefined;
-        freeArray.push(arrayIndex);
-        this.contains.arrayIndex = -1;
-    }
-
-    return (contains.building === undefined);
-};
+function ResourceTile(x, y, img, Resource) {
+    phaser.Sprite.apply(this, game, x, y, img);
+    this.resource = Resource; //string that defines the resource contained within the tile (if the terrain is water, the resource will be water.
+                               //If it's an obstacle, it will be empty)
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-function House(x, y) {
+function House(x, y, img) {
     phaser.Sprite.apply(this, game, x, y, img);
-    this.coziness = -1;
-    this._calculateCoziness();//editarlo para groups
-    this.contains = {residentA: {}, };
-    //THIS.HOSPITALQUETIENECERCA
+    this.coziness = 0;
+    this._calculateCoziness(); //editarlo para groups
+    this.residentA = undefined;
+    this.residentB = undefined;
+    this.hospitalNear = false;
 }
 
 House.prototype._calculateCoziness = function() {
@@ -103,9 +49,52 @@ House.prototype._calculateCoziness = function() {
     this.coziness = coziness;
 };
 
-function Producer(x, y) {
-    phaser.Sprite.apply(this, game, x, y, img);
-    this.resource; // = BUSCAR LA resource;
+House.prototype.add = function(citizen) {
+    var ret = true;
+    if(this.residentA === undefined){
+        this.residentA = citizen;
+    }
+    else if(this.residentB === undefined){
+        this.residentB = citizen;
+    }
+    else
+        ret = false;
+
+    return ret;
+};
+
+House.prototype.bulldoze = function(homelessArray) {
+    
+    if(this.residentA !== undefined){
+        homelessArray.push(this.residentA);
+    }
+    if(this.residentB !== undefined){
+        homelessArray.push(this.residentB);
+    }
+};
+
+House.prototype.tick = function(foodAmount){
+    this.residentA.tick(false, foodAmount, this.hospitalNear);
+    this.residentB.tick(false, foodAmount, this.hospitalNear);
+};
+
+House.prototype.countCitizens = function(){
+    var ret = 0;
+    if(this.residentA !== undefined){
+        ret++;
+    }
+    if(this.residentB !== undefined){
+        ret++;
+    }
+
+    return ret;
+};
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+function Producer(x, y, img) { 
+    phaser.Sprite.apply(this, game, x, y, img); //img needs to be filtered depending on resource. Done outside the function?
     this.amount = 10;
 }
 
@@ -116,14 +105,20 @@ Producer.prototype.tick = function(resourceVar){
     resourceVar += this.amount;
 };
 
-function Hospitals(x, y) {
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+function Hospitals(x, y, img) {
     phaser.Sprite.apply(this, game, x, y, img);
     this.get = "fucked";
 }
 
-function Cleaner() {} //i'd leave the code for this for when we have a bunch of the game made. It'd probably be mid/late-game stuff and we need an algorithm to process stuff around it
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function Decor() {} //i'd leave the code for this for when we have a bunch of the game made, too
+
+function Cleaner(x, y, img) {} //i'd leave the code for this for when we have a bunch of the game made. It'd probably be mid/late-game stuff and we need an algorithm to process stuff around it
+
+function Decor(x, y, img) {} //i'd leave the code for this for when we have a bunch of the game made, too
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -135,8 +130,11 @@ function Citizen() {
     this.sick = false;
 }
 
-Citizen.prototype.tick = function(foodAmount, healing){
+Citizen.prototype.tick = function(homeless, foodAmount, healing){
     age++;
+    if(homeless)
+        //do something?
+        this.health -= 0;
     if(sick)
         this.health -= 5;
     if(foodAmount <= 0)
@@ -151,9 +149,11 @@ Citizen.prototype.tick = function(foodAmount, healing){
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
 module.exports = {
     GameManager: GameManager,
-    Tile: Tile,
+    BaseTile: BaseTile,
+    ResourceTile: ResourceTile,
     House: House,
     Producer: Producer,
     Cleaner: Cleaner,

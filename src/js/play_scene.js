@@ -3,6 +3,7 @@
 var timeScale = 0;
 var currentTime = { "hour": 0, "buffer": 0};
 var Classes = require("./classes.js");
+var homelessArray = [];
 
 
 var PlayScene = {
