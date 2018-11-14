@@ -8,28 +8,31 @@ function GameManager(){
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-function BaseTile(x, y, img, terrainType) {
-    phaser.Sprite.apply(this, game, x, y, img);
+function BaseTile(game, x, y, img, terrainType) {
+    Phaser.Sprite.call(this, game, x, y, img);
     this.terrain = terrainType; //integer value. 0 = water, 1 = soil, 2 = purified soil, 3 = mountain/obstacle
 }
+BaseTile.prototype = Object.create(Phaser.Sprite.prototype);
 
-function ResourceTile(x, y, img, Resource) {
-    phaser.Sprite.apply(this, game, x, y, img);
+function ResourceTile(game, x, y, img, Resource) {
+    phaser.Sprite.call(this, game, x, y, img);
     this.resource = Resource; //string that defines the resource contained within the tile (if the terrain is water, the resource will be water.
                                //If it's an obstacle, it will be empty)
 }
+ResourceTile.prototype = Object.create(Phaser.Sprite.prototype);
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-function House(x, y, img) {
-    phaser.Sprite.apply(this, game, x, y, img);
+function House(game, x, y, img) {
+    phaser.Sprite.call(this, game, x, y, img);
     this.coziness = 0;
     this._calculateCoziness(); //editarlo para groups
     this.residentA = undefined;
     this.residentB = undefined;
     this.hospitalNear = false;
 }
+House.prototype = Object.create(Phaser.Sprite.prototype);
 
 House.prototype._calculateCoziness = function() {
     var coziness = 0;
@@ -43,7 +46,7 @@ House.prototype._calculateCoziness = function() {
                 else if(aux.terrain == 2)
                     coziness += 2;
 
-                //CHECK IF THERE ARE DECORATIONS NEARBY (BUILDING ARRAY IN GAMEMANAGER)
+                //CHECK IF THERE ARE DECORATIONS NEARBY
             }
 
     this.coziness = coziness;
@@ -93,32 +96,29 @@ House.prototype.countCitizens = function(){
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-function Producer(x, y, img) { 
-    phaser.Sprite.apply(this, game, x, y, img); //img needs to be filtered depending on resource. Done outside the function?
-    this.amount = 10;
+function Producer(game, x, y, img, amount) { 
+    Phaser.Sprite.call(this, game, x, y, img); //img needs to be filtered depending on resource. Done outside the function?
+    this.amount = amount;
 }
-
-//NOTE: I'm assuming we're using an object with properties related to each type of resource, each of them containing an array of those kinds of producers
-//that way, to update the resource amount it'd be a matter of going through each array with each resource amount variable
-//example: var producers = {wood: [producerA, producerB], coal: []};
-Producer.prototype.tick = function(resourceVar){
-    resourceVar += this.amount;
-};
+Producer.prototype = Object.create(Phaser.Sprite.prototype);
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-function Hospitals(x, y, img) {
-    phaser.Sprite.apply(this, game, x, y, img);
+function Hospital(game, x, y, img) {
+    phaser.Sprite.call(this, game, x, y, img);
     this.get = "fucked";
 }
+Hospital.prototype = Object.create(Phaser.Sprite.prototype);
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-function Cleaner(x, y, img) {} //i'd leave the code for this for when we have a bunch of the game made. It'd probably be mid/late-game stuff and we need an algorithm to process stuff around it
+function Cleaner(game, x, y, img) {} //i'd leave the code for this for when we have a bunch of the game made. It'd probably be mid/late-game stuff and we need an algorithm to process stuff around it
+Cleaner.prototype = Object.create(Phaser.Sprite.prototype);
 
-function Decor(x, y, img) {} //i'd leave the code for this for when we have a bunch of the game made, too
+function Decor(game, x, y, img) {} //i'd leave the code for this for when we have a bunch of the game made, too
+Decor.prototype = Object.create(Phaser.Sprite.prototype);
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

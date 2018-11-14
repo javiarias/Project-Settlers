@@ -1,9 +1,13 @@
 'use strict';
+var Classes = require("./classes.js");
 
 var timeScale = 0;
 var currentTime = { "hour": 0, "buffer": 0};
-var Classes = require("./classes.js");
 var homelessArray = [];
+
+/////////GROUPS AND RESOURCES
+var woodGroup;
+var wood = 0;
 
 
 var PlayScene = {
@@ -11,6 +15,8 @@ var PlayScene = {
     var logo = this.game.add.sprite(
       this.game.world.centerX, this.game.world.centerY, 'logo');
     logo.anchor.setTo(0.5, 0.5);
+
+    woodGroup = this.game.add.group();
 
     //Función de inputs
     this.game.input.keyboard.onPressCallback = function (e) {
@@ -26,6 +32,11 @@ var PlayScene = {
           break;
         case " ":
           timeScale = 0;
+          break;
+        case "k":
+          var aux = new Classes.Producer(this.game, 0, 0, "logo", 1);
+          aux.anchor.setTo(0.5, 0.5);
+          woodGroup.add(aux);
           break;
         default:
           break;
@@ -44,6 +55,12 @@ var PlayScene = {
       currentTime.hour = (currentTime.hour + 1) % 24; //incremento de la hora
 
       //bucle de update del juego
+
+      woodGroup.forEach(function(prod){
+        wood += prod.amount;
+      });
+      
+      console.log(wood);
 
       //----DEBUG----
 
