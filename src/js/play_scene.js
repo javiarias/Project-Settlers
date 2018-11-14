@@ -1,13 +1,24 @@
 'use strict';
 var Classes = require("./classes.js");
 
+//misc variables
 var timeScale = 0;
 var currentTime = { "hour": 0, "buffer": 0};
 var homelessArray = [];
+var shiftStart = 8;
+var shiftEnd = 20;
 
 /////////GROUPS AND RESOURCES
 var woodGroup;
 var wood = 0;
+
+var coalGroup;
+var coal = 0;
+
+var uraniumGroup;
+var uranium = 0;
+
+//etc...
 
 
 var PlayScene = {
@@ -17,8 +28,11 @@ var PlayScene = {
     logo.anchor.setTo(0.5, 0.5);
 
     woodGroup = this.game.add.group();
+    coalGroup = this.game.add.group();
+    uraniumGroup = this.game.add.group();
+    //etc...
 
-    //Función de inputs
+    //here we define the input keys
     this.game.input.keyboard.onPressCallback = function (e) {
       switch(e) {
         case "1":
@@ -47,20 +61,36 @@ var PlayScene = {
 
   update: function () {
 
-    currentTime.buffer += timeScale; //incremento del buffer
+    currentTime.buffer += timeScale; //buffer increment
 
-    if (currentTime.buffer >=3) { //si el buffer supera 3, se ejecuta el bucle de juego. AKA, en velocidad 1 se ejecutará cada 3 bucles, en velocidad 2 cada 2... etc.
+    if (currentTime.buffer >=3) { //if buffer > 3, update. AKA, speed 1 = every 3 loops, speed 2 = every 2 loops... etc.
+      
+      //update clock
       currentTime.buffer = 0;
 
-      currentTime.hour = (currentTime.hour + 1) % 24; //incremento de la hora
+      currentTime.hour = (currentTime.hour + 1) % 24; 
+    
+      ////////////////////////////////////////
+      //update producers
+      if(currentTime.hour >= shiftStart && currentTime.hour<= shiftEnd){
 
-      //bucle de update del juego
+        woodGroup.forEach(function(prod){
+          wood += prod.amount;
+        });
 
-      woodGroup.forEach(function(prod){
-        wood += prod.amount;
-      });
+        coalGroup.forEach(function(prod){
+          coal += prod.amount;
+        });
+
+        uraniumGroup.forEach(function(prod){
+          uranium += prod.amount;
+        });
+
+        //etc...
+      }
       
-      console.log(wood);
+      ////////////////////////////////////////
+      //update citizens
 
       //----DEBUG----
 
