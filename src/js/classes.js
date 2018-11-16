@@ -1,31 +1,5 @@
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-function GameManager(){
-
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-function BaseTile(game, x, y, img, terrainType) {
-    Phaser.Sprite.call(this, game, x, y, img);
-    this.terrain = terrainType; //integer value. 0 = water, 1 = soil, 2 = purified soil, 3 = mountain/obstacle
-}
-BaseTile.prototype = Object.create(Phaser.Sprite.prototype);
-
-function ResourceTile(game, x, y, img, Resource) {
-    phaser.Sprite.call(this, game, x, y, img);
-    this.resource = Resource; //string that defines the resource contained within the tile (if the terrain is water, the resource will be water.
-                               //If it's an obstacle, it will be empty)
-}
-ResourceTile.prototype = Object.create(Phaser.Sprite.prototype);
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 function House(game, x, y, img) {
-    phaser.Sprite.call(this, game, x, y, img);
+    Phaser.Sprite.call(this, game, x, y, img);
     this.coziness = 0;
     this._calculateCoziness(); //editarlo para groups
     this.residentA = undefined;
@@ -33,6 +7,7 @@ function House(game, x, y, img) {
     this.hospitalNear = false;
 }
 House.prototype = Object.create(Phaser.Sprite.prototype);
+House.constructor = House;
 
 House.prototype._calculateCoziness = function() {
     var coziness = 0;
@@ -96,29 +71,44 @@ House.prototype.countCitizens = function(){
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-function Producer(game, x, y, img, amount) { 
+function Producer(game, x, y, img, amount, consumes = "none", consumed = 0) { 
     Phaser.Sprite.call(this, game, x, y, img); //img needs to be filtered depending on resource. Done outside the function?
     this.amount = amount;
+    this.consumes = consumes;
+    this.consumed = consumed;
 }
 Producer.prototype = Object.create(Phaser.Sprite.prototype);
+Producer.constructor = Producer;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 function Hospital(game, x, y, img) {
-    phaser.Sprite.call(this, game, x, y, img);
+    Phaser.Sprite.call(this, game, x, y, img);
     this.get = "fucked";
 }
 Hospital.prototype = Object.create(Phaser.Sprite.prototype);
+Hospital.constructor = Hospital;
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function Road(game, x, y, img) {
+    Phaser.Sprite.call(this, game, x, y, img);
+    this.get = "fucked";
+}
+Road.prototype = Object.create(Phaser.Sprite.prototype);
+Road.constructor = Road;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 function Cleaner(game, x, y, img) {} //i'd leave the code for this for when we have a bunch of the game made. It'd probably be mid/late-game stuff and we need an algorithm to process stuff around it
 Cleaner.prototype = Object.create(Phaser.Sprite.prototype);
+Cleaner.constructor = Cleaner;
 
 function Decor(game, x, y, img) {} //i'd leave the code for this for when we have a bunch of the game made, too
 Decor.prototype = Object.create(Phaser.Sprite.prototype);
+Decor.constructor = Decor;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -129,6 +119,7 @@ function Citizen() {
     this.health = 100;
     this.sick = false;
 }
+Citizen.constructor = Citizen;
 
 Citizen.prototype.tick = function(homeless, foodAmount, healing){
     age++;
@@ -151,9 +142,7 @@ Citizen.prototype.tick = function(homeless, foodAmount, healing){
 
 
 module.exports = {
-    GameManager: GameManager,
-    BaseTile: BaseTile,
-    ResourceTile: ResourceTile,
+    Road: Road,
     House: House,
     Producer: Producer,
     Cleaner: Cleaner,

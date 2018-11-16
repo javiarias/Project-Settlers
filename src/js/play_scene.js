@@ -1,38 +1,48 @@
 'use strict';
 var Classes = require("./classes.js");
 
-//misc variables
-var timeScale = 0;
-var currentTime = { "hour": 0, "buffer": 0};
-var homelessArray = [];
-var shiftStart = 8;
-var shiftEnd = 20;
-
-/////////GROUPS AND RESOURCES
-var woodGroup;
-var wood = 0;
-
-var coalGroup;
-var coal = 0;
-
-var uraniumGroup;
-var uranium = 0;
-
-//etc...
-
 
 var PlayScene = {
+  
   create: function () {
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
     var logo = this.game.add.sprite(
       this.game.world.centerX, this.game.world.centerY, 'logo');
     logo.anchor.setTo(0.5, 0.5);
+
+    //misc variables
+    var timeScale = 0;
+    var currentTime = { "hour": 0, "buffer": 0};
+    var homelessArray = [];
+    var shiftStart = 8;
+    var shiftEnd = 20;
+
+    /////////GROUPS AND RESOURCES
+    var houseGroup;
+    var food = 0;
+
+    var woodGroup;
+    var wood = 0;
+
+    var coalGroup;
+    var coal = 0;
+
+    var uraniumGroup;
+    var uranium = 0;
+
+    var energyGroup;
+    var energy = 0;
+
+    //etc...
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
     woodGroup = this.game.add.group();
     coalGroup = this.game.add.group();
     uraniumGroup = this.game.add.group();
     //etc...
 
-    //here we define the input keys
+    //keyboard phaser
     this.game.input.keyboard.onPressCallback = function (e) {
       switch(e) {
         case "1":
@@ -52,8 +62,7 @@ var PlayScene = {
           aux.anchor.setTo(0.5, 0.5);
           woodGroup.add(aux);
           break;
-        default:
-          break;
+
       }
       currentTime.buffer = 0;
     }
@@ -87,6 +96,28 @@ var PlayScene = {
         });
 
         //etc...
+
+        //update consumers
+        energyGroup.forEach(function(prod){
+          energy += prod.amount;
+
+          switch(prod.consumes){
+
+            case "uranium":
+              uranium -= prod.consumed;
+              break;
+
+              //other cases for other consumers
+          }
+        });
+
+        houseGroup.forEach(function(prod){
+          food -= prod.countCitizens * 5;
+        });
+
+        homelessArray.forEach(function(){
+          food -= 5;
+        });
       }
       
       ////////////////////////////////////////
