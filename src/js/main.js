@@ -24,10 +24,38 @@ var PreloaderScene = {
     // TODO: load here the assets for the game
     this.game.load.image('logo', 'images/HERO.png');
     this.game.load.image('test', 'images/Phaser.png');
+ 
+    //this.game.load.tilemap('tilemap', 'images/map/map.json', null, Phaser.Tilemap.TILED_JSON);
+    //this.game.load.tilemapTiledJSON('tilemap', 'images/map.json');
+
+    //this.game.load.image('patronesTilemap', 'images/map/tileset.png');
+
+    this.game.load.tilemap('tilemap', 'images/map2/Mapa2.json', null, Phaser.Tilemap.TILED_JSON);
+    this.game.load.image('patronesTilemap', 'images/map2/Tileset2.json');
+
   },
 
   create: function () {
     this.game.state.start('play');
+
+     //asumo que todo esto va aqui
+     var map;
+     
+     this.map = this.game.add.tilemap('tilemap'); //aquí da el error
+     this.map.addTilesetImage("patrones","patronesTilemap");
+ 
+     //capas
+     this.map.waterLayer = this.map.createStaticLayer ("WaterLayer");
+     this.map.groundLayer = this.map.createStaticLayer ("GroundLayer");
+     this.map.resourcesLayer = this.map.createStaticLayer ("ResourcesLayer");
+     this.map.obstaclesLayer = this.map.createStaticLayer ("ObstaclesLayer");
+
+     this.waterLayer.resizeWorld();
+     this.groundLayer.resizeWorld();
+     this.resourcesLayer.resizeWorld();
+     this.obstaclesLayer.resizeWorld();
+
+     //mapa creado (?)
   }
 };
 
