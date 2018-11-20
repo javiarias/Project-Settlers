@@ -17,6 +17,10 @@ var PlayScene = {
     this.homelessArray = [];
     this.shiftStart = 8;
     this.shiftEnd = 20;
+    this._tileSize = 16;
+    this._buildModeActive = false;
+
+    this._buildingModeSprite;
 
     /////////GROUPS AND RESOURCES
     this.houseGroup;
@@ -46,26 +50,27 @@ var PlayScene = {
 
     //keyboard phaser
     var key_One = this.game.input.keyboard.addKey(Phaser.Keyboard.ONE);
-    key_One.onDown.add(setTimescale, this, 0, 1);
+    key_One.onDown.add(setTimescale, this);
 
     var key_Two = this.game.input.keyboard.addKey(Phaser.Keyboard.TWO);
-    key_Two.onDown.add(setTimescale, this, 0, 2);
+    key_Two.onDown.add(setTimescale, this);
 
     var key_Three = this.game.input.keyboard.addKey(Phaser.Keyboard.THREE);
-    key_Three.onDown.add(setTimescale, this, 0, 3);
+    key_Three.onDown.add(setTimescale, this);
 
     var key_Space = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     key_Space.onDown.add(pauseTime, this);
 
     var key_K = this.game.input.keyboard.addKey(Phaser.Keyboard.K);
-    key_K.onDown.add(buildWood, this);
+    key_K.onDown.add(buildMode, this);
 
+    this.game.input.onDown.add(click, this);
 
     
 
     
-    function setTimescale(key, time){
-      this.timeScale = time;
+    function setTimescale(key){
+      this.timeScale = parseInt(key.event.key);
       this.currentTime.buffer = 0;
     }
 
@@ -73,10 +78,31 @@ var PlayScene = {
       this.paused = !this.paused;
     }
 
-    function buildWood(){
-      var aux = new Classes.Producer(this.game, 0, 0, "logo", 1);
+    function buildMode(key = undefined){
+      if(_buildModeActive){
+        this._buildingModeSprite = this.game.add.sprite(this.game.input.x, this.game.input.y, 'buildTest');
+        this._buildingModeSprite.anchor.setTo(0.5, 0.5);
+      }
+      else
+        this._buildingModeSprite.destroy();
+
+      pauseTime();
+      _buildModeActive = !_buildModeActive;
+    }
+
+
+    function click(){
+      if(this._buildModeActive)
+        buildTest();
+    }
+
+    function buildTest(){
+
+      var aux = new Classes.Producer(this.game, Math.round(this.game.input.x / _tileSize) * _tileSize, Math.round(this.game.input.y / _tileSize) * _tileSize, "buildTest", 1);
       aux.anchor.setTo(0.5, 0.5);
       this.woodGroup.add(aux);
+
+      buildMode();
     }
   },
 
@@ -148,6 +174,8 @@ var PlayScene = {
         //console.log("waiting..."); 
       }
     }
+
+    else if(){}
   }
 };
 

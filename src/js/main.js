@@ -24,6 +24,7 @@ var PreloaderScene = {
     // TODO: load here the assets for the game
     this.game.load.image('logo', 'images/HERO.png');
     this.game.load.image('test', 'images/Phaser.png');
+    this.game.load.image('buildTest', 'images/building test.png');
   },
 
   create: function () {
