@@ -5,3 +5,4 @@ dist
 .publish
 gulp.config.json
 package-lock.json
+.png~
