@@ -24,7 +24,13 @@ var PreloaderScene = {
     // TODO: load here the assets for the game
     this.game.load.image('logo', 'images/HERO.png');
     this.game.load.image('test', 'images/Phaser.png');
-    this.game.load.image('buildTest', 'images/building test.png');
+
+    //this.game.load.image('buildTest', 'images/building test.png');
+
+ 
+    this.game.load.tilemap('tilemap', 'images/map2/Mapa2.json', null, Phaser.Tilemap.TILED_JSON);
+    this.game.load.image('patronesTilemap', 'images/map2/Tileset.png');
+
   },
 
   create: function () {
@@ -34,7 +40,7 @@ var PreloaderScene = {
 
 
 window.onload = function () {
-  var game = new Phaser.Game(800, 600, Phaser.AUTO, 'game');
+  var game = new Phaser.Game(1500, 1500, Phaser.AUTO, 'game');
 
   game.state.add('boot', BootScene);
   game.state.add('preloader', PreloaderScene);
