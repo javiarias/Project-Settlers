@@ -10,24 +10,16 @@ var PlayScene = {
       this.game.world.centerX, this.game.world.centerY, 'logo');
     logo.anchor.setTo(0.5, 0.5);
 
-    this.map = this.game.add.tilemap('tilemap'); //aquí da el error
-     this.map.addTilesetImage("Tileset","patronesTilemap");
- 
-     //capas
-     this.map.waterLayer = this.map.createLayer ("Agua");
-     this.map.groundLayer = this.map.createLayer ("Suelo");
-     this.map.resourcesLayer = this.map.createLayer ("Recursos");
-     this.map.obstaclesLayer = this.map.createLayer ("Obstaculos");
+    this.map = this.game.add.tilemap('tilemap'); 
+    this.map.addTilesetImage("Tileset","patronesTilemap");
 
-     this.map.waterLayer.scale.set(.5);
-     this.map.groundLayer.scale.set(.5);
-     this.map.resourcesLayer.scale.set(.5);
-     this.map.obstaclesLayer.scale.set(.5);
+    //layers
+    this.map.waterLayer = this.map.createLayer ("Agua");
+    this.map.groundLayer = this.map.createLayer ("Suelo");
+    this.map.resourcesLayer = this.map.createLayer ("Recursos");
+    this.map.obstaclesLayer = this.map.createLayer ("Obstaculos");
 
      this.map.waterLayer.resizeWorld();
-     this.map.groundLayer.resizeWorld();
-     this.map.resourcesLayer.resizeWorld();
-     this.map.obstaclesLayer.resizeWorld();
 
     //misc variables
     this.paused = true;
@@ -36,7 +28,7 @@ var PlayScene = {
     this.homelessArray = [];
     this.shiftStart = 8;
     this.shiftEnd = 20;
-    this._tileSize = 16;
+    this._tileSize = this.map.tileWidth;
     this._buildModeActive = false;
     this._destroyModeActive = false;
 
@@ -100,6 +92,8 @@ var PlayScene = {
 
     this.game.input.onDown.add(click, this);
 
+    this.cursors = this.game.input.keyboard.createCursorKeys();
+
     
 
     
@@ -112,6 +106,7 @@ var PlayScene = {
       this.paused = !this.paused;
       if(!this.paused && this._buildModeActive)
         buildMode.call(this);
+      this._destroyModeActive = false;
     }
 
     function destroyMode(key = undefined){
@@ -131,11 +126,11 @@ var PlayScene = {
 
     function buildMode(key = undefined){
       if(this._destroyModeActive)
-      this._destroyModeActive = false;
+        this._destroyModeActive = false;
 
 
       if(!this._buildModeActive){
-        this._buildingModeSprite = this.game.add.sprite(this.game.input.x, this.game.input.y, 'buildTest');
+        this._buildingModeSprite = this.game.add.sprite(this.game.input.mousePointer.x, this.game.input.mousePointer.y, 'buildTest');
         this._buildingModeSprite.anchor.setTo(0.5, 0.5);
         this.paused = true;
         this._buildModeActive = true;
@@ -148,7 +143,6 @@ var PlayScene = {
         this._buildModeActive = false;
       }
     }
-
 
     function click(){
       if(this._buildModeActive)
@@ -175,7 +169,7 @@ var PlayScene = {
 
 
       if(!overlap){
-        var auxBuilding = new Classes.Producer(this.game, Math.round(this.game.input.x / this._tileSize) * this._tileSize, Math.round(this.game.input.y / this._tileSize) * this._tileSize, "buildTest", 1);
+        var auxBuilding = new Classes.Producer(this.game, Math.round(this.game.input.worldX / this._tileSize) * this._tileSize, Math.round(this.game.input.worldY / this._tileSize) * this._tileSize, "buildTest", 1);
         auxBuilding.anchor.setTo(0.5, 0.5);
 
         auxBuilding.inputEnabled = true;
@@ -216,7 +210,7 @@ var PlayScene = {
     if(!this.paused){
       this.currentTime.buffer += this.timeScale; //buffer increment
 
-      if (this.currentTime.buffer >=3) { //if buffer > 3, update. AKA, speed 1 = every 3 loops, speed 2 = every 2 loops... etc.
+      if (this.currentTime.buffer >=9) { //if buffer > 3, update. AKA, speed 1 = every 3 loops, speed 2 = every 2 loops... etc.
         
         //update clock
         this.currentTime.buffer = 0;
@@ -281,9 +275,42 @@ var PlayScene = {
     }
 
     else if(this._buildModeActive){
-      this._buildingModeSprite.x = Math.round(this.game.input.x / this._tileSize) * this._tileSize;
-      this._buildingModeSprite.y = Math.round(this.game.input.y / this._tileSize) * this._tileSize;
+      this._buildingModeSprite.x = Math.round(this.game.input.worldX / this._tileSize) * this._tileSize;
+      this._buildingModeSprite.y = Math.round(this.game.input.worldY / this._tileSize) * this._tileSize;
     }
+
+    if (this.cursors.up.isDown)
+      this.game.camera.y -= 16;
+
+    else if (this.cursors.down.isDown)
+      this.game.camera.y += 16;
+
+    if (this.cursors.left.isDown)
+      this.game.camera.x -= 16;
+
+    else if (this.cursors.right.isDown)
+      this.game.camera.x += 16;
+  },
+
+  render: function() {
+    this.game.debug.text("Current speed: " + this.timeScale, 10, 485);
+    this.game.debug.text("Wood: " + this.wood, 10, 500);
+    this.game.debug.text("Game paused: " + this.paused, 10, 515);
+    
+    var mode = "NONE";
+    if(this._buildModeActive)
+      mode = "building";
+    else if(this._destroyModeActive)
+      mode = "destroying";
+
+    this.game.debug.text("Current mode: " + mode, 10, 530);
+
+    this.game.debug.text("Current time: " + this.currentTime.hour + ":00", 10, 545);
+
+    if(this.currentTime.hour >= this.shiftStart && this.currentTime.hour<= this.shiftEnd)
+      this.game.debug.text("WORK TIME!!", 10, 560);
+    
+      
   }
 };
 
