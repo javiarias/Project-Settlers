@@ -31,7 +31,7 @@ var PreloaderScene = {
     //this.game.load.image('patronesTilemap', 'images/map/tileset.png');
 
     this.game.load.tilemap('tilemap', 'images/map2/Mapa2.json', null, Phaser.Tilemap.TILED_JSON);
-    this.game.load.image('patronesTilemap', 'images/map2/Tileset2.png');
+    this.game.load.image('patronesTilemap', 'images/map2/Tileset.png');
 
   },
 
@@ -42,7 +42,7 @@ var PreloaderScene = {
      var map;
      
      this.map = this.game.add.tilemap('tilemap'); //aquí da el error
-     this.map.addTilesetImage("patrones","patronesTilemap");
+     this.map.addTilesetImage("Tileset","patronesTilemap");
  
      //capas
      this.map.waterLayer = this.map.createStaticLayer ("WaterLayer");
