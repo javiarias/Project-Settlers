@@ -19,16 +19,15 @@ var PlayScene = {
      this.map.resourcesLayer = this.map.createLayer ("Recursos");
      this.map.obstaclesLayer = this.map.createLayer ("Obstaculos");
 
-     //aquí falla
-     /*this.map.waterLayer.scale.set(0.5);
-     this.map.groundLayer.scale.set(0.5);
-     this.map.resourcesLayer.scale.set(0.5);
-     this.map.obstaclesLayer.scale.set(0.5);
+     this.map.waterLayer.scale.set(.5);
+     this.map.groundLayer.scale.set(.5);
+     this.map.resourcesLayer.scale.set(.5);
+     this.map.obstaclesLayer.scale.set(.5);
 
      this.map.waterLayer.resizeWorld();
      this.map.groundLayer.resizeWorld();
      this.map.resourcesLayer.resizeWorld();
-     this.map.obstaclesLayer.resizeWorld();*/
+     this.map.obstaclesLayer.resizeWorld();
 
     //misc variables
     this.paused = true;
