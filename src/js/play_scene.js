@@ -19,6 +19,7 @@ var PlayScene = {
     this.shiftEnd = 20;
     this._tileSize = 16;
     this._buildModeActive = false;
+    this._destroyModeActive = false;
 
     this._buildingModeSprite;
 
@@ -41,11 +42,22 @@ var PlayScene = {
     //etc...
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
+    this.buildingGroup = this.game.add.group();
+
     this.houseGroup = this.game.add.group();
+    this.buildingGroup.add(this.houseGroup);
+
     this.woodGroup = this.game.add.group();
+    this.buildingGroup.add(this.woodGroup);
+
     this.coalGroup = this.game.add.group();
+    this.buildingGroup.add(this.coalGroup);
+
     this.uraniumGroup = this.game.add.group();
+    this.buildingGroup.add(this.uraniumGroup);
+
     this.energyGroup = this.game.add.group();
+    this.buildingGroup.add(this.energyGroup);
     //etc...
 
     //keyboard phaser
@@ -64,6 +76,9 @@ var PlayScene = {
     var key_K = this.game.input.keyboard.addKey(Phaser.Keyboard.K);
     key_K.onDown.add(buildMode, this);
 
+    var key_L = this.game.input.keyboard.addKey(Phaser.Keyboard.L);
+    key_L.onDown.add(destroyMode, this);
+
     this.game.input.onDown.add(click, this);
 
     
@@ -76,17 +91,41 @@ var PlayScene = {
 
     function pauseTime(){
       this.paused = !this.paused;
+      if(!this.paused && this._buildModeActive)
+        buildMode.call(this);
+    }
+
+    function destroyMode(key = undefined){
+      if(this._buildModeActive)
+      this._buildModeActive = false;
+
+
+      if(!this._destroyModeActive){
+        this.paused = true;
+        this._destroyModeActive = true;
+      }
+
+      else{
+        this._destroyModeActive = false;
+      }
     }
 
     function buildMode(key = undefined){
+      if(this._destroyModeActive)
+      this._destroyModeActive = false;
+
+
       if(!this._buildModeActive){
         this._buildingModeSprite = this.game.add.sprite(this.game.input.x, this.game.input.y, 'buildTest');
         this._buildingModeSprite.anchor.setTo(0.5, 0.5);
         this.paused = true;
         this._buildModeActive = true;
       }
-      else if(this._buildingModeSprite !== undefined){
-        this._buildingModeSprite.destroy();
+
+      else{
+        if(this._buildingModeSprite !== undefined)
+          this._buildingModeSprite.destroy();
+
         this._buildModeActive = false;
       }
     }
@@ -95,15 +134,59 @@ var PlayScene = {
     function click(){
       if(this._buildModeActive)
         buildTest.call(this);
+      else if(this._destroyModeActive)
+        destroyTest.call(this);
+    }
+
+    function destroyTest(){
+      this.woodGroup.forEach(function(prod){
+        if(prod.input.pointerOver())
+          prod.destroy();
+      }, this);
     }
 
     function buildTest(){
+      var overlap = false;
 
-      var aux = new Classes.Producer(this.game, Math.round(this.game.input.x / this._tileSize) * this._tileSize, Math.round(this.game.input.y / this._tileSize) * this._tileSize, "buildTest", 1);
-      aux.anchor.setTo(0.5, 0.5);
-      this.woodGroup.add(aux);
+      this.woodGroup.forEach(function (building){
+        overlap = overlap || checkOverlap.call(this, this._buildingModeSprite, building);
+      }, this);
 
-      buildMode.call(this);
+
+      if(!overlap){
+        var auxBuilding = new Classes.Producer(this.game, Math.round(this.game.input.x / this._tileSize) * this._tileSize, Math.round(this.game.input.y / this._tileSize) * this._tileSize, "buildTest", 1);
+        auxBuilding.anchor.setTo(0.5, 0.5);
+
+        auxBuilding.inputEnabled = true;
+        auxBuilding.input.priorityID = 1;
+        auxBuilding.events.onInputOver.add(mouseOver, this, 0, auxBuilding);
+        auxBuilding.events.onInputOut.add(mouseOut, this, 0, auxBuilding);
+
+        this.woodGroup.add(auxBuilding);
+
+        buildMode.call(this);
+      }
+    }
+
+    function mouseOver(sprite){
+      if(this._destroyModeActive)
+        sprite.tint = 0xFF0000;
+    }
+
+    function mouseOut(sprite){
+        sprite.tint = 0xFFFFFF;
+    }
+
+    function checkOverlap(a, b){
+
+      var x = a.getBounds();
+      x.width--;
+      x.height--;
+      var y = b.getBounds();
+      y.width--;
+      y.height--;
+
+      return Phaser.Rectangle.intersects(x, y);
     }
   },
 
@@ -164,7 +247,7 @@ var PlayScene = {
         //update citizens
 
         //----DEBUG----
-        //console.log(this.wood);
+        console.log(this.wood);
         //console.log(currentTime.hour); 
         //console.log("DING");
       }
