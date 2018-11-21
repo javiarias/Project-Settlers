@@ -148,8 +148,10 @@ var PlayScene = {
     function buildTest(){
       var overlap = false;
 
-      this.woodGroup.forEach(function (building){
-        overlap = overlap || checkOverlap.call(this, this._buildingModeSprite, building);
+      this.buildingGroup.forEach(function (group){
+        group.forEach(function(building){
+          overlap = overlap || checkOverlap.call(this, this._buildingModeSprite, building);
+        }, this)
       }, this);
 
 
