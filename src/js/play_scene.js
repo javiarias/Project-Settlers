@@ -79,30 +79,31 @@ var PlayScene = {
     }
 
     function buildMode(key = undefined){
-      if(_buildModeActive){
+      if(!this._buildModeActive){
         this._buildingModeSprite = this.game.add.sprite(this.game.input.x, this.game.input.y, 'buildTest');
         this._buildingModeSprite.anchor.setTo(0.5, 0.5);
+        this.paused = true;
+        this._buildModeActive = true;
       }
-      else
+      else if(this._buildingModeSprite !== undefined){
         this._buildingModeSprite.destroy();
-
-      pauseTime();
-      _buildModeActive = !_buildModeActive;
+        this._buildModeActive = false;
+      }
     }
 
 
     function click(){
       if(this._buildModeActive)
-        buildTest();
+        buildTest.call(this);
     }
 
     function buildTest(){
 
-      var aux = new Classes.Producer(this.game, Math.round(this.game.input.x / _tileSize) * _tileSize, Math.round(this.game.input.y / _tileSize) * _tileSize, "buildTest", 1);
+      var aux = new Classes.Producer(this.game, Math.round(this.game.input.x / this._tileSize) * this._tileSize, Math.round(this.game.input.y / this._tileSize) * this._tileSize, "buildTest", 1);
       aux.anchor.setTo(0.5, 0.5);
       this.woodGroup.add(aux);
 
-      buildMode();
+      buildMode.call(this);
     }
   },
 
@@ -124,15 +125,15 @@ var PlayScene = {
 
           this.woodGroup.forEach(function(prod){
             this.wood += prod.amount;
-          });
+          }, this);
 
           this.coalGroup.forEach(function(prod){
             this.coal += prod.amount;
-          });
+          }, this);
 
           this.uraniumGroup.forEach(function(prod){
             this.uranium += prod.amount;
-          });
+          }, this);
 
           //etc...
 
@@ -148,22 +149,22 @@ var PlayScene = {
 
                 //other cases for other consumers
             }
-          });
+          }, this);
 
           this.houseGroup.forEach(function(prod){
             this.food -= prod.countCitizens * 5;
-          });
+          }, this);
 
           this.homelessArray.forEach(function(){
             this.food -= 5;
-          });
+          }, this);
         }
         
         ////////////////////////////////////////
         //update citizens
 
         //----DEBUG----
-        console.log(this.wood);
+        //console.log(this.wood);
         //console.log(currentTime.hour); 
         //console.log("DING");
       }
@@ -175,7 +176,10 @@ var PlayScene = {
       }
     }
 
-    else if(){}
+    else if(this._buildModeActive){
+      this._buildingModeSprite.x = Math.round(this.game.input.x / this._tileSize) * this._tileSize;
+      this._buildingModeSprite.y = Math.round(this.game.input.y / this._tileSize) * this._tileSize;
+    }
   }
 };
 
