@@ -10,6 +10,26 @@ var PlayScene = {
       this.game.world.centerX, this.game.world.centerY, 'logo');
     logo.anchor.setTo(0.5, 0.5);
 
+    this.map = this.game.add.tilemap('tilemap'); //aquí da el error
+     this.map.addTilesetImage("Tileset","patronesTilemap");
+ 
+     //capas
+     this.map.waterLayer = this.map.createLayer ("Agua");
+     this.map.groundLayer = this.map.createLayer ("Suelo");
+     this.map.resourcesLayer = this.map.createLayer ("Recursos");
+     this.map.obstaclesLayer = this.map.createLayer ("Obstaculos");
+
+     //aquí falla
+     /*this.map.waterLayer.scale.set(0.5);
+     this.map.groundLayer.scale.set(0.5);
+     this.map.resourcesLayer.scale.set(0.5);
+     this.map.obstaclesLayer.scale.set(0.5);
+
+     this.map.waterLayer.resizeWorld();
+     this.map.groundLayer.resizeWorld();
+     this.map.resourcesLayer.resizeWorld();
+     this.map.obstaclesLayer.resizeWorld();*/
+
     //misc variables
     this.paused = true;
     this.timeScale = 1;
