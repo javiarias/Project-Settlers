@@ -19,7 +19,7 @@ var PlayScene = {
     this.map.resourcesLayer = this.map.createLayer ("resources");
     this.map.obstaclesLayer = this.map.createLayer ("obstacles");
 
-     this.map.waterLayer.resizeWorld();
+    this.map.waterLayer.resizeWorld();
 
     //misc variables
     this.paused = true;
@@ -31,6 +31,8 @@ var PlayScene = {
     this._tileSize = this.map.tileWidth;
     this._buildModeActive = false;
     this._destroyModeActive = false;
+    this._escapeMenu = false;
+    this.fade;
 
     this._buildingModeSprite;
 
@@ -90,9 +92,16 @@ var PlayScene = {
     var key_L = this.game.input.keyboard.addKey(Phaser.Keyboard.L);
     key_L.onDown.add(destroyMode, this);
 
+    var key_ESC = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
+    key_ESC.onDown.add(escape, this);
+
+
+
     this.game.input.onDown.add(click, this);
 
     this.cursors = this.game.input.keyboard.createCursorKeys();
+
+    this.cursorsAlt = this.game.input.keyboard.addKeys( { 'up': Phaser.KeyCode.W, 'down': Phaser.KeyCode.S, 'left': Phaser.KeyCode.A, 'right': Phaser.KeyCode.D } );
 
     
 
@@ -103,54 +112,62 @@ var PlayScene = {
     }
 
     function pauseTime(){
-      this.paused = !this.paused;
-      if(!this.paused && this._buildModeActive)
-        buildMode.call(this);
-      this._destroyModeActive = false;
+      if(!this._escapeMenu) {
+        this.paused = !this.paused;
+        if(!this.paused && this._buildModeActive)
+          buildMode.call(this);
+        this._destroyModeActive = false;
+      }
     }
 
     function destroyMode(key = undefined){
-      if(this._buildModeActive)
-      this._buildModeActive = false;
+      if(!this._escapeMenu) {
+        if(this._buildModeActive)
+        this._buildModeActive = false;
 
 
-      if(!this._destroyModeActive){
-        this.paused = true;
-        this._destroyModeActive = true;
-      }
+        if(!this._destroyModeActive){
+          this.paused = true;
+          this._destroyModeActive = true;
+        }
 
-      else{
-        this._destroyModeActive = false;
+        else{
+          this._destroyModeActive = false;
+        }
       }
     }
 
     function buildMode(key = undefined){
-      if(this._destroyModeActive)
-        this._destroyModeActive = false;
+      if(!this._escapeMenu) {
+        if(this._destroyModeActive)
+          this._destroyModeActive = false;
 
 
-      if(!this._buildModeActive){
-        this._buildingModeSprite = this.game.add.sprite(this.game.input.mousePointer.x, this.game.input.mousePointer.y, 'buildTest');
-        this._buildingModeSprite.anchor.setTo(0.5, 0.5);
-        this._buildingModeSprite.alpha = 0.7;
-        
-        this.paused = true;
-        this._buildModeActive = true;
-      }
+        if(!this._buildModeActive){
+          this._buildingModeSprite = this.game.add.sprite(this.game.input.mousePointer.x, this.game.input.mousePointer.y, 'buildTest');
+          this._buildingModeSprite.anchor.setTo(0.5, 0.5);
+          this._buildingModeSprite.alpha = 0.7;
+          
+          this.paused = true;
+          this._buildModeActive = true;
+        }
 
-      else{
-        if(this._buildingModeSprite !== undefined)
-          this._buildingModeSprite.destroy();
+        else{
+          if(this._buildingModeSprite !== undefined)
+            this._buildingModeSprite.destroy();
 
-        this._buildModeActive = false;
+          this._buildModeActive = false;
+        }
       }
     }
 
     function click(){
-      if(this._buildModeActive)
-        buildTest.call(this);
-      else if(this._destroyModeActive)
-        destroyTest.call(this);
+      if(!this._escapeMenu) {
+        if(this._buildModeActive)
+          buildTest.call(this);
+        else if(this._destroyModeActive)
+          destroyTest.call(this);
+      }
     }
 
     function destroyTest(){
@@ -186,12 +203,27 @@ var PlayScene = {
     }
 
     function mouseOver(sprite){
-      if(this._destroyModeActive)
+      if(this._destroyModeActive && !this._escapeMenu)
         sprite.tint = 0xFF0000;
     }
 
     function mouseOut(sprite){
         sprite.tint = 0xFFFFFF;
+    }
+
+    function escape(){
+      this._escapeMenu = !this._escapeMenu;
+
+      if(this._escapeMenu) {
+        this.fade = this.game.add.sprite(this.game.camera.x, this.game.camera.y, 'fade');
+        this.fade.width = this.game.camera.width;
+        this.fade.height = this.game.camera.height;
+        this.fade.alpha = 0.5;
+        //abrir el menú
+      }
+
+      else
+        this.fade.destroy();
     }
 
     this.checkOverlap = function(a, b){
@@ -208,103 +240,104 @@ var PlayScene = {
   },
 
   update: function () {
+    if(!this._escapeMenu) {
+      if(!this.paused){
+        this.currentTime.buffer += this.timeScale; //buffer increment
 
-    if(!this.paused){
-      this.currentTime.buffer += this.timeScale; //buffer increment
+        if (this.currentTime.buffer >=9) { //if buffer > 3, update. AKA, speed 1 = every 3 loops, speed 2 = every 2 loops... etc.
+          
+          //update clock
+          this.currentTime.buffer = 0;
 
-      if (this.currentTime.buffer >=9) { //if buffer > 3, update. AKA, speed 1 = every 3 loops, speed 2 = every 2 loops... etc.
+          this.currentTime.hour = (this.currentTime.hour + 1) % 24; 
         
-        //update clock
-        this.currentTime.buffer = 0;
+          ////////////////////////////////////////
+          //update producers
+          if(this.currentTime.hour >= this.shiftStart && this.currentTime.hour<= this.shiftEnd){
 
-        this.currentTime.hour = (this.currentTime.hour + 1) % 24; 
-      
-        ////////////////////////////////////////
-        //update producers
-        if(this.currentTime.hour >= this.shiftStart && this.currentTime.hour<= this.shiftEnd){
+            this.woodGroup.forEach(function(prod){
+              this.wood += prod.amount;
+            }, this);
 
-          this.woodGroup.forEach(function(prod){
-            this.wood += prod.amount;
-          }, this);
+            this.coalGroup.forEach(function(prod){
+              this.coal += prod.amount;
+            }, this);
 
-          this.coalGroup.forEach(function(prod){
-            this.coal += prod.amount;
-          }, this);
+            this.uraniumGroup.forEach(function(prod){
+              this.uranium += prod.amount;
+            }, this);
 
-          this.uraniumGroup.forEach(function(prod){
-            this.uranium += prod.amount;
-          }, this);
+            //etc...
 
-          //etc...
+            //update consumers
+            this.energyGroup.forEach(function(prod){
+              this.energy += prod.amount;
 
-          //update consumers
-          this.energyGroup.forEach(function(prod){
-            this.energy += prod.amount;
+              switch(prod.consumes){
 
-            switch(prod.consumes){
+                case "uranium":
+                this.uranium -= prod.consumed;
+                  break;
 
-              case "uranium":
-              this.uranium -= prod.consumed;
-                break;
+                  //other cases for other consumers
+              }
+            }, this);
 
-                //other cases for other consumers
-            }
-          }, this);
+            this.houseGroup.forEach(function(prod){
+              this.food -= prod.countCitizens * 5;
+            }, this);
 
-          this.houseGroup.forEach(function(prod){
-            this.food -= prod.countCitizens * 5;
-          }, this);
+            this.homelessArray.forEach(function(){
+              this.food -= 5;
+            }, this);
+          }
+          
+          ////////////////////////////////////////
+          //update citizens
 
-          this.homelessArray.forEach(function(){
-            this.food -= 5;
-          }, this);
+          //----DEBUG----
+          console.log(this.wood);
+          //console.log(currentTime.hour); 
+          //console.log("DING");
         }
         
-        ////////////////////////////////////////
-        //update citizens
+        else {
+          //----DEBUG----
 
-        //----DEBUG----
-        console.log(this.wood);
-        //console.log(currentTime.hour); 
-        //console.log("DING");
+          //console.log("waiting..."); 
+        }
       }
-      
-      else {
-        //----DEBUG----
 
-        //console.log("waiting..."); 
+      else if(this._buildModeActive){
+        this._buildingModeSprite.x = Math.round(this.game.input.worldX / this._tileSize) * this._tileSize;
+        this._buildingModeSprite.y = Math.round(this.game.input.worldY / this._tileSize) * this._tileSize;
+
+        var overlap = false;
+
+        this.buildingGroup.forEach(function (group){
+          group.forEach(function(building){
+            overlap = overlap || this.checkOverlap.call(this, this._buildingModeSprite, building);
+          }, this)
+        }, this);
+
+        if (overlap)
+          this._buildingModeSprite.tint = 0xFF0000;
+        else
+        this._buildingModeSprite.tint = 0xFFFFFF;
       }
+
+      if (this.cursors.up.isDown || this.cursorsAlt.up.isDown)
+        this.game.camera.y -= 16;
+
+      else if (this.cursors.down.isDown || this.cursorsAlt.down.isDown)
+        this.game.camera.y += 16;
+
+      if (this.cursors.left.isDown || this.cursorsAlt.left.isDown)
+        this.game.camera.x -= 16;
+
+      else if (this.cursors.right.isDown || this.cursorsAlt.right.isDown)
+        this.game.camera.x += 16;
     }
-
-    else if(this._buildModeActive){
-      this._buildingModeSprite.x = Math.round(this.game.input.worldX / this._tileSize) * this._tileSize;
-      this._buildingModeSprite.y = Math.round(this.game.input.worldY / this._tileSize) * this._tileSize;
-
-      var overlap = false;
-
-      this.buildingGroup.forEach(function (group){
-        group.forEach(function(building){
-          overlap = overlap || this.checkOverlap.call(this, this._buildingModeSprite, building);
-        }, this)
-      }, this);
-
-      if (overlap)
-        this._buildingModeSprite.tint = 0xFF0000;
-      else
-      this._buildingModeSprite.tint = 0xFFFFFF;
-    }
-
-    if (this.cursors.up.isDown)
-      this.game.camera.y -= 16;
-
-    else if (this.cursors.down.isDown)
-      this.game.camera.y += 16;
-
-    if (this.cursors.left.isDown)
-      this.game.camera.x -= 16;
-
-    else if (this.cursors.right.isDown)
-      this.game.camera.x += 16;
   },
 
   render: function() {
