@@ -39,8 +39,8 @@ var PreloaderScene = {
     this.game.load.image('buildTest', 'images/building test.png');
 
  
-    this.game.load.tilemap('tilemap', 'images/map2/Mapa2.json', null, Phaser.Tilemap.TILED_JSON);
-    this.game.load.image('patronesTilemap', 'images/map2/Tileset.png');
+    this.game.load.tilemap('tilemap', 'images/map/map.json', null, Phaser.Tilemap.TILED_JSON);
+    this.game.load.image('patronesTilemap', 'images/map/tileset.png');
 
   },
 

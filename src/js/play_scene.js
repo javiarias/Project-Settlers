@@ -14,10 +14,10 @@ var PlayScene = {
     this.map.addTilesetImage("Tileset","patronesTilemap");
 
     //layers
-    this.map.waterLayer = this.map.createLayer ("Agua");
-    this.map.groundLayer = this.map.createLayer ("Suelo");
-    this.map.resourcesLayer = this.map.createLayer ("Recursos");
-    this.map.obstaclesLayer = this.map.createLayer ("Obstaculos");
+    this.map.waterLayer = this.map.createLayer ("water");
+    this.map.groundLayer = this.map.createLayer ("soil");
+    this.map.resourcesLayer = this.map.createLayer ("resources");
+    this.map.obstaclesLayer = this.map.createLayer ("obstacles");
 
      this.map.waterLayer.resizeWorld();
 
