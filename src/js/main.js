@@ -28,7 +28,7 @@ var BootScene = {
 var PreloaderScene = {
   preload: function () {
 
-    this.loadingBar = this.game.add.sprite(0, 240, 'preloader_bar');
+    this.loadingBar = this.game.add.sprite(0, 240, 'preloader_bar ');
     this.loadingBar.anchor.setTo(0, 0.5);
     this.load.setPreloadSprite(this.loadingBar);
 
@@ -36,11 +36,17 @@ var PreloaderScene = {
     this.game.load.image('logo', 'images/HERO.png');
     this.game.load.image('test', 'images/Phaser.png');
 
+    //sprites
     this.game.load.image('buildTest', 'images/building test.png');
-
- 
+  
+    //map 
     this.game.load.tilemap('tilemap', 'images/map/map.json', null, Phaser.Tilemap.TILED_JSON);
     this.game.load.image('patronesTilemap', 'images/map/tileset.png');
+
+    //sounds
+    this.game.load.audio('menuSound', ['sounds/menu.mp3', 'sounds/menu.ogg']);
+    this.game.load.audio('gameSound', ['sounds/game.mp3', 'sounds/game.ogg']);
+
 
   },
 
