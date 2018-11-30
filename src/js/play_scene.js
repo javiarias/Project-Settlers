@@ -132,6 +132,8 @@ var PlayScene = {
       if(!this._buildModeActive){
         this._buildingModeSprite = this.game.add.sprite(this.game.input.mousePointer.x, this.game.input.mousePointer.y, 'buildTest');
         this._buildingModeSprite.anchor.setTo(0.5, 0.5);
+        this._buildingModeSprite.alpha = 0.7;
+        
         this.paused = true;
         this._buildModeActive = true;
       }
@@ -163,7 +165,7 @@ var PlayScene = {
 
       this.buildingGroup.forEach(function (group){
         group.forEach(function(building){
-          overlap = overlap || checkOverlap.call(this, this._buildingModeSprite, building);
+          overlap = overlap || this.checkOverlap.call(this, this._buildingModeSprite, building);
         }, this)
       }, this);
 
@@ -192,7 +194,7 @@ var PlayScene = {
         sprite.tint = 0xFFFFFF;
     }
 
-    function checkOverlap(a, b){
+    this.checkOverlap = function(a, b){
 
       var x = a.getBounds();
       x.width--;
@@ -277,6 +279,19 @@ var PlayScene = {
     else if(this._buildModeActive){
       this._buildingModeSprite.x = Math.round(this.game.input.worldX / this._tileSize) * this._tileSize;
       this._buildingModeSprite.y = Math.round(this.game.input.worldY / this._tileSize) * this._tileSize;
+
+      var overlap = false;
+
+      this.buildingGroup.forEach(function (group){
+        group.forEach(function(building){
+          overlap = overlap || this.checkOverlap.call(this, this._buildingModeSprite, building);
+        }, this)
+      }, this);
+
+      if (overlap)
+        this._buildingModeSprite.tint = 0xFF0000;
+      else
+      this._buildingModeSprite.tint = 0xFFFFFF;
     }
 
     if (this.cursors.up.isDown)
