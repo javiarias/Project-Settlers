@@ -29,7 +29,7 @@ var PlayScene = {
     var menuMusic = this.game.add.audio('menuSound');
     var gameMusic = this.game.add.audio('gameSound'); 
 
-    gameMusic.play;
+    gameMusic.play();
     gameMusic.loop = true;
 
     this.paused = true;
