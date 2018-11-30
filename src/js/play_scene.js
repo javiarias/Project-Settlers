@@ -20,8 +20,18 @@ var PlayScene = {
     this.map.obstaclesLayer = this.map.createLayer ("obstacles");
 
     this.map.waterLayer.resizeWorld();
+    this.map.groundLayer.resizeWorld();
+    this.map.resourcesLayer.resizeWorld();
+    this.map.obstaclesLayer.resizeWorld();
 
-    //misc variables
+    //music
+
+    var menuMusic = this.game.add.audio('menuSound');
+    var gameMusic = this.game.add.audio('gameSound'); 
+
+    gameMusic.play();
+    gameMusic.loop = true;
+
     this.paused = true;
     this.timeScale = 1;
     this.currentTime = { "hour": 0, "buffer": 0};
@@ -238,6 +248,7 @@ var PlayScene = {
       return Phaser.Rectangle.intersects(x, y);
     }
   },
+
 
   update: function () {
     if(!this._escapeMenu) {
