@@ -69,18 +69,49 @@ var PlayScene = {
 
     this.houseGroup = this.game.add.group();
     this.buildingGroup.add(this.houseGroup);
+    this.houseGroup.sprite = 'House Test';
 
     this.woodGroup = this.game.add.group();
     this.buildingGroup.add(this.woodGroup);
+    this.houseGroup.sprite = 'Wood Test';
 
-    this.coalGroup = this.game.add.group();
-    this.buildingGroup.add(this.coalGroup);
+    /*this.coalGroup = this.game.add.group(); //Comentado de momento, añado un grupo Mine y ya vemos como hacer el reparto de recursos (¿Stone + Coal?)
+    this.buildingGroup.add(this.coalGroup);*/
 
     this.uraniumGroup = this.game.add.group();
     this.buildingGroup.add(this.uraniumGroup);
+    this.houseGroup.sprite = 'Uranium Test';
 
     this.energyGroup = this.game.add.group();
     this.buildingGroup.add(this.energyGroup);
+    this.houseGroup.sprite = 'Energy Test';
+
+    this.windGroup = this.game.add.group();
+    this.buildingGroup.add(this.windGroup);
+    this.houseGroup.sprite = 'Wind Test';
+
+    this.roadsGroup = this.game.add.group();
+    this.buildingGroup.add(this.roadsGroup);
+    //this.houseGroup.sprite = 'Road  test'; //Grupo de sprites (?)
+
+    this.waterGroup = this.game.add.group();
+    this.buildingGroup.add(this.waterGroup);
+    this.houseGroup.sprite = 'Water Test';
+
+    this.hospitalGroup = this.game.add.group();
+    this.buildingGroup.add(this.hospitalGroup);
+    this.houseGroup.sprite = 'Hospital Test';
+
+    this.mineGroup = this.game.add.group();
+    this.buildingGroup.add(this.mineGroup);
+    this.houseGroup.sprite = 'Mine Test';
+
+    this.cropGroup = this.game.add.group();
+    this.buildingGroup.add(this.cropGroup);
+    this.houseGroup.sprite = 'Crop Test';
+
+    //Añadidos todos los que tienen sprite
+
     //etc...
 
     //keyboard phaser
@@ -105,15 +136,11 @@ var PlayScene = {
     var key_ESC = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
     key_ESC.onDown.add(escape, this);
 
-
-
     this.game.input.onDown.add(click, this);
 
     this.cursors = this.game.input.keyboard.createCursorKeys();
 
     this.cursorsAlt = this.game.input.keyboard.addKeys( { 'up': Phaser.KeyCode.W, 'down': Phaser.KeyCode.S, 'left': Phaser.KeyCode.A, 'right': Phaser.KeyCode.D } );
-
-    
 
     
     function setTimescale(key){
@@ -154,7 +181,7 @@ var PlayScene = {
 
 
         if(!this._buildModeActive){
-          this._buildingModeSprite = this.game.add.sprite(this.game.input.mousePointer.x, this.game.input.mousePointer.y, 'buildTest');
+          this._buildingModeSprite = this.game.add.sprite(this.game.input.mousePointer.x, this.game.input.mousePointer.y, 'buildTest'); //No se si se puede hacer, pero coger en vez de 'buildTest' el sprite del grupo que esté activo?
           this._buildingModeSprite.anchor.setTo(0.5, 0.5);
           this._buildingModeSprite.alpha = 0.7;
           

@@ -37,8 +37,23 @@ var PreloaderScene = {
     this.game.load.image('test', 'images/Phaser.png');
     this.game.load.image("fade", "images/fade.png");
 
-    //sprites
-    this.game.load.image('buildTest', 'images/building test.png');
+    //building sprites
+    this.game.load.image('build Test', 'images/buildings/building test.png');
+    this.game.load.image('Crop Test', 'images/buildings/Crop test.png');
+    this.game.load.image('Energy Test', 'images/buildings/Energy test.png');
+    this.game.load.image('Hospital Test', 'images/buildings/Hospital test.png');
+    this.game.load.image('House Test', 'images/buildings/House test.png');
+    this.game.load.image('Mine Test', 'images/buildings/Mine test.png');
+    this.game.load.image('Road Down Test', 'images/buildings/road down test.png');
+    this.game.load.image('Road Left Test', 'images/buildings/road left test.png');
+    this.game.load.image('Road Right Test', 'images/buildings/road right test.png');
+    this.game.load.image('Road Up Test', 'images/buildings/road up test.png');
+    this.game.load.image('Uranium Test', 'images/buildings/Uranium test.png');
+    this.game.load.image('Water Test', 'images/buildings/Water test.png');
+    this.game.load.image('Wind Test', 'images/buildings/Wind test.png');
+    this.game.load.image('Wood Test', 'images/buildings/Wood test.png');
+
+
   
     //map 
     this.game.load.tilemap('tilemap', 'images/map/map.json', null, Phaser.Tilemap.TILED_JSON);
