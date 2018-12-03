@@ -45,22 +45,20 @@ var PlayScene = {
     this.fade;
 
     this._buildingModeSprite;
+    this._buildingModeType = "";
 
     /////////GROUPS AND RESOURCES
-    this.houseGroup;
     this.food = 0;
 
-    this.woodGroup;
     this.wood = 0;
 
-    this.coalGroup;
     this.coal = 0;
 
-    this.uraniumGroup;
     this.uranium = 0;
 
-    this.energyGroup;
     this.energy = 0;
+
+    this.water = 0;
 
     //etc...
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -73,42 +71,43 @@ var PlayScene = {
 
     this.woodGroup = this.game.add.group();
     this.buildingGroup.add(this.woodGroup);
-    this.houseGroup.sprite = 'Wood Test';
+    this.woodGroup.sprite = 'Wood Test';
 
-    /*this.coalGroup = this.game.add.group(); //Comentado de momento, añado un grupo Mine y ya vemos como hacer el reparto de recursos (¿Stone + Coal?)
-    this.buildingGroup.add(this.coalGroup);*/
+    this.coalGroup = this.game.add.group(); //Comentado de momento, añado un grupo Mine y ya vemos como hacer el reparto de recursos (¿Stone + Coal?)
+    this.buildingGroup.add(this.coalGroup);
+    this.coalGroup.sprite = 'Coal Test'
 
     this.uraniumGroup = this.game.add.group();
     this.buildingGroup.add(this.uraniumGroup);
-    this.houseGroup.sprite = 'Uranium Test';
+    this.uraniumGroup.sprite = 'Uranium Test';
 
     this.energyGroup = this.game.add.group();
     this.buildingGroup.add(this.energyGroup);
-    this.houseGroup.sprite = 'Energy Test';
+    this.energyGroup.sprite = 'Energy Test';
 
     this.windGroup = this.game.add.group();
     this.buildingGroup.add(this.windGroup);
-    this.houseGroup.sprite = 'Wind Test';
+    this.windGroup.sprite = 'Wind Test';
 
     this.roadsGroup = this.game.add.group();
     this.buildingGroup.add(this.roadsGroup);
-    //this.houseGroup.sprite = 'Road  test'; //Grupo de sprites (?)
+    this.roadsGroup.sprite = 'Road Test'; //Grupo de sprites (?)
 
     this.waterGroup = this.game.add.group();
     this.buildingGroup.add(this.waterGroup);
-    this.houseGroup.sprite = 'Water Test';
+    this.waterGroup.sprite = 'Water Test';
 
     this.hospitalGroup = this.game.add.group();
     this.buildingGroup.add(this.hospitalGroup);
-    this.houseGroup.sprite = 'Hospital Test';
+    this.hospitalGroup.sprite = 'Hospital Test';
 
-    this.mineGroup = this.game.add.group();
-    this.buildingGroup.add(this.mineGroup);
-    this.houseGroup.sprite = 'Mine Test';
+    this.stoneGroup = this.game.add.group();
+    this.buildingGroup.add(this.stoneGroup);
+    this.stoneGroup.sprite = 'Mine Test';
 
     this.cropGroup = this.game.add.group();
     this.buildingGroup.add(this.cropGroup);
-    this.houseGroup.sprite = 'Crop Test';
+    this.cropGroup.sprite = 'Crop Test';
 
     //Añadidos todos los que tienen sprite
 
@@ -128,7 +127,10 @@ var PlayScene = {
     key_Space.onDown.add(pauseTime, this);
 
     var key_K = this.game.input.keyboard.addKey(Phaser.Keyboard.K);
-    key_K.onDown.add(buildMode, this);
+    key_K.onDown.add(buildMode, this, 0, this.houseGroup);
+
+    var key_J = this.game.input.keyboard.addKey(Phaser.Keyboard.J);
+    key_J.onDown.add(buildMode, this, 0, this.woodGroup);
 
     var key_L = this.game.input.keyboard.addKey(Phaser.Keyboard.L);
     key_L.onDown.add(destroyMode, this);
@@ -157,7 +159,7 @@ var PlayScene = {
       }
     }
 
-    function destroyMode(key = undefined){
+    function destroyMode(){
       if(!this._escapeMenu) {
         if(this._buildModeActive)
         this._buildModeActive = false;
@@ -174,22 +176,24 @@ var PlayScene = {
       }
     }
 
-    function buildMode(key = undefined){
+    function buildMode(key = undefined, group){
       if(!this._escapeMenu) {
         if(this._destroyModeActive)
           this._destroyModeActive = false;
 
 
         if(!this._buildModeActive){
-          this._buildingModeSprite = this.game.add.sprite(this.game.input.mousePointer.x, this.game.input.mousePointer.y, 'buildTest'); //No se si se puede hacer, pero coger en vez de 'buildTest' el sprite del grupo que esté activo?
+          this._buildingModeSprite = this.game.add.sprite(this.game.input.mousePointer.x, this.game.input.mousePointer.y, group.sprite);
           this._buildingModeSprite.anchor.setTo(0.5, 0.5);
           this._buildingModeSprite.alpha = 0.7;
+
+          this._buildingModeType = group;
           
           this.paused = true;
           this._buildModeActive = true;
         }
 
-        else{
+        else {
           if(this._buildingModeSprite !== undefined)
             this._buildingModeSprite.destroy();
 
@@ -201,20 +205,22 @@ var PlayScene = {
     function click(){
       if(!this._escapeMenu) {
         if(this._buildModeActive)
-          buildTest.call(this);
+          build.call(this);
         else if(this._destroyModeActive)
-          destroyTest.call(this);
+          destroy.call(this);
       }
     }
 
-    function destroyTest(){
-      this.woodGroup.forEach(function(prod){
-        if(prod.input.pointerOver())
-          prod.destroy();
+    function destroy(){
+      this.buildingGroup.forEach(function(group){
+        group.forEach(function (prod){
+          if(prod.input.pointerOver())
+            prod.destroy();
+        }, this);
       }, this);
     }
 
-    function buildTest(){
+    function build(){
       var overlap = false;
 
       this.buildingGroup.forEach(function (group){
@@ -225,7 +231,7 @@ var PlayScene = {
 
 
       if(!overlap){
-        var auxBuilding = new Classes.Producer(this.game, Math.round(this.game.input.worldX / this._tileSize) * this._tileSize, Math.round(this.game.input.worldY / this._tileSize) * this._tileSize, "buildTest", 1);
+        var auxBuilding = new Classes.Producer(this.game, Math.round(this.game.input.worldX / this._tileSize) * this._tileSize, Math.round(this.game.input.worldY / this._tileSize) * this._tileSize, this._buildingModeType.sprite, 1);
         auxBuilding.anchor.setTo(0.5, 0.5);
 
         auxBuilding.inputEnabled = true;
@@ -233,7 +239,7 @@ var PlayScene = {
         auxBuilding.events.onInputOver.add(mouseOver, this, 0, auxBuilding);
         auxBuilding.events.onInputOut.add(mouseOut, this, 0, auxBuilding);
 
-        this.woodGroup.add(auxBuilding);
+        this._buildingModeType.add(auxBuilding);
 
         buildMode.call(this);
       }
