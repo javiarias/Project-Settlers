@@ -1,5 +1,5 @@
 'use strict';
-var Classes = require("./classes.js");
+var Classes = require("./buildings.js");
 
 var PlayScene = {
   
@@ -67,51 +67,85 @@ var PlayScene = {
 
     this.houseGroup = this.game.add.group();
     this.buildingGroup.add(this.houseGroup);
-    this.houseGroup.sprite = 'House Test';
+    this.houseGroup.sprite = 'House';
 
     this.woodGroup = this.game.add.group();
     this.buildingGroup.add(this.woodGroup);
-    this.woodGroup.sprite = 'Wood Test';
+    this.woodGroup.sprite = 'Wood';
 
     this.coalGroup = this.game.add.group(); //Comentado de momento, añado un grupo Mine y ya vemos como hacer el reparto de recursos (¿Stone + Coal?)
     this.buildingGroup.add(this.coalGroup);
-    this.coalGroup.sprite = 'Coal Test'
+    this.coalGroup.sprite = 'Coal'
 
     this.uraniumGroup = this.game.add.group();
     this.buildingGroup.add(this.uraniumGroup);
-    this.uraniumGroup.sprite = 'Uranium Test';
+    this.uraniumGroup.sprite = 'Uranium';
 
     this.energyGroup = this.game.add.group();
     this.buildingGroup.add(this.energyGroup);
-    this.energyGroup.sprite = 'Energy Test';
+    this.energyGroup.sprite = 'Energy';
 
     this.windGroup = this.game.add.group();
     this.buildingGroup.add(this.windGroup);
-    this.windGroup.sprite = 'Wind Test';
+    this.windGroup.sprite = 'Wind';
 
     this.roadsGroup = this.game.add.group();
     this.buildingGroup.add(this.roadsGroup);
-    this.roadsGroup.sprite = 'Road Test'; //Grupo de sprites (?)
+    this.roadsGroup.sprite = 'Road'; //Grupo de sprites (?)
 
     this.waterGroup = this.game.add.group();
     this.buildingGroup.add(this.waterGroup);
-    this.waterGroup.sprite = 'Water Test';
+    this.waterGroup.sprite = 'Water';
 
     this.hospitalGroup = this.game.add.group();
     this.buildingGroup.add(this.hospitalGroup);
-    this.hospitalGroup.sprite = 'Hospital Test';
+    this.hospitalGroup.sprite = 'Hospital';
 
     this.stoneGroup = this.game.add.group();
     this.buildingGroup.add(this.stoneGroup);
-    this.stoneGroup.sprite = 'Mine Test';
+    this.stoneGroup.sprite = 'Stone';
 
     this.cropGroup = this.game.add.group();
     this.buildingGroup.add(this.cropGroup);
-    this.cropGroup.sprite = 'Crop Test';
+    this.cropGroup.sprite = 'Crops';
 
-    //Añadidos todos los que tienen sprite
+    //etc.
 
-    //etc...
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //menus
+    this.pauseMenu = this.game.add.group();
+
+    var pauseBkg = this.game.add.sprite(this.game.camera.x + this.game.camera.width / 2, this.game.camera.y + this.game.camera.height / 2, "pauseBkg");
+    pauseBkg.anchor.setTo(.5, .5);
+    pauseBkg.fixedToCamera = true;
+    pauseBkg.smoothed = false;
+    this.pauseMenu.add(pauseBkg);
+
+    var pauseSettings = this.game.add.button(pauseBkg.x - 72, pauseBkg.y + 3, "settBttn", function(){}, this, 0, 0, 1);
+    pauseSettings.anchor.setTo(0.5, 0.5);
+    pauseSettings.fixedToCamera = true;
+    pauseSettings.smoothed = false;
+
+    this.pauseMenu.add(pauseSettings);
+
+    var pauseMinimize = this.game.add.button(pauseBkg.x, pauseBkg.y + 3, "minBttn", escape, this, 0, 0, 1);
+    pauseMinimize.anchor.setTo(0.5, 0.5);
+    pauseMinimize.fixedToCamera = true;
+    pauseMinimize.smoothed = false;
+
+    this.pauseMenu.add(pauseMinimize);
+    
+    var pauseExit = this.game.add.button(pauseBkg.x + 72, pauseBkg.y + 3, "exitBttn", function(){}, this, 0, 0, 1);
+    pauseExit.anchor.setTo(0.5, 0.5);
+    pauseExit.fixedToCamera = true;
+    pauseExit.smoothed = false;
+
+    this.pauseMenu.add(pauseExit);
+
+
+    this.pauseMenu.visible = false;
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
     //keyboard phaser
     var key_One = this.game.input.keyboard.addKey(Phaser.Keyboard.ONE);
@@ -262,11 +296,14 @@ var PlayScene = {
         this.fade.width = this.game.camera.width;
         this.fade.height = this.game.camera.height;
         this.fade.alpha = 0.5;
-        //abrir el menú
+        
+        this.game.world.bringToTop(this.pauseMenu);
       }
 
       else
         this.fade.destroy();
+
+      this.pauseMenu.visible = this._escapeMenu;
     }
 
     this.checkOverlap = function(a, b){

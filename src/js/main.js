@@ -38,22 +38,21 @@ var PreloaderScene = {
     this.game.load.image("fade", "images/fade.png");
 
     //building sprites
-    this.game.load.image('buildTest', 'images/buildings/building test.png');
-    this.game.load.image('Crop Test', 'images/buildings/Crop test.png');
-    this.game.load.image('Energy Test', 'images/buildings/Energy test.png');
-    this.game.load.image('Hospital Test', 'images/buildings/Hospital test.png');
-    this.game.load.image('House Test', 'images/buildings/House test.png');
-    this.game.load.image('Mine Test', 'images/buildings/Mine test.png');
-    this.game.load.image('Coal Test', 'images/buildings/Coal test.png');
-    this.game.load.image('Road Test', 'images/buildings/road test.png');
-    this.game.load.image('Road Down Test', 'images/buildings/road down test.png');
-    this.game.load.image('Road Left Test', 'images/buildings/road left test.png');
-    this.game.load.image('Road Right Test', 'images/buildings/road right test.png');
-    this.game.load.image('Road Up Test', 'images/buildings/road up test.png');
-    this.game.load.image('Uranium Test', 'images/buildings/Uranium test.png');
-    this.game.load.image('Water Test', 'images/buildings/Water test.png');
-    this.game.load.image('Wind Test', 'images/buildings/Wind test.png');
-    this.game.load.image('Wood Test', 'images/buildings/Wood test.png');
+    this.game.load.image('Crops', 'images/buildings/Crops.png');
+    this.game.load.image('Energy', 'images/buildings/Energy.png');
+    this.game.load.image('Hospital', 'images/buildings/Hospital.png');
+    this.game.load.image('House', 'images/buildings/House.png');
+    this.game.load.image('Stone', 'images/buildings/Stone.png');
+    this.game.load.image('Coal', 'images/buildings/Coal.png');
+    this.game.load.image('Road', 'images/buildings/road.png');
+    this.game.load.image('Road Down', 'images/buildings/road down.png');
+    this.game.load.image('Road Left', 'images/buildings/road left.png');
+    this.game.load.image('Road Right', 'images/buildings/road right.png');
+    this.game.load.image('Road Up', 'images/buildings/road up.png');
+    this.game.load.image('Uranium', 'images/buildings/Uranium.png');
+    this.game.load.image('Water', 'images/buildings/Water.png');
+    this.game.load.image('Wind', 'images/buildings/Wind.png');
+    this.game.load.image('Wood', 'images/buildings/Wood.png');
 
 
   
@@ -65,6 +64,11 @@ var PreloaderScene = {
     this.game.load.audio('menuSound', ['sounds/menu.mp3', 'sounds/menu.ogg']);
     this.game.load.audio('gameSound', ['sounds/game.mp3', 'sounds/game.ogg']);
 
+    //menus
+    this.game.load.image('pauseBkg', 'images/menu/pauseMenu.png');
+    this.game.load.spritesheet('exitBttn', 'images/menu/exit.png', 55, 48);
+    this.game.load.spritesheet('minBttn', 'images/menu/minimize.png', 55, 48);
+    this.game.load.spritesheet('settBttn', 'images/menu/settings.png', 55, 48);
 
   },
 
