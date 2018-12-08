@@ -36,6 +36,7 @@ var PlayScene = {
     this.timeScale = 1;
     this.currentTime = { "hour": 0, "buffer": 0};
     this.homelessArray = [];
+    this.CitizenArray = []; //Prueba para actualizar
     this.shiftStart = 8;
     this.shiftEnd = 20;
     this._tileSize = this.map.tileWidth;
@@ -168,6 +169,9 @@ var PlayScene = {
 
     var key_L = this.game.input.keyboard.addKey(Phaser.Keyboard.L);
     key_L.onDown.add(destroyMode, this);
+
+    var key_Q = this.game.input.keyboard.addKey(Phaser.Keyboard.Q);
+    key_Q.onDown.add(addCitizen, this);
 
     var key_ESC = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
     key_ESC.onDown.add(escape, this);
@@ -317,6 +321,11 @@ var PlayScene = {
 
       return Phaser.Rectangle.intersects(x, y);
     }
+
+    function addCitizen()
+    {
+     // var test = Citizen()
+    } 
   },
 
 
@@ -376,6 +385,11 @@ var PlayScene = {
           ////////////////////////////////////////
           //update citizens
 
+          this.CitizenArray.forEach(function(tick)
+          {
+            //this.CitizenArray.tick;
+          }, this);
+
           //----DEBUG----
           console.log(this.wood);
           //console.log(currentTime.hour); 
@@ -424,8 +438,7 @@ var PlayScene = {
   render: function() {
     this.game.debug.text("Current speed: " + this.timeScale, 10, 485);
     this.game.debug.text("Wood: " + this.wood, 10, 500);
-    this.game.debug.text("Game paused: " + this.paused, 10, 515);
-    
+    this.game.debug.text("Game paused: " + this.paused, 10, 515);    
     var mode = "NONE";
     if(this._buildModeActive)
       mode = "building";
@@ -439,7 +452,8 @@ var PlayScene = {
     if(this.currentTime.hour >= this.shiftStart && this.currentTime.hour<= this.shiftEnd)
       this.game.debug.text("WORK TIME!!", 10, 560);
     
-      
+    this.game.debug.text("Citizens: " +this.CitizenArray.length, 10, 575)
+
   }
 };
 

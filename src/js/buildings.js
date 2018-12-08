@@ -5,6 +5,7 @@ function House(game, x, y, img) {
     this.residentA = undefined;
     this.residentB = undefined;
     this.hospitalNear = false;
+    this.full = false;
 }
 House.prototype = Object.create(Phaser.Sprite.prototype);
 House.constructor = House;
@@ -34,6 +35,7 @@ House.prototype.add = function(citizen) {
     }
     else if(this.residentB === undefined){
         this.residentB = citizen;
+        full = true;
     }
     else
         ret = false;
@@ -113,18 +115,47 @@ Decor.constructor = Decor;
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-function Citizen() {
+function Citizen(homelessArray, CitizenArray) {
     this.name = "Get Fucked";
-    this.age = 0;
-    this.health = 100;
+    //this.age = 0; //De momento no es necesario
+    this.health = 80; //Valor modificable
     this.sick = false;
+    this.homeless = true;
+    this.house = -1; //Puesto para que tenga en cuenta la casa en la que vive
+//    CitizenArray.push(this);
+    homelessArray.push(this);
+    
+
+    if (this.getHouse)
+        homelessArray.shift(this);
 }
+
 Citizen.constructor = Citizen;
+
+Citizen.prototype.getHouse = function (homeless, HouseArray){ //podríamos hacer un array de casas vacias para no comprobar todo el array. Asume que es homeless por defecto
+    var i = 0;
+    var ret = 0
+    while (i < HouseArray.length && ret == 0){ 
+        if (!HouseArray[i].full)
+            if (House.add(this))
+                {
+                    ret = 1;
+                    this.house = i;
+                }                
+    }
+
+    if (ret = 0)
+        return false;
+    else
+        return true;
+};
 
 Citizen.prototype.tick = function(homeless, foodAmount, healing){
     age++;
     if(homeless)
-        //do something?
+        if (this.getHouse)
+            homelessArray.shift(this);
+        
         this.health -= 0;
     if(sick)
         this.health -= 5;
@@ -135,7 +166,18 @@ Citizen.prototype.tick = function(homeless, foodAmount, healing){
     if(healing)
         this.health += 10;
 
-    return (this.health <= 0);
+    if (this.health <= 0)    
+        this.die();
+    //return (this.health <= 0); //No es necesario devolver nada (?)
+};
+
+Citizen.prototype.die = function (){
+    //this = undefined; //puede valer?
+};
+
+Citizen.prototype.reproduce = function (){
+    if (!this.homeless && HouseArray[this.House].full && Math.floor((Math.random() * 100) + 1) > 30) //Probabilidad que se puede cambiar
+        Citizen(homelessArray);
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
