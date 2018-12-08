@@ -66,9 +66,13 @@ var PreloaderScene = {
 
     //menus
     this.game.load.image('pauseBkg', 'images/menu/pauseMenu.png');
+    this.game.load.image('optionsBkg', 'images/menu/optionsMenu.png');
     this.game.load.spritesheet('exitBttn', 'images/menu/exit.png', 55, 48);
     this.game.load.spritesheet('minBttn', 'images/menu/minimize.png', 55, 48);
     this.game.load.spritesheet('settBttn', 'images/menu/settings.png', 55, 48);
+    this.game.load.spritesheet('plusBttn', 'images/menu/plus.png', 55, 48);
+    this.game.load.spritesheet('minusBttn', 'images/menu/minus.png', 55, 48);
+    this.game.load.spritesheet('backBttn', 'images/menu/back.png', 55, 48);
 
   },
 
@@ -85,7 +89,12 @@ var MainMenu = {
     this.button = this.game.add.button(this.game.camera.x + (this.game.width/2), this.game.camera.y + 2.5 * (this.game.height/4), 'logo', gameStart, this);
     this.button.anchor.setTo(0.5, 0.5);
 
+    var menuMusic = this.game.add.audio('menuSound');
+    menuMusic.play();
+    menuMusic.loop = true;
+
     function gameStart() {
+      menuMusic.stop();
       this.game.state.start('play');
     }
   }
