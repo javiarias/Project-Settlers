@@ -29,7 +29,7 @@ var PreloaderScene = {
 
     // TODO: load here the assets for the game
     this.game.load.image('logo', 'images/HERO.png');
-    this.game.load.image('test', 'images/phaser.png');
+    this.game.load.image('test', 'images/Phaser.png');
     this.game.load.image("fade", "images/fade.png");
 
     //building sprites
@@ -53,7 +53,7 @@ var PreloaderScene = {
   
     //map 
     this.game.load.tilemap('tilemap', 'images/map/map.json', null, Phaser.Tilemap.TILED_JSON);
-    this.game.load.image('patronesTilemap', 'images/map/Tileset.png');
+    this.game.load.image('patronesTilemap', 'images/map/tileset.png');
 
     //sounds
     this.game.load.audio/('menuSound', ['audio/menu.mp3', 'audio/menu.ogg']);
@@ -84,7 +84,7 @@ var MainMenu = {
     this.button = this.game.add.button(this.game.camera.x + (this.game.width/2), this.game.camera.y + 2.5 * (this.game.height/4), 'logo', gameStart, this);
     this.button.anchor.setTo(0.5, 0.5);
 
-    var menuMusic = this.game.add.audio/('menuSound');
+    var menuMusic = this.game.add.sound('menuSound');
     menuMusic.play();
     menuMusic.loop = true;
 
