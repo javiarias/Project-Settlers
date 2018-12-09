@@ -61,6 +61,7 @@ var PreloaderScene = {
 
     //menus
     this.game.load.image('pauseBkg', 'images/menu/pauseMenu.png');
+    this.game.load.image('mainBkg', 'images/menu/mainBkg.png');
     this.game.load.image('optionsBkg', 'images/menu/optionsMenu.png');
     this.game.load.spritesheet('exitBttn', 'images/menu/exit.png', 55, 48);
     this.game.load.spritesheet('minBttn', 'images/menu/minimize.png', 55, 48);
@@ -69,6 +70,7 @@ var PreloaderScene = {
     this.game.load.spritesheet('minusBttn', 'images/menu/minus.png', 55, 48);
     this.game.load.spritesheet('backBttn', 'images/menu/back.png', 55, 48);
     this.game.load.spritesheet('muteBttn', 'images/menu/mute.png', 55, 48);
+    this.game.load.spritesheet('playBttn', 'images/menu/play.png', 55, 48);
 
   },
 
@@ -79,12 +81,17 @@ var PreloaderScene = {
 
 var MainMenu = {
   create: function(){
-    this.txt = this.game.add.text(this.game.camera.x + (this.game.width/2), this.game.camera.y + (this.game.height/10), "Project Settlers \n BETA!!", {font: "30px Arial", fill: "#ffffff", stroke: '#000000', strokeThickness: 3, align: "center" });
+    this.background = this.game.add.sprite(0, 0, "mainBkg");
+    this.background.smoothed = false;
+
+    this.txt = this.game.add.text(this.game.camera.x + (this.game.width/2), this.game.camera.y + (this.game.height/5), "Project Settlers \n BETA!!", {font: "30px Arial", fill: "#ffffff", align: "center" });
     this.txt.anchor.setTo(0.5, 0.5);
     this.txt.smoothed = false;
 
-    this.play = this.game.add.button(this.game.camera.x + (this.game.width/2), this.game.camera.y + 2 * (this.game.height/4), 'logo', gameStart, this);
+    this.play = this.game.add.button(this.game.camera.x + (this.game.width/2), this.game.camera.y + 2 * (this.game.height/4), 'playBttn', gameStart, this, 0, 0, 1);
     this.play.anchor.setTo(0.5, 0.5);
+    this.play.scale.setTo(4, 4);
+    this.play.smoothed = false;
 
     this.volume = 20;
 
