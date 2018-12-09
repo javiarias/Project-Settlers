@@ -34,7 +34,7 @@ var PreloaderScene = {
 
     // TODO: load here the assets for the game
     this.game.load.image('logo', 'images/HERO.png');
-    this.game.load.image('test', 'images/Phaser.png');
+    this.game.load.image('test', 'images/phaser.png');
     this.game.load.image("fade", "images/fade.png");
 
     //building sprites
@@ -58,7 +58,7 @@ var PreloaderScene = {
   
     //map 
     this.game.load.tilemap('tilemap', 'images/map/map.json', null, Phaser.Tilemap.TILED_JSON);
-    this.game.load.image('patronesTilemap', 'images/map/tileset.png');
+    this.game.load.image('patronesTilemap', 'images/map/Tileset.png');
 
     //sounds
     this.game.load.audio('menuSound', ['sounds/menu.mp3', 'sounds/menu.ogg']);
