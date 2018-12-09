@@ -26,11 +26,13 @@ var PlayScene = {
 
     //music
 
+    this.volume = 50;
+
     this.gameMusic = this.game.add.audio('gameSound'); 
 
     this.gameMusic.play();
     this.gameMusic.loop = true;
-    this.gameMusic.volume = 0.5;
+    this.gameMusic.volume = this.volume / 100;
 
     this.paused = true;
     this.timeScale = 1;
@@ -155,48 +157,69 @@ var PlayScene = {
 
     this.optionsMenu.add(optionsBkg);
 
-    var volumeText = this.game.add.text(optionsBkg.x, optionsBkg.y - 20, this.gameMusic.volume * 100);
+    var volumeText = this.game.add.text(optionsBkg.x, optionsBkg.y - 20, this.volume);
     volumeText.anchor.setTo(0.5, 0.5);
     volumeText.fixedToCamera = true;
     volumeText.smoothed = false;
 
     this.optionsMenu.add(volumeText);
 
-    var optionsMinus = this.game.add.button(optionsBkg.x - 77, optionsBkg.y - 20, "minusBttn", function(){updateVolume.call(this, -0.05);}, this, 0, 0, 1);
+    var optionsMinus = this.game.add.button(optionsBkg.x - 77, optionsBkg.y - 20, "minusBttn", function(){updateVolume.call(this, -5);}, this, 0, 0, 1);
     optionsMinus.anchor.setTo(0.5, 0.5);
     optionsMinus.fixedToCamera = true;
     optionsMinus.smoothed = false;
 
     this.optionsMenu.add(optionsMinus);
     
-    var optionsPlus = this.game.add.button(optionsBkg.x + 77, optionsBkg.y - 20, "plusBttn", function(){updateVolume.call(this, 0.05);}, this, 0, 0, 1);
+    var optionsPlus = this.game.add.button(optionsBkg.x + 77, optionsBkg.y - 20, "plusBttn", function(){updateVolume.call(this, 5);}, this, 0, 0, 1);
     optionsPlus.anchor.setTo(0.5, 0.5);
     optionsPlus.fixedToCamera = true;
     optionsPlus.smoothed = false;
 
     this.optionsMenu.add(optionsPlus);
 
-    var optionsBack = this.game.add.button(optionsBkg.x, optionsBkg.y + 48, "backBttn", function(){this.optionsMenu.visible = false; this.pauseMenu.visible = true; this.game.world.bringToTop(this.pauseMenu);}, this, 0, 0, 1);
+    var optionsBack = this.game.add.button(optionsBkg.x - 47, optionsBkg.y + 48, "backBttn", function(){this.optionsMenu.visible = false; this.pauseMenu.visible = true; this.game.world.bringToTop(this.pauseMenu);}, this, 0, 0, 1);
     optionsBack.anchor.setTo(0.5, 0.5);
     optionsBack.fixedToCamera = true;
     optionsBack.smoothed = false;
 
     this.optionsMenu.add(optionsBack);
 
+    var optionsMute = this.game.add.button(optionsBkg.x + 47, optionsBkg.y + 48, "muteBttn", function(){mute.call(this);}, this, 0, 0, 1);
+    if(this.game.sound.mute)
+      optionsMute.setFrames(2, 2, 3);
+    optionsMute.anchor.setTo(0.5, 0.5);
+    optionsMute.fixedToCamera = true;
+    optionsMute.smoothed = false;
+
+    this.optionsMenu.add(optionsMute);
+
 
     this.optionsMenu.visible = false;
 
     function updateVolume(update){
-      if(this.gameMusic.volume + update >= 0 && this.gameMusic.volume + update <= 1){
+      if(this.volume + update >= 0 && this.volume + update <= 100){
 
-        this.gameMusic.volume += update;
-        this.gameMusic.volume = Math.round(this.gameMusic.volume * 100) / 100
+        this.volume += update;
+        this.gameMusic.volume = this.volume / 100;
 
         this.optionsMenu.forEach(function(text){
           if (text.text !== null)
-            text.text = Math.round(this.gameMusic.volume * 100);
+            text.text = this.volume;
           }, this);
       }
+    }
+
+    function mute(){
+      this.game.sound.mute = !this.game.sound.mute;
+      this.optionsMenu.forEach(function(button){
+        if(button.key == "muteBttn"){
+          if(this.game.sound.mute)
+            button.setFrames(2, 2, 3);
+          else
+            button.setFrames(0, 0, 1);
+        }
+      }, this);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
