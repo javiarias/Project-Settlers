@@ -87,6 +87,7 @@ var MainMenu = {
     var menuMusic = this.game.add.sound('menuSound');
     menuMusic.play();
     menuMusic.loop = true;
+    menuMusic.volume = 0.5;
 
     function gameStart() {
       menuMusic.stop();
