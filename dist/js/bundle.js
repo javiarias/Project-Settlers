@@ -282,8 +282,8 @@ var PreloaderScene = {
     this.game.load.image('patronesTilemap', 'images/map/tileset.png');
 
     //sounds
-    this.game.load.audio/('menuSound', ['audio/menu.mp3', 'audio/menu.ogg']);
-    this.game.load.audio/('gameSound', ['audio/game.mp3', 'audio/game.ogg']);
+    this.game.load.sound('menuSound', ['audio/menu.mp3', 'audio/menu.ogg']);
+    this.game.load.sound('gameSound', ['audio/game.mp3', 'audio/game.ogg']);
 
     //menus
     this.game.load.image('pauseBkg', 'images/menu/pauseMenu.png');
