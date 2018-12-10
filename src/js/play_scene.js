@@ -40,7 +40,7 @@ var PlayScene = {
     this.homelessArray = [];
     this.shiftStart = 8;
     this.shiftEnd = 20;
-    this._tileSize = this.map.tileWidth;
+    this._tileSize = this.map.tileWidth / 2;
     this._buildModeActive = false;
     this._destroyModeActive = false;
     this._escapeMenu = false;
@@ -52,7 +52,7 @@ var PlayScene = {
     /////////GROUPS AND RESOURCES
     this.food = 100;
 
-    this.wood = 45;
+    this.wood = 50;
 
     this.coal = 0;
 
@@ -62,7 +62,7 @@ var PlayScene = {
 
     this.water = 0;
 
-    this.stone = 45;
+    this.stone = 50;
     
     //etc...
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -139,7 +139,7 @@ var PlayScene = {
 
     this.pauseMenu.add(pauseMinimize);
     
-    var pauseExit = this.game.add.button(pauseBkg.x + 72, pauseBkg.y + 3, "exitBttn", function(){}, this, 0, 0, 1);
+    var pauseExit = this.game.add.button(pauseBkg.x + 72, pauseBkg.y + 3, "exitBttn", function(){this.game.state.start('main');}, this, 0, 0, 1);
     pauseExit.anchor.setTo(0.5, 0.5);
     pauseExit.fixedToCamera = true;
     pauseExit.smoothed = false;
@@ -534,7 +534,13 @@ var PlayScene = {
 
       overlap = overlap || this.game.input.mousePointer.x < 6 || this.game.input.mousePointer.x > 640 || this.game.input.mousePointer.y < 44 || this.game.input.mousePointer.y > 539;
 
-      if(!overlap){
+      var roadOverlap = (this._buildingModeType == this.roadGroup);
+      this.roadGroup.forEach(function (road){
+        roadOverlap = roadOverlap || this.checkAdjacency.call(this, this._buildingModeSprite, road);
+      }, this);
+
+
+      if(!overlap && roadOverlap && this.wood > 0 && this.stone > 0){
         var auxBuilding;
 
         if(this._buildingModeType == this.houseGroup)
@@ -551,14 +557,17 @@ var PlayScene = {
         auxBuilding.over = false;
 
         //WIP
-        this.wood -= 10;
-        this.stone -= 10;
-        this.woodTxt.text = "Wood: " + this.wood;
-        this.stoneTxt.text = "Stone: " + this.stone;
+        if(this._buildingModeType != this.roadGroup){
+          this.wood -= 10;
+          this.stone -= 10;
+          this.woodTxt.text = "Wood: " + this.wood;
+          this.stoneTxt.text = "Stone: " + this.stone;
+        }
 
         this._buildingModeType.add(auxBuilding);
 
-        buildMode.call(this);
+        this._buildModeActive = false;
+        buildMode.call(this, this, this._buildingModeType);
       }
     }
 
@@ -614,6 +623,17 @@ var PlayScene = {
       y.height--;
 
       return Phaser.Rectangle.intersects(x, y);
+    }
+
+    this.checkAdjacency = function(a, b){
+
+      var x = a.getBounds();
+      var y = b.getBounds();
+
+      var corners = false;
+      corners = (x.y == y.bottom || x.bottom == y.y ) && (x.x == y.right || x.right == y.x);
+
+      return Phaser.Rectangle.intersects(x, y) && !corners;
     }
 
     function addCitizen()
@@ -744,7 +764,14 @@ var PlayScene = {
 
         overlap = overlap || this.game.input.mousePointer.x < 6 || this.game.input.mousePointer.x > 640 || this.game.input.mousePointer.y < 44 || this.game.input.mousePointer.y > 539;
 
-        if (overlap)
+        var roadOverlap = (this._buildingModeType == this.roadGroup);
+
+        this.roadGroup.forEach(function (road){
+          roadOverlap = roadOverlap || this.checkAdjacency.call(this, this._buildingModeSprite, road);
+        }, this);
+
+
+        if (overlap || !roadOverlap || this.wood <= 0 || this.stone <= 0)
           this._buildingModeSprite.tint = 0xFF0000;
         else
           this._buildingModeSprite.tint = 0xFFFFFF;
