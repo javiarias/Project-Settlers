@@ -567,6 +567,8 @@ var PlayScene = {
         this._buildingModeType.add(auxBuilding);
 
         this._buildModeActive = false;
+        if(this._buildingModeSprite !== undefined)
+            this._buildingModeSprite.destroy();
         buildMode.call(this, this, this._buildingModeType);
       }
     }
