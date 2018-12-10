@@ -52,7 +52,7 @@ var PlayScene = {
     /////////GROUPS AND RESOURCES
     this.food = 100;
 
-    this.wood = 0;
+    this.wood = 45;
 
     this.coal = 0;
 
@@ -62,6 +62,8 @@ var PlayScene = {
 
     this.water = 0;
 
+    this.stone = 45;
+    
     //etc...
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -91,9 +93,9 @@ var PlayScene = {
     this.buildingGroup.add(this.windGroup);
     this.windGroup.sprite = 'Wind';
 
-    this.roadsGroup = this.game.add.group();
-    this.buildingGroup.add(this.roadsGroup);
-    this.roadsGroup.sprite = 'Road'; //Grupo de sprites (?)
+    this.roadGroup = this.game.add.group();
+    this.buildingGroup.add(this.roadGroup);
+    this.roadGroup.sprite = 'Road'; //Grupo de sprites (?)
 
     this.waterGroup = this.game.add.group();
     this.buildingGroup.add(this.waterGroup);
@@ -239,7 +241,7 @@ var PlayScene = {
 
     this.UI.add(escapeBttn);
 
-    var numberOfButtons = 11;
+    var numberOfButtons = 6;
     var scale = 1;
     if(637 < 60 * numberOfButtons)
       scale = 637 / (60 * numberOfButtons);
@@ -247,7 +249,7 @@ var PlayScene = {
     var buttonOffset = 637 / numberOfButtons - (55 * scale) + (55 * scale)/2; // 11 = número de botones, 55 = tamaño x del botón
     
 
-    var roadBttn = this.game.add.button(5 + buttonOffset - (buttonOffset - (55 * scale)/2)/2, UIBkg.bottom - 30, "roadBttn", function(){}, this, 0, 0, 1);
+    var roadBttn = this.game.add.button(5 + buttonOffset - (buttonOffset - (55 * scale)/2)/2, UIBkg.bottom - 30, "roadBttn", function(){buildMode.call(this, this, this.roadGroup);}, this, 0, 0, 1);
     roadBttn.anchor.setTo(.5, .5);
     roadBttn.fixedToCamera = true;
     roadBttn.smoothed = false;
@@ -255,7 +257,7 @@ var PlayScene = {
 
     this.UI.add(roadBttn);
 
-    var houseBttn = this.game.add.button(roadBttn.right + buttonOffset, roadBttn.centerY, "houseBttn", function(){}, this, 0, 0, 1);
+    var houseBttn = this.game.add.button(roadBttn.right + buttonOffset, roadBttn.centerY, "houseBttn", function(){buildMode.call(this, this, this.houseGroup);}, this, 0, 0, 1);
     houseBttn.anchor.setTo(.5, .5);
     houseBttn.fixedToCamera = true;
     houseBttn.smoothed = false;
@@ -263,15 +265,15 @@ var PlayScene = {
 
     this.UI.add(houseBttn);
 
-    var waterBttn = this.game.add.button(houseBttn.right + buttonOffset,  roadBttn.centerY, "waterBttn", function(){}, this, 0, 0, 1);
+    /*var waterBttn = this.game.add.button(houseBttn.right + buttonOffset,  roadBttn.centerY, "waterBttn", function(){}, this, 0, 0, 1);
     waterBttn.anchor.setTo(.5, .5);
     waterBttn.fixedToCamera = true;
     waterBttn.smoothed = false;
     waterBttn.scale.setTo(scale, scale);
 
-    this.UI.add(waterBttn);
+    this.UI.add(waterBttn);*/
 
-    var cropBttn = this.game.add.button(waterBttn.right + buttonOffset,  roadBttn.centerY, "cropBttn", function(){}, this, 0, 0, 1);
+    var cropBttn = this.game.add.button(houseBttn.right + buttonOffset,  roadBttn.centerY, "cropBttn", function(){buildMode.call(this, this, this.cropGroup);}, this, 0, 0, 1);
     cropBttn.anchor.setTo(.5, .5);
     cropBttn.fixedToCamera = true;
     cropBttn.smoothed = false;
@@ -279,7 +281,7 @@ var PlayScene = {
 
     this.UI.add(cropBttn);
 
-    var woodBttn = this.game.add.button(cropBttn.right + buttonOffset,  roadBttn.centerY, "woodBttn", function(){}, this, 0, 0, 1);
+    var woodBttn = this.game.add.button(cropBttn.right + buttonOffset,  roadBttn.centerY, "woodBttn", function(){buildMode.call(this, this, this.woodGroup);}, this, 0, 0, 1);
     woodBttn.anchor.setTo(.5, .5);
     woodBttn.fixedToCamera = true;
     woodBttn.smoothed = false;
@@ -287,7 +289,7 @@ var PlayScene = {
 
     this.UI.add(woodBttn);
 
-    var stoneBttn = this.game.add.button(woodBttn.right + buttonOffset,  roadBttn.centerY, "stoneBttn", function(){}, this, 0, 0, 1);
+    var stoneBttn = this.game.add.button(woodBttn.right + buttonOffset,  roadBttn.centerY, "stoneBttn", function(){buildMode.call(this, this, this.stoneGroup);}, this, 0, 0, 1);
     stoneBttn.anchor.setTo(.5, .5);
     stoneBttn.fixedToCamera = true;
     stoneBttn.smoothed = false;
@@ -295,7 +297,7 @@ var PlayScene = {
 
     this.UI.add(stoneBttn);
 
-    var coalBttn = this.game.add.button(stoneBttn.right + buttonOffset,  roadBttn.centerY, "coalBttn", function(){}, this, 0, 0, 1);
+    /*var coalBttn = this.game.add.button(stoneBttn.right + buttonOffset,  roadBttn.centerY, "coalBttn", function(){}, this, 0, 0, 1);
     coalBttn.anchor.setTo(.5, .5);
     coalBttn.fixedToCamera = true;
     coalBttn.smoothed = false;
@@ -333,7 +335,66 @@ var PlayScene = {
     hospitalBttn.smoothed = false;
     hospitalBttn.scale.setTo(scale, scale);
 
-    this.UI.add(hospitalBttn);
+    this.UI.add(hospitalBttn);*/
+
+    var bulldozeBttn = this.game.add.button(stoneBttn.right + buttonOffset,  roadBttn.centerY, "bulldozeBttn", function(){destroyMode.call(this);}, this, 0, 0, 1);
+    bulldozeBttn.anchor.setTo(.5, .5);
+    bulldozeBttn.fixedToCamera = true;
+    bulldozeBttn.smoothed = false;
+    bulldozeBttn.scale.setTo(scale, scale);
+
+    this.UI.add(bulldozeBttn);
+
+
+
+    this.timeTxt = this.game.add.text(719, 50, this.currentTime.hour + ":00", {fill: "red"});
+    this.timeTxt.anchor.setTo(.5, 0);
+    this.timeTxt.fixedToCamera = true;
+    this.timeTxt.smoothed = false;
+
+    this.UI.add(this.timeTxt);
+
+    this.timescaleTxt = this.game.add.text(this.timeTxt.x, this.timeTxt.bottom + 5, "Speed: " + this.timeScale);
+    this.timescaleTxt.anchor.setTo(.5, 0);
+    this.timescaleTxt.fixedToCamera = true;
+    this.timescaleTxt.smoothed = false;
+
+    this.UI.add(this.timescaleTxt);
+    
+    this.foodTxt = this.game.add.text(this.timeTxt.x, this.timescaleTxt.bottom + 550/5, "Food: " + this.food, {font: "20px Arial"});
+    this.foodTxt.anchor.setTo(.5, 0);
+    this.foodTxt.fixedToCamera = true;
+    this.foodTxt.smoothed = false;
+
+    this.UI.add(this.foodTxt);
+    
+    this.woodTxt = this.game.add.text(this.timeTxt.x, this.foodTxt.bottom + 5, "Wood: " + this.wood, {font: "20px Arial"});
+    this.woodTxt.anchor.setTo(.5, 0);
+    this.woodTxt.fixedToCamera = true;
+    this.woodTxt.smoothed = false;
+
+    this.UI.add(this.woodTxt);
+    
+    this.stoneTxt = this.game.add.text(this.timeTxt.x, this.woodTxt.bottom + 5, "Stone: " + this.stone, {font: "20px Arial"});
+    this.stoneTxt.anchor.setTo(.5, 0);
+    this.stoneTxt.fixedToCamera = true;
+    this.stoneTxt.smoothed = false;
+
+    this.UI.add(this.stoneTxt);
+    
+    this.citizensTxt = this.game.add.text(this.timeTxt.x + 3, this.stoneTxt.bottom + 550/5, "Total Citizens: 5", {font: "20px Arial"});
+    this.citizensTxt.anchor.setTo(.5, 0);
+    this.citizensTxt.fixedToCamera = true;
+    this.citizensTxt.smoothed = false;
+
+    this.UI.add(this.citizensTxt);
+    
+    this.homelessTxt = this.game.add.text(this.timeTxt.x, this.citizensTxt.bottom + 5, "Homeless: 5", {font: "20px Arial"});
+    this.homelessTxt.anchor.setTo(.5, 0);
+    this.homelessTxt.fixedToCamera = true;
+    this.homelessTxt.smoothed = false;
+
+    this.UI.add(this.homelessTxt);
 
 
 
@@ -378,6 +439,7 @@ var PlayScene = {
     function setTimescale(key){
       this.timeScale = parseInt(key.event.key);
       this.currentTime.buffer = 0;
+      this.timescaleTxt.text = "Speed: " + this.timeScale;
     }
 
     function pauseTime(){
@@ -386,6 +448,10 @@ var PlayScene = {
         if(!this.paused && this._buildModeActive)
           buildMode.call(this);
         this._destroyModeActive = false;
+        if(this.paused)
+          this.timeTxt.addColor("#ff0000", 0);
+        else
+          this.timeTxt.addColor("#000000", 0);
       }
     }
 
@@ -401,6 +467,7 @@ var PlayScene = {
         if(!this._destroyModeActive){
           this.paused = true;
           this._destroyModeActive = true;
+          this.timeTxt.addColor("#ff0000", 0);
         }
 
         else{
@@ -424,6 +491,7 @@ var PlayScene = {
           
           this.paused = true;
           this._buildModeActive = true;
+          this.timeTxt.addColor("#ff0000", 0);
         }
 
         else {
@@ -436,23 +504,23 @@ var PlayScene = {
     }
 
     function click(){
-      if(!this._escapeMenu) {
-        if(this._buildModeActive)
+      if(!this._escapeMenu){
+        if(this.game.input.mousePointer.x < 6 || this.game.input.mousePointer.x > 640 || this.game.input.mousePointer.y < 44 || this.game.input.mousePointer.y > 539){
+          if(this._buildModeActive)
+            buildMode.call(this);
+          this._destroyModeActive = false;
+        }
+        else if(this._buildModeActive)
           build.call(this);
-        else if(this._destroyModeActive)
-          destroy.call(this);
       }
     }
 
-    function destroy(){
-      this.buildingGroup.forEach(function(group){
-        group.forEach(function (prod){
-          if(prod.input.pointerOver())
-            if(prod.full !== null)
-              prod.bulldoze();
-            prod.destroy();
-        }, this);
-      }, this);
+    function destroy(sprite){
+      if(this._destroyModeActive){
+        if(sprite.full !== undefined)
+          sprite.bulldoze(this.homelessArray);
+        sprite.destroy();
+      }
     }
 
     function build(){
@@ -464,6 +532,7 @@ var PlayScene = {
         }, this)
       }, this);
 
+      overlap = overlap || this.game.input.mousePointer.x < 6 || this.game.input.mousePointer.x > 640 || this.game.input.mousePointer.y < 44 || this.game.input.mousePointer.y > 539;
 
       if(!overlap){
         var auxBuilding;
@@ -478,6 +547,14 @@ var PlayScene = {
         auxBuilding.input.priorityID = 1;
         auxBuilding.events.onInputOver.add(mouseOver, this, 0, auxBuilding);
         auxBuilding.events.onInputOut.add(mouseOut, this, 0, auxBuilding);
+        auxBuilding.events.onInputDown.add(destroy, this);
+        auxBuilding.over = false;
+
+        //WIP
+        this.wood -= 10;
+        this.stone -= 10;
+        this.woodTxt.text = "Wood: " + this.wood;
+        this.stoneTxt.text = "Stone: " + this.stone;
 
         this._buildingModeType.add(auxBuilding);
 
@@ -486,33 +563,45 @@ var PlayScene = {
     }
 
     function mouseOver(sprite){
-      if(this._destroyModeActive && !this._escapeMenu)
+      if(this._destroyModeActive && !this._escapeMenu){
         sprite.tint = 0xFF0000;
+        this.over = true;
+      }
     }
 
     function mouseOut(sprite){
         sprite.tint = 0xFFFFFF;
+        this.over = false;
     }
 
-    function escape(){
-      this._escapeMenu = !this._escapeMenu;
-
-      if(this._escapeMenu) {
-        this.fade = this.game.add.sprite(this.game.camera.x, this.game.camera.y, 'fade');
-        this.fade.width = this.game.camera.width;
-        this.fade.height = this.game.camera.height;
-        this.fade.alpha = 0.5;
-        
-        this.game.world.bringToTop(this.pauseMenu);
+    function escape(key){
+      if(key !== undefined && (this._buildModeActive || this._destroyModeActive)){
+        if(this._buildModeActive)
+          buildMode.call(this);
+        this._destroyModeActive = false;
       }
 
-      else
-        this.fade.destroy();
+      else{
 
-      this.pauseMenu.visible = this._escapeMenu;
-      this.UI.forEach(function(button){
-        button.inputEnabled = !this._escapeMenu;
-      }, this);
+        this._escapeMenu = !this._escapeMenu;
+
+        if(this._escapeMenu) {
+          this.fade = this.game.add.sprite(this.game.camera.x, this.game.camera.y, 'fade');
+          this.fade.width = this.game.camera.width;
+          this.fade.height = this.game.camera.height;
+          this.fade.alpha = 0.5;
+          
+          this.game.world.bringToTop(this.pauseMenu);
+        }
+
+        else
+          this.fade.destroy();
+
+        this.pauseMenu.visible = this._escapeMenu;
+        this.UI.forEach(function(button){
+          button.inputEnabled = !this._escapeMenu;
+        }, this);
+      }
     }
 
     this.checkOverlap = function(a, b){
@@ -531,6 +620,9 @@ var PlayScene = {
     {
       var citizen = new Classes.Citizen(this.homelessArray);
     } 
+
+    for(var i = 0; i < 5; i++)
+      addCitizen.call(this);
   },
 
 
@@ -539,7 +631,7 @@ var PlayScene = {
       if(!this.paused){
         this.currentTime.buffer += this.timeScale; //buffer increment
 
-        if (this.currentTime.buffer >= 9) { //if buffer > 3, update. AKA, speed 1 = every 3 loops, speed 2 = every 2 loops... etc.
+        if (this.currentTime.buffer >= 20) { //if buffer > 3, update. AKA, speed 1 = every 3 loops, speed 2 = every 2 loops... etc.
           
           //update clock
           this.currentTime.buffer = 0;
@@ -549,6 +641,8 @@ var PlayScene = {
           ////////////////////////////////////////
           //update producers
           if(this.currentTime.hour >= this.shiftStart && this.currentTime.hour<= this.shiftEnd){
+
+            this.timeTxt.addColor("#008500", 0);
 
             this.woodGroup.forEach(function(prod){
               this.wood += prod.amount;
@@ -560,6 +654,14 @@ var PlayScene = {
 
             this.uraniumGroup.forEach(function(prod){
               this.uranium += prod.amount;
+            }, this);
+
+            this.cropGroup.forEach(function(prod){
+              this.food += prod.amount;
+            }, this);
+
+            this.stoneGroup.forEach(function(prod){
+              this.stone += prod.amount;
             }, this);
 
             //etc...
@@ -578,9 +680,15 @@ var PlayScene = {
               }
             }, this);
 
+
+            this.foodTxt.text = "Food: " + this.food;
+            this.woodTxt.text = "Wood: " + this.wood;
+            this.stoneTxt.text = "Stone: " + this.stone;
           }
 
           else if(this.currentTime.hour == 0){
+            
+            this.timeTxt.addColor("#000000", 0);
 
             this.houseGroup.forEach(function(prod){
               this.food -= 5 * prod.countCitizens();
@@ -598,14 +706,26 @@ var PlayScene = {
             }
           }
 
-          var originalLength = this.homelessArray.length;
-            for (var i = this.homelessArray.length - 1; i >= 0; i--) {
-              if(!this.homelessArray[i].homeless || this.homelessArray[i].health <= 0)
-                this.homelessArray.splice(i, 1);
+          else
+            this.timeTxt.addColor("#000000", 0);
 
-              if(this.homelessArray.length > originalLength)
-                i += (this.homelessArray.length - originalLength);
-            }
+          var originalLength = this.homelessArray.length;
+          for (var i = this.homelessArray.length - 1; i >= 0; i--) {
+            if(!this.homelessArray[i].homeless || this.homelessArray[i].health <= 0 || this.homelessArray[i].addToHouse(this.homelessArray, this.houseGroup))
+              this.homelessArray.splice(i, 1);
+
+            if(this.homelessArray.length > originalLength)
+              i += (this.homelessArray.length - originalLength);
+          }
+
+          this.timeTxt.text = this.currentTime.hour + ":00";
+
+          var aux = this.homelessArray.length;
+
+          this.houseGroup.forEach(function(house){aux += house.countCitizens();});
+          
+          this.homelessTxt.text = "Homeless: " + this.homelessArray.length;
+          this.citizensTxt.text = "Total Citizens: " + aux;
 
         }
       }
@@ -622,10 +742,12 @@ var PlayScene = {
           }, this)
         }, this);
 
+        overlap = overlap || this.game.input.mousePointer.x < 6 || this.game.input.mousePointer.x > 640 || this.game.input.mousePointer.y < 44 || this.game.input.mousePointer.y > 539;
+
         if (overlap)
           this._buildingModeSprite.tint = 0xFF0000;
         else
-        this._buildingModeSprite.tint = 0xFFFFFF;
+          this._buildingModeSprite.tint = 0xFFFFFF;
       }
 
       if (this.cursors.up.isDown || this.cursorsAlt.up.isDown)
@@ -643,7 +765,7 @@ var PlayScene = {
   },
 
   render: function() {
-    this.game.debug.text("Current speed: " + this.timeScale, 10, 485);
+    /*this.game.debug.text("Current speed: " + this.timeScale, 10, 485);
     this.game.debug.text("Food: " + this.food, 10, 500);
     this.game.debug.text("Game paused: " + this.paused, 10, 515);    
     var mode = "NONE";
@@ -664,7 +786,7 @@ var PlayScene = {
     this.houseGroup.forEach(function(house){aux += house.countCitizens();});
     this.game.debug.text("Citizens in homes: " + aux, 10, 575);
 
-    this.game.debug.text("Homeless citizens: " + this.homelessArray.length, 10, 590);
+    this.game.debug.text("Homeless citizens: " + this.homelessArray.length, 10, 590);*/
   }
 };
 

@@ -67,9 +67,11 @@ House.prototype.kill = function(citizen) {
 House.prototype.bulldoze = function(homelessArray) {
     
     if(this.residentA !== undefined){
+        this.residentA.homeless = true;
         homelessArray.unshift(this.residentA);
     }
     if(this.residentB !== undefined){
+        this.residentB.homeless = true;
         homelessArray.unshift(this.residentB);
     }
 };
@@ -183,7 +185,9 @@ Citizen.prototype.addToHouse = function (homelessArray, houseGroup){
 
 Citizen.prototype.tick = function(foodAmount, healing, house, homelessArray, houseGroup = null){
     this.age++;
-    this.birthCooldown--;
+
+    if(this.birthCooldown > 0)
+        this.birthCooldown--;
 
     if(this.sick)
         this.health -= 5;
@@ -199,13 +203,12 @@ Citizen.prototype.tick = function(foodAmount, healing, house, homelessArray, hou
             house.kill(this);
     }
 
-    if (!this.homeless && house.full && this.birthCooldown <= 0 && Math.floor((Math.random() * 100) + 1) > 100) //Probabilidad que se puede cambiar
+    var aux = Math.floor((Math.random() * 100) + 1);
+    if (!this.homeless && house.full && this.birthCooldown <= 0 && aux < 5) //Probabilidad que se puede cambiar
         this.givingBirth = true;
 
     
     else if(this.homeless){
-        this.addToHouse(homelessArray, houseGroup);
-        
         this.health -= 0;
     }
 };

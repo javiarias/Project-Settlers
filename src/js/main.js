@@ -85,6 +85,7 @@ var PreloaderScene = {
     this.game.load.spritesheet('windBttn', 'images/menu/UIButtons/wind.png', 55, 48);
     this.game.load.spritesheet('energyBttn', 'images/menu/UIButtons/energy.png', 55, 48);
     this.game.load.spritesheet('hospitalBttn', 'images/menu/UIButtons/hospital.png', 55, 48);
+    this.game.load.spritesheet('bulldozeBttn', 'images/menu/UIButtons/bulldoze.png', 55, 48);
 
   },
 
