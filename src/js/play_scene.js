@@ -144,7 +144,6 @@ var PlayScene = {
 
     this.pauseMenu.add(pauseExit);
 
-
     this.pauseMenu.visible = false;
 
     //volume menu
@@ -221,6 +220,123 @@ var PlayScene = {
         }
       }, this);
     }
+
+    //UI
+
+    this.UI = this.game.add.group();
+
+    var UIBkg = this.game.add.sprite(0, 0, "UI");
+    UIBkg.fixedToCamera = true;
+    UIBkg.smoothed = false;
+
+    this.UI.add(UIBkg);
+
+    var escapeBttn = this.game.add.button(UIBkg.right - 5, 5, "exitBttn", function(){escape.call(this);}, this, 0, 0, 1);
+    escapeBttn.anchor.setTo(1, 0);
+    escapeBttn.fixedToCamera = true;
+    escapeBttn.smoothed = false;
+    escapeBttn.scale.setTo(0.7, 0.7);
+
+    this.UI.add(escapeBttn);
+
+    var numberOfButtons = 11;
+    var scale = 1;
+    if(637 < 60 * numberOfButtons)
+      scale = 637 / (60 * numberOfButtons);
+
+    var buttonOffset = 637 / numberOfButtons - (55 * scale) + (55 * scale)/2; // 11 = número de botones, 55 = tamaño x del botón
+    
+
+    var roadBttn = this.game.add.button(5 + buttonOffset - (buttonOffset - (55 * scale)/2)/2, UIBkg.bottom - 30, "roadBttn", function(){}, this, 0, 0, 1);
+    roadBttn.anchor.setTo(.5, .5);
+    roadBttn.fixedToCamera = true;
+    roadBttn.smoothed = false;
+    roadBttn.scale.setTo(scale, scale);
+
+    this.UI.add(roadBttn);
+
+    var houseBttn = this.game.add.button(roadBttn.right + buttonOffset, roadBttn.centerY, "houseBttn", function(){}, this, 0, 0, 1);
+    houseBttn.anchor.setTo(.5, .5);
+    houseBttn.fixedToCamera = true;
+    houseBttn.smoothed = false;
+    houseBttn.scale.setTo(scale, scale);
+
+    this.UI.add(houseBttn);
+
+    var waterBttn = this.game.add.button(houseBttn.right + buttonOffset,  roadBttn.centerY, "waterBttn", function(){}, this, 0, 0, 1);
+    waterBttn.anchor.setTo(.5, .5);
+    waterBttn.fixedToCamera = true;
+    waterBttn.smoothed = false;
+    waterBttn.scale.setTo(scale, scale);
+
+    this.UI.add(waterBttn);
+
+    var cropBttn = this.game.add.button(waterBttn.right + buttonOffset,  roadBttn.centerY, "cropBttn", function(){}, this, 0, 0, 1);
+    cropBttn.anchor.setTo(.5, .5);
+    cropBttn.fixedToCamera = true;
+    cropBttn.smoothed = false;
+    cropBttn.scale.setTo(scale, scale);
+
+    this.UI.add(cropBttn);
+
+    var woodBttn = this.game.add.button(cropBttn.right + buttonOffset,  roadBttn.centerY, "woodBttn", function(){}, this, 0, 0, 1);
+    woodBttn.anchor.setTo(.5, .5);
+    woodBttn.fixedToCamera = true;
+    woodBttn.smoothed = false;
+    woodBttn.scale.setTo(scale, scale);
+
+    this.UI.add(woodBttn);
+
+    var stoneBttn = this.game.add.button(woodBttn.right + buttonOffset,  roadBttn.centerY, "stoneBttn", function(){}, this, 0, 0, 1);
+    stoneBttn.anchor.setTo(.5, .5);
+    stoneBttn.fixedToCamera = true;
+    stoneBttn.smoothed = false;
+    stoneBttn.scale.setTo(scale, scale);
+
+    this.UI.add(stoneBttn);
+
+    var coalBttn = this.game.add.button(stoneBttn.right + buttonOffset,  roadBttn.centerY, "coalBttn", function(){}, this, 0, 0, 1);
+    coalBttn.anchor.setTo(.5, .5);
+    coalBttn.fixedToCamera = true;
+    coalBttn.smoothed = false;
+    coalBttn.scale.setTo(scale, scale);
+
+    this.UI.add(coalBttn);
+
+    var uraniumBttn = this.game.add.button(coalBttn.right + buttonOffset,  roadBttn.centerY, "uraniumBttn", function(){}, this, 0, 0, 1);
+    uraniumBttn.anchor.setTo(.5, .5);
+    uraniumBttn.fixedToCamera = true;
+    uraniumBttn.smoothed = false;
+    uraniumBttn.scale.setTo(scale, scale);
+
+    this.UI.add(uraniumBttn);
+
+    var windBttn = this.game.add.button(uraniumBttn.right + buttonOffset,  roadBttn.centerY, "windBttn", function(){}, this, 0, 0, 1);
+    windBttn.anchor.setTo(.5, .5);
+    windBttn.fixedToCamera = true;
+    windBttn.smoothed = false;
+    windBttn.scale.setTo(scale, scale);
+
+    this.UI.add(windBttn);
+
+    var energyBttn = this.game.add.button(windBttn.right + buttonOffset,  roadBttn.centerY, "energyBttn", function(){}, this, 0, 0, 1);
+    energyBttn.anchor.setTo(.5, .5);
+    energyBttn.fixedToCamera = true;
+    energyBttn.smoothed = false;
+    energyBttn.scale.setTo(scale, scale);
+
+    this.UI.add(energyBttn);
+
+    var hospitalBttn = this.game.add.button(energyBttn.right + buttonOffset,  roadBttn.centerY, "hospitalBttn", function(){}, this, 0, 0, 1);
+    hospitalBttn.anchor.setTo(.5, .5);
+    hospitalBttn.fixedToCamera = true;
+    hospitalBttn.smoothed = false;
+    hospitalBttn.scale.setTo(scale, scale);
+
+    this.UI.add(hospitalBttn);
+
+
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -394,6 +510,9 @@ var PlayScene = {
         this.fade.destroy();
 
       this.pauseMenu.visible = this._escapeMenu;
+      this.UI.forEach(function(button){
+        button.inputEnabled = !this._escapeMenu;
+      }, this);
     }
 
     this.checkOverlap = function(a, b){

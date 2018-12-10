@@ -60,6 +60,7 @@ var PreloaderScene = {
     this.game.load.audio('gameSound', ['audio/game.mp3', 'audio/game.ogg']);
 
     //menus
+    this.game.load.image('UI', 'images/menu/UI.png');
     this.game.load.image('pauseBkg', 'images/menu/pauseMenu.png');
     this.game.load.image('mainBkg', 'images/menu/mainBkg.png');
     this.game.load.image('optionsBkg', 'images/menu/optionsMenu.png');
@@ -71,6 +72,19 @@ var PreloaderScene = {
     this.game.load.spritesheet('backBttn', 'images/menu/back.png', 55, 48);
     this.game.load.spritesheet('muteBttn', 'images/menu/mute.png', 55, 48);
     this.game.load.spritesheet('playBttn', 'images/menu/play.png', 55, 48);
+
+
+    this.game.load.spritesheet('houseBttn', 'images/menu/UIButtons/house.png', 55, 48);
+    this.game.load.spritesheet('roadBttn', 'images/menu/UIButtons/road.png', 55, 48);
+    this.game.load.spritesheet('waterBttn', 'images/menu/UIButtons/water.png', 55, 48);
+    this.game.load.spritesheet('cropBttn', 'images/menu/UIButtons/crop.png', 55, 48);
+    this.game.load.spritesheet('woodBttn', 'images/menu/UIButtons/wood.png', 55, 48);
+    this.game.load.spritesheet('stoneBttn', 'images/menu/UIButtons/stone.png', 55, 48);
+    this.game.load.spritesheet('coalBttn', 'images/menu/UIButtons/coal.png', 55, 48);
+    this.game.load.spritesheet('uraniumBttn', 'images/menu/UIButtons/uranium.png', 55, 48);
+    this.game.load.spritesheet('windBttn', 'images/menu/UIButtons/wind.png', 55, 48);
+    this.game.load.spritesheet('energyBttn', 'images/menu/UIButtons/energy.png', 55, 48);
+    this.game.load.spritesheet('hospitalBttn', 'images/menu/UIButtons/hospital.png', 55, 48);
 
   },
 
@@ -100,48 +114,48 @@ var MainMenu = {
     this.menuMusic.loop = true;
     this.menuMusic.volume = this.volume / 100;
 
-    this.options = this.game.add.button(this.game.camera.x + (this.game.width/2), this.game.camera.y + 3.5 * (this.game.height/4), "settBttn", function(){this.optionsMenu.visible = true; this.game.world.bringToTop(this.optionsMenu); this.play.inputEnabled = false; this.options.inputEnabled = false;}, this, 0, 0, 1);
+    this.options = this.game.add.button(this.game.camera.x + (this.game.width/2), this.game.camera.y + 3.5 * (this.game.height/4), "settBttn", function(){this.optionsMain.visible = true; this.game.world.bringToTop(this.optionsMain); this.play.inputEnabled = false; this.options.inputEnabled = false;}, this, 0, 0, 1);
     this.options.anchor.setTo(.5, .5);
     this.options.smoothed = false;
 
 
     //volume menu
-    this.optionsMenu = this.game.add.group();
+    this.optionsMain = this.game.add.group();
 
     var optionsBkg = this.game.add.sprite(this.game.camera.x + this.game.camera.width / 2, this.game.camera.y + this.game.camera.height / 2, "optionsBkg");
     optionsBkg.anchor.setTo(.5, .5);
     optionsBkg.fixedToCamera = true;
     optionsBkg.smoothed = false;
 
-    this.optionsMenu.add(optionsBkg);
+    this.optionsMain.add(optionsBkg);
 
     var volumeText = this.game.add.text(optionsBkg.x, optionsBkg.y - 20, this.volume);
     volumeText.anchor.setTo(0.5, 0.5);
     volumeText.fixedToCamera = true;
     volumeText.smoothed = false;
 
-    this.optionsMenu.add(volumeText);
+    this.optionsMain.add(volumeText);
 
     var optionsMinus = this.game.add.button(optionsBkg.x - 77, optionsBkg.y - 20, "minusBttn", function(){updateVolume.call(this, -5);}, this, 0, 0, 1);
     optionsMinus.anchor.setTo(0.5, 0.5);
     optionsMinus.fixedToCamera = true;
     optionsMinus.smoothed = false;
 
-    this.optionsMenu.add(optionsMinus);
+    this.optionsMain.add(optionsMinus);
     
     var optionsPlus = this.game.add.button(optionsBkg.x + 77, optionsBkg.y - 20, "plusBttn", function(){updateVolume.call(this, 5);}, this, 0, 0, 1);
     optionsPlus.anchor.setTo(0.5, 0.5);
     optionsPlus.fixedToCamera = true;
     optionsPlus.smoothed = false;
 
-    this.optionsMenu.add(optionsPlus);
+    this.optionsMain.add(optionsPlus);
 
-    var optionsBack = this.game.add.button(optionsBkg.x - 47, optionsBkg.y + 48, "backBttn", function(){this.optionsMenu.visible = false; this.play.inputEnabled = true; this.options.inputEnabled = true;}, this, 0, 0, 1);
+    var optionsBack = this.game.add.button(optionsBkg.x - 47, optionsBkg.y + 48, "backBttn", function(){this.optionsMain.visible = false; this.play.inputEnabled = true; this.options.inputEnabled = true;}, this, 0, 0, 1);
     optionsBack.anchor.setTo(0.5, 0.5);
     optionsBack.fixedToCamera = true;
     optionsBack.smoothed = false;
 
-    this.optionsMenu.add(optionsBack);
+    this.optionsMain.add(optionsBack);
 
     var optionsMute = this.game.add.button(optionsBkg.x + 47, optionsBkg.y + 48, "muteBttn", function(){mute.call(this);}, this, 0, 0, 1);
     if(this.game.sound.mute)
@@ -150,10 +164,10 @@ var MainMenu = {
     optionsMute.fixedToCamera = true;
     optionsMute.smoothed = false;
 
-    this.optionsMenu.add(optionsMute);
+    this.optionsMain.add(optionsMute);
 
 
-    this.optionsMenu.visible = false;
+    this.optionsMain.visible = false;
 
     function updateVolume(update){
       if(this.volume + update >= 0 && this.volume + update <= 100){
@@ -161,7 +175,7 @@ var MainMenu = {
         this.volume += update;
         this.menuMusic.volume = this.volume / 100;
 
-        this.optionsMenu.forEach(function(text){
+        this.optionsMain.forEach(function(text){
           if (text.text !== null)
             text.text = this.volume;
           }, this);
@@ -170,7 +184,7 @@ var MainMenu = {
 
     function mute(){
       this.game.sound.mute = !this.game.sound.mute;
-      this.optionsMenu.forEach(function(button){
+      this.optionsMain.forEach(function(button){
         if(button.key == "muteBttn"){
           if(this.game.sound.mute)
             button.setFrames(2, 2, 3);
@@ -182,6 +196,7 @@ var MainMenu = {
 
     function gameStart() {
       this.menuMusic.stop();
+      this.optionsMain.destroy();
       this.game.state.start('play');
     }
   }
