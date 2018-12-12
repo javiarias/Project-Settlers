@@ -987,7 +987,7 @@ var PlayScene = {
       }, this);
 
 
-      if(!overlap && roadOverlap && this.wood > 0 && this.stone > 0){
+      if(!overlap && roadOverlap && this.wood >= 10 && this.stone >= 10){
         var auxBuilding;
 
         if(this._buildingModeType == this.houseGroup)
@@ -1017,6 +1017,13 @@ var PlayScene = {
         if(this._buildingModeSprite !== undefined)
             this._buildingModeSprite.destroy();
         buildMode.call(this, this, this._buildingModeType);
+
+
+        if(this.wood < 10)
+          this.woodTxt.addColor("#FF0000", 0);
+
+        if(this.stone < 10)
+          this.stoneTxt.addColor("#FF0000", 0);
       }
     }
 
@@ -1160,7 +1167,8 @@ var PlayScene = {
             this.timeTxt.addColor("#000000", 0);
 
             this.houseGroup.forEach(function(prod){
-              this.food -= 5 * prod.countCitizens();
+              if(this.food > 0)
+                this.food -= 5 * prod.countCitizens();
               prod.tick(this.food, this.homelessArray);
 
               for(var i = prod.numberOfBirths; i > 0; i--)
@@ -1173,6 +1181,8 @@ var PlayScene = {
                 this.food -= 5;
               this.homelessArray[i].tick(this.food, false, null, this.homelessArray, this.houseGroup);
             }
+
+            this.foodTxt.text = "Food: " + this.food;
           }
 
           else
@@ -1195,6 +1205,21 @@ var PlayScene = {
           
           this.homelessTxt.text = "Homeless: " + this.homelessArray.length;
           this.citizensTxt.text = "Total Citizens: " + aux;
+
+          if(this.food < 5)
+            this.foodTxt.addColor("#FF0000", 0);
+          else
+            this.foodTxt.addColor("#000000", 0);
+
+          if(this.wood < 10)
+            this.woodTxt.addColor("#FF0000", 0);
+          else  
+            this.woodTxt.addColor("#000000", 0);
+
+          if(this.stone < 10)
+            this.stoneTxt.addColor("#FF0000", 0);
+          else
+            this.stoneTxt.addColor("#000000", 0);
 
         }
       }
