@@ -540,7 +540,7 @@ var PlayScene = {
       }, this);
 
 
-      if(!overlap && roadOverlap && this.wood >= 10 && this.stone >= 10){
+      if(!overlap && roadOverlap && (this._buildingModeType == this.roadGroup || (this.wood >= 10 && this.stone >= 10))){
         var auxBuilding;
 
         if(this._buildingModeType == this.houseGroup)
@@ -798,7 +798,7 @@ var PlayScene = {
         }, this);
 
 
-        if (overlap || !roadOverlap || this.wood <= 0 || this.stone <= 0)
+        if (overlap || !roadOverlap || (this._buildingModeType == this.roadGroup && (this.wood <= 0 || this.stone <= 0)))
           this._buildingModeSprite.tint = 0xFF0000;
         else
           this._buildingModeSprite.tint = 0xFFFFFF;
