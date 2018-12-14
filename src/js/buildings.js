@@ -1,7 +1,6 @@
 function House(game, x, y, img) {
     Phaser.Sprite.call(this, game, x, y, img);
-    this.coziness = 0;
-    this._calculateCoziness();
+    this.coziness = this._calculateCoziness();
     this.residentA = undefined;
     this.residentB = undefined;
     this.hospitalNear = false;
@@ -14,23 +13,12 @@ House.constructor = House;
 House.prototype._calculateCoziness = function() {
     var coziness = 0;
 
-    /*for(i = -1; i <= 1; i++)
-        for(j = -1; j <= 1; j++)
-            if (this.x + i >= 0 && this.x + i < map.mapSize && this.y + j >= 0 && this.y + j < map.mapSize){
-                var aux = map.mapArray.get(x + i, y + j);
-                if(aux.terrain == 0 || aux.terrain == 3)
-                    coziness += 1;
-                else if(aux.terrain == 2)
-                    coziness += 2;
+    //cálculo de coziness
 
-                //CHECK IF THERE ARE DECORATIONS NEARBY
-            }*/
-
-    this.coziness = coziness;
+    return coziness;
 };
 
 House.prototype.add = function(citizen) {
-    var ret = true;
     if(this.residentA === undefined){
         this.residentA = citizen;
     }
@@ -39,29 +27,21 @@ House.prototype.add = function(citizen) {
         this.residentB = citizen;
     }
 
-    else
-        ret = false;
+    this.full = (this.residentA !== undefined && this.residentB !== undefined);
 
-    this.full = (this.countCitizens() == 2);
-
-    return ret;
+    return this.full;
 };
 
 House.prototype.kill = function(citizen) {
-    var ret = true;
     if(this.residentA == citizen){
         this.residentA = undefined;
-        full = false;
+        this.full = false;
     }
+
     else if(this.residentB == citizen){
         this.residentB = undefined;
-        full = false;
+        this.full = false;
     }
-
-    else
-        ret = false;
-
-    return ret;
 };
 
 House.prototype.bulldoze = function(homelessArray) {

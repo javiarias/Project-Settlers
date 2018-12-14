@@ -6,48 +6,48 @@ var PlayScene = {
   create: function () {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    var logo = this.game.add.sprite(
-      this.game.world.centerX, this.game.world.centerY, 'logo');
-    logo.anchor.setTo(0.5, 0.5);
+        var logo = this.game.add.sprite(
+          this.game.world.centerX, this.game.world.centerY, 'logo');
+        logo.anchor.setTo(0.5, 0.5);
 
-    this.map = this.game.add.tilemap('tilemap'); 
-    this.map.addTilesetImage("Tileset","patronesTilemap");
+        this.map = this.game.add.tilemap('tilemap'); 
+        this.map.addTilesetImage("Tileset","patronesTilemap");
 
-    //layers
-    this.map.waterLayer = this.map.createLayer ("water");
-    this.map.groundLayer = this.map.createLayer ("soil");
-    this.map.resourcesLayer = this.map.createLayer ("resources");
-    this.map.obstaclesLayer = this.map.createLayer ("obstacles");
+        //layers
+        this.map.waterLayer = this.map.createLayer ("water");
+        this.map.groundLayer = this.map.createLayer ("soil");
+        this.map.resourcesLayer = this.map.createLayer ("resources");
+        this.map.obstaclesLayer = this.map.createLayer ("obstacles");
 
-    this.map.waterLayer.resizeWorld();
-    this.map.groundLayer.resizeWorld();
-    this.map.resourcesLayer.resizeWorld();
-    this.map.obstaclesLayer.resizeWorld();
+        this.map.waterLayer.resizeWorld();
+        this.map.groundLayer.resizeWorld();
+        this.map.resourcesLayer.resizeWorld();
+        this.map.obstaclesLayer.resizeWorld();
 
     //music
 
-    this.volume = 50;
+          this.volume = 50;
 
-    this.gameMusic = this.game.add.audio('gameSound'); 
+          this.gameMusic = this.game.add.audio('gameSound'); 
 
-    this.gameMusic.play();
-    this.gameMusic.loop = true;
-    this.gameMusic.volume = this.volume / 100;
+          this.gameMusic.play();
+          this.gameMusic.loop = true;
+          this.gameMusic.volume = this.volume / 100;
 
-    this.paused = true;
-    this.timeScale = 1;
-    this.currentTime = { "hour": 0, "buffer": 0};
-    this.homelessArray = [];
-    this.shiftStart = 8;
-    this.shiftEnd = 20;
-    this._tileSize = this.map.tileWidth / 2;
-    this._buildModeActive = false;
-    this._destroyModeActive = false;
-    this._escapeMenu = false;
-    this.fade;
+          this.paused = true;
+          this.timeScale = 1;
+          this.currentTime = { "hour": 0, "buffer": 0};
+          this.homelessArray = [];
+          this.shiftStart = 8;
+          this.shiftEnd = 20;
+          this._tileSize = this.map.tileWidth;
+          this._buildModeActive = false;
+          this._destroyModeActive = false;
+          this._escapeMenu = false;
+          this.fade;
 
-    this._buildingModeSprite;
-    this._buildingModeType = "";
+          this._buildingModeSprite;
+          this._buildingModeType = "";
 
     /////////GROUPS AND RESOURCES
     this.food = 100;
@@ -492,6 +492,8 @@ var PlayScene = {
           this.paused = true;
           this._buildModeActive = true;
           this.timeTxt.addColor("#ff0000", 0);
+
+          this.game.world.bringToTop(this.UI);
         }
 
         else {
@@ -543,10 +545,15 @@ var PlayScene = {
       if(!overlap && roadOverlap && (this._buildingModeType == this.roadGroup || (this.wood >= 10 && this.stone >= 10))){
         var auxBuilding;
 
+        var offset = 0;
+
+        if((this._buildingModeSprite.height / 16) % 2 == 0)
+          offset = 8;
+
         if(this._buildingModeType == this.houseGroup)
-          auxBuilding = new Classes.House(this.game, Math.round(this.game.input.worldX / this._tileSize) * this._tileSize, Math.round(this.game.input.worldY / this._tileSize) * this._tileSize, this._buildingModeType.sprite, 1);
+          auxBuilding = new Classes.House(this.game, Math.round(this.game.input.worldX / this._tileSize) * this._tileSize, offset + Math.round(this.game.input.worldY / this._tileSize) * this._tileSize, this._buildingModeType.sprite, 1);
         else
-          auxBuilding = new Classes.Producer(this.game, Math.round(this.game.input.worldX / this._tileSize) * this._tileSize, Math.round(this.game.input.worldY / this._tileSize) * this._tileSize, this._buildingModeType.sprite, 1);
+          auxBuilding = new Classes.Producer(this.game, Math.round(this.game.input.worldX / this._tileSize) * this._tileSize, offset + Math.round(this.game.input.worldY / this._tileSize) * this._tileSize, this._buildingModeType.sprite, 1);
         auxBuilding.anchor.setTo(0.5, 0.5);
 
         auxBuilding.inputEnabled = true;
@@ -637,6 +644,9 @@ var PlayScene = {
     this.checkAdjacency = function(a, b){
 
       var x = a.getBounds();
+      x.width = x.width / 2;
+      x.y++;
+      x.x++;
       var y = b.getBounds();
 
       var corners = false;
@@ -778,8 +788,14 @@ var PlayScene = {
       }
 
       else if(this._buildModeActive){
+
+        var offset = 0;
+
+        if((this._buildingModeSprite.height / 16) % 2 == 0)
+          offset = 8;
+
         this._buildingModeSprite.x = Math.round(this.game.input.worldX / this._tileSize) * this._tileSize;
-        this._buildingModeSprite.y = Math.round(this.game.input.worldY / this._tileSize) * this._tileSize;
+        this._buildingModeSprite.y = offset + Math.round(this.game.input.worldY / this._tileSize) * this._tileSize;
 
         var overlap = false;
 
