@@ -28,9 +28,9 @@ var PreloaderScene = {
   preload: function () {
 
     // TODO: load here the assets for the game
-    this.game.load.image('logo', 'images/HERO.png');
+    /*this.game.load.image('logo', 'images/HERO.png');
     this.game.load.image('test', 'images/Phaser.png');
-    this.game.load.image("fade", "images/fade.png");
+    this.game.load.image("fade", "images/fade.png");*/
 
     //building sprites
     this.game.load.image('Crops', 'images/buildings/Crops.png');
@@ -48,8 +48,6 @@ var PreloaderScene = {
     this.game.load.image('Water', 'images/buildings/Water.png');
     this.game.load.image('Wind', 'images/buildings/Wind.png');
     this.game.load.image('Wood', 'images/buildings/Wood.png');
-
-
   
     //map 
     this.game.load.tilemap('tilemap', 'images/map/map.json', null, Phaser.Tilemap.TILED_JSON);
@@ -72,8 +70,6 @@ var PreloaderScene = {
     this.game.load.spritesheet('backBttn', 'images/menu/back.png', 55, 48);
     this.game.load.spritesheet('muteBttn', 'images/menu/mute.png', 55, 48);
     this.game.load.spritesheet('playBttn', 'images/menu/play.png', 55, 48);
-
-
     this.game.load.spritesheet('houseBttn', 'images/menu/UIButtons/house.png', 55, 48);
     this.game.load.spritesheet('roadBttn', 'images/menu/UIButtons/road.png', 55, 48);
     this.game.load.spritesheet('waterBttn', 'images/menu/UIButtons/water.png', 55, 48);
@@ -118,7 +114,6 @@ var MainMenu = {
     this.options = this.game.add.button(this.game.camera.x + (this.game.width/2), this.game.camera.y + 3.5 * (this.game.height/4), "settBttn", function(){this.optionsMain.visible = true; this.game.world.bringToTop(this.optionsMain); this.play.inputEnabled = false; this.options.inputEnabled = false;}, this, 0, 0, 1);
     this.options.anchor.setTo(.5, .5);
     this.options.smoothed = false;
-
 
     //volume menu
     this.optionsMain = this.game.add.group();
@@ -166,7 +161,6 @@ var MainMenu = {
     optionsMute.smoothed = false;
 
     this.optionsMain.add(optionsMute);
-
 
     this.optionsMain.visible = false;
 

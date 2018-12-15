@@ -5,10 +5,10 @@
   "license": "CC-BY-NC-SA-4.0",
   "repository": "javiarias/Project-Settlers",
   "dependencies": {
-    "browserify": "*",
     "browser-sync": "*",
+    "browserify": "*",
     "del": "*",
-    "gulp": "*",
+    "gulp": "^3.9.1",
     "gulp-connect": "*",
     "gulp-gh-pages": "*",
     "gulp-util": "*",

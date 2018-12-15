@@ -1,5 +1,6 @@
 'use strict';
 var Classes = require("./buildings.js");
+var Phasetips = require("./Phasetips.js");
 
 var PlayScene = {
   
@@ -396,7 +397,98 @@ var PlayScene = {
 
     this.UI.add(this.homelessTxt);
 
+    var tip1 = new Phasetips(this, {
+      targetObject: roadBttn,
+      context: "Test",
+      strokeColor: 0xff0000,
+      position: "top",
+      positionOffset: 20,
+      onHoverCallback: function() {
+        roadBttn.loadTexture("roadBttn");
+      },
+      onOutCallback: function() {
+        roadBttn.loadTexture("roadBttn");
+      },
+      animation: "grow"
+    });
 
+    var tip2 = new Phasetips(this, {
+      targetObject: houseBttn,
+      context: "Test",
+      strokeColor: 0xff0000,
+      position: "top",
+      positionOffset: 20,
+      onHoverCallback: function() {
+        roadBttn.loadTexture("houseBttn");
+      },
+      onOutCallback: function() {
+        roadBttn.loadTexture("houseBttn");
+      },
+      animation: "grow"
+    });
+
+    var tip3 = new Phasetips(this, {
+      targetObject: cropBttn,
+      context: "Test",
+      strokeColor: 0xff0000,
+      position: "top",
+      positionOffset: 20,
+      onHoverCallback: function() {
+        roadBttn.loadTexture("cropBttn");
+      },
+      onOutCallback: function() {
+        roadBttn.loadTexture("cropBttn");
+      },
+      animation: "grow"
+    });
+
+    var tip4 = new Phasetips(this, {
+      targetObject: stoneBttn,
+      context: "Test",
+      strokeColor: 0xff0000,
+      position: "top",
+      positionOffset: 20,
+      onHoverCallback: function() {
+        roadBttn.loadTexture("stoneBttn");
+      },
+      onOutCallback: function() {
+        roadBttn.loadTexture("stoneBttn");
+      },
+      animation: "grow"
+    });
+
+    var tip5 = new Phasetips(this, {
+      targetObject: woodBttn,
+      context: "Test",
+      strokeColor: 0xff0000,
+      position: "top",
+      positionOffset: 20,
+      onHoverCallback: function() {
+        roadBttn.loadTexture("woodBttn");
+      },
+      onOutCallback: function() {
+        roadBttn.loadTexture("woodBttn");
+      },
+      animation: "grow"
+    });
+
+    var tip6 = new Phasetips(this, {
+      targetObject: bulldozeBttn,
+      context: "Test",
+      strokeColor: 0xff0000,
+      position: "top",
+      positionOffset: 20,
+      onHoverCallback: function() {
+        roadBttn.loadTexture("bulldozeBttn");
+      },
+      onOutCallback: function() {
+        roadBttn.loadTexture("bulldozeBttn");
+      },
+      animation: "grow"
+    });
+
+
+    
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
