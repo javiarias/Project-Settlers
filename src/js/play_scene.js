@@ -419,10 +419,10 @@ var PlayScene = {
       position: "top",
       positionOffset: 20,
       onHoverCallback: function() {
-        roadBttn.loadTexture("houseBttn");
+        houseBttn.loadTexture("houseBttn");
       },
       onOutCallback: function() {
-        roadBttn.loadTexture("houseBttn");
+        houseBttn.loadTexture("houseBttn");
       },
       animation: "grow"
     });
@@ -486,10 +486,6 @@ var PlayScene = {
       },
       animation: "grow"
     });
-
-
-    
-
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
 

@@ -23,12 +23,23 @@ var BootScene = {
   }
 };
 
-
 var PreloaderScene = {
   preload: function () {
 
+
+    //show percentage  
+      this.progress = this.game.add.text(this.game.world.centerX, this.game.world.centerY-30, '0%', {fill: 'white'});    
+      this.progress.anchor.setTo(.5,.5);        
+      //show progress bar    
+      var progressBar = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'progressBar');     
+      progressBar.anchor.setTo(0.5, 0.5);     
+      this.game.load.setPreloadSprite(progressBar);    
+      this.game.load.onFileComplete.add(this.fileComplete, this);
+      
+      PreloadScene.prototype.fileComplete = function (progress, cacheKey, success, totalLoaded, totalFiles) {    this.progress.text = progress+"%"};
+
     // TODO: load here the assets for the game
-    /*this.game.load.image('logo', 'images/HERO.png');
+    /*  this.game.load.image('logo', 'images/HERO.png');
     this.game.load.image('test', 'images/Phaser.png');
     this.game.load.image("fade", "images/fade.png");*/
 
