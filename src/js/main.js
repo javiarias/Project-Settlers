@@ -23,7 +23,6 @@ var BootScene = {
   }
 };
 
-
 var PreloaderScene = {
   preload: function () {
 
@@ -34,6 +33,7 @@ var PreloaderScene = {
 
     
     this.game.load.image("fade", "images/fade.png");
+
 
     //building sprites
     this.game.load.image('Crops', 'images/buildings/Crops.png');
