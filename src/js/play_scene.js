@@ -403,12 +403,6 @@ var PlayScene = {
       strokeColor: 0xff0000,
       position: "top",
       positionOffset: 20,
-      onHoverCallback: function() {
-        roadBttn.loadTexture("roadBttn");
-      },
-      onOutCallback: function() {
-        roadBttn.loadTexture("roadBttn");
-      },
       animation: "grow"
     });
 
@@ -418,12 +412,6 @@ var PlayScene = {
       strokeColor: 0xff0000,
       position: "top",
       positionOffset: 20,
-      onHoverCallback: function() {
-        roadBttn.loadTexture("houseBttn");
-      },
-      onOutCallback: function() {
-        roadBttn.loadTexture("houseBttn");
-      },
       animation: "grow"
     });
 
@@ -433,12 +421,6 @@ var PlayScene = {
       strokeColor: 0xff0000,
       position: "top",
       positionOffset: 20,
-      onHoverCallback: function() {
-        roadBttn.loadTexture("cropBttn");
-      },
-      onOutCallback: function() {
-        roadBttn.loadTexture("cropBttn");
-      },
       animation: "grow"
     });
 
@@ -448,12 +430,6 @@ var PlayScene = {
       strokeColor: 0xff0000,
       position: "top",
       positionOffset: 20,
-      onHoverCallback: function() {
-        roadBttn.loadTexture("stoneBttn");
-      },
-      onOutCallback: function() {
-        roadBttn.loadTexture("stoneBttn");
-      },
       animation: "grow"
     });
 
@@ -463,12 +439,6 @@ var PlayScene = {
       strokeColor: 0xff0000,
       position: "top",
       positionOffset: 20,
-      onHoverCallback: function() {
-        roadBttn.loadTexture("woodBttn");
-      },
-      onOutCallback: function() {
-        roadBttn.loadTexture("woodBttn");
-      },
       animation: "grow"
     });
 
@@ -478,12 +448,6 @@ var PlayScene = {
       strokeColor: 0xff0000,
       position: "top",
       positionOffset: 20,
-      onHoverCallback: function() {
-        roadBttn.loadTexture("bulldozeBttn");
-      },
-      onOutCallback: function() {
-        roadBttn.loadTexture("bulldozeBttn");
-      },
       animation: "grow"
     });
 
@@ -708,6 +672,7 @@ var PlayScene = {
           this.fade.height = this.game.camera.height;
           this.fade.alpha = 0.5;
           
+          this.game.world.bringToTop(this.fade);
           this.game.world.bringToTop(this.pauseMenu);
         }
 

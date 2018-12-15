@@ -29,8 +29,11 @@ var PreloaderScene = {
 
     // TODO: load here the assets for the game
     /*this.game.load.image('logo', 'images/HERO.png');
-    this.game.load.image('test', 'images/Phaser.png');
-    this.game.load.image("fade", "images/fade.png");*/
+    this.game.load.image('test', 'images/Phaser.png');*/
+
+
+    
+    this.game.load.image("fade", "images/fade.png");
 
     //building sprites
     this.game.load.image('Crops', 'images/buildings/Crops.png');
