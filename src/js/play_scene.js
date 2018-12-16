@@ -14,8 +14,12 @@ var PlayScene = {
         this.map = this.game.add.tilemap('tilemap'); 
         this.map.addTilesetImage("Tileset","patronesTilemap");
 
+        this.game.physics.startSystem(Phaser.Physics.ARCADE); //inicia
+
         //layers
         this.map.waterLayer = this.map.createLayer ("water");
+        this.map.setCollision([60,61,62,66,80,81,82.83,84], true, this.map.waterLayer);
+
         this.map.groundLayer = this.map.createLayer ("soil");
         this.map.resourcesLayer = this.map.createLayer ("resources");
         this.map.obstaclesLayer = this.map.createLayer ("obstacles");
@@ -25,7 +29,7 @@ var PlayScene = {
         this.map.resourcesLayer.resizeWorld();
         this.map.obstaclesLayer.resizeWorld();
 
-    //music
+        //music
 
           this.volume = 50;
 
@@ -708,6 +712,23 @@ var PlayScene = {
       return Phaser.Rectangle.intersects(x, y) && !corners;
     }
 
+    this.checkObstacles = function(a){
+
+      var x = a.getBounds();
+
+      return this.game.physics.arcade.collide(x, this.game.waterlayer);
+      /*
+      x.width = x.width / 2;
+      x.y++;
+      x.x++;
+      var y = b.getBounds();
+
+      var corners = false;
+      corners = (x.y == y.bottom || x.bottom == y.y ) && (x.x == y.right || x.right == y.x);
+
+      return Phaser.Rectangle.intersects(x, y) && !corners;*/
+    }
+
     function addCitizen()
     {
       var citizen = new Classes.Citizen(this.homelessArray);
@@ -866,8 +887,15 @@ var PlayScene = {
           roadOverlap = roadOverlap || this.checkAdjacency.call(this, this._buildingModeSprite, road);
         }, this);
 
+        var obstacle = false;
 
-        if (overlap || !roadOverlap || (this._buildingModeType == this.roadGroup && (this.wood <= 0 || this.stone <= 0)))
+        this.buildingGroup.forEach(function (group){
+          group.forEach(function(building){
+            obstacle = obstacle || this.checkObstacles.call(this, this._buildingModeSprite);
+          }, this)
+        }, this);
+
+        if (overlap || !roadOverlap || (this._buildingModeType == this.roadGroup && (this.wood <= 0 || this.stone <= 0)) || !obstacle)
           this._buildingModeSprite.tint = 0xFF0000;
         else
           this._buildingModeSprite.tint = 0xFFFFFF;

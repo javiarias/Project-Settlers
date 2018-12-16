@@ -56,6 +56,12 @@
  "nextlayerid":7,
  "nextobjectid":1,
  "orientation":"orthogonal",
+ "properties":[
+        {
+         "name":"collides",
+         "type":"bool",
+         "value":true
+        }],
  "renderorder":"right-down",
  "tiledversion":"1.2.1",
  "tileheight":16,
