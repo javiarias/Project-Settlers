@@ -392,59 +392,69 @@ var PlayScene = {
     this.homelessTxt.smoothed = false;
 
     this.UI.add(this.homelessTxt);
-
-    var tip1 = new Phasetips(this, {
+    
+    this.tip1 = new Phasetips(this.game, {
       targetObject: roadBttn,
-      context: "Road: Allows you to build on top of it",
+      context: "Road:\n  You can build right above them.\nCost:\n  Free",
+      width: 150,
+      height: 97,
       strokeColor: 0xff0000,
       position: "top",
-      positionOffset: 30,
-      animation: "grow",
+      positionOffset: 30,   
+      fontSize: 10,
+      animation: "fade"
     });
 
-    var tip2 = new Phasetips(this, {
+    this.tip2 = new Phasetips(this.game, {
       targetObject: houseBttn,
-      context: "House: Allows you to provide shelter for 2 citizens. Cost: 10 Wood",
+      context: "House:\n  Provides shelter for 2 citizens.\nCost:\n  10 Wood, 10 Stone",
       strokeColor: 0xff0000,
       position: "top",
-      positionOffset: 30,
-      animation: "grow"
+      positionOffset: 30,   
+      fontSize: 10,
+      animation: "fade"
     });
 
-    var tip3 = new Phasetips(this, {
+    this.tip3 = new Phasetips(this.game, {
       targetObject: cropBttn,
-      context: "Farm: Allows you to obtain food. Cost: 10 Stone",
+      context: "Farm:\n  Provides food for your citizens.\nCost:\n  10 Wood, 10 Stone",
       strokeColor: 0xff0000,
       position: "top",
-      positionOffset: 30,
-      animation: "grow"
+      positionOffset: 30,   
+      fontSize: 10,
+      animation: "fade"
     });
 
-    var tip4 = new Phasetips(this, {
+    this.tip4 = new Phasetips(this.game, {
       targetObject: stoneBttn,
-      context: "Quarry: Allows you to obtain stone. Cost: 10 Stone",
+      context: "Quarry:\n  Used to mine stone for building.\nCost:\n  10 Wood, 10 Stone",
       strokeColor: 0xff0000,
       position: "top",
-      positionOffset: 30,
-      animation: "grow"
+      positionOffset: 30,   
+      fontSize: 10,
+      animation: "fade"
     });
 
-    var tip5 = new Phasetips(this, {
+    this.tip5 = new Phasetips(this.game, {
       targetObject: woodBttn,
-      context: "Wooden camp: Allows you to obtain wood. Cost: 10",
+      context: "Sawmill:\n  Used to cut wood for building.\nCost:\n  10 Wood, 10 Stone",
       strokeColor: 0xff0000,
       position: "top",
-      positionOffset: 30,
-      animation: "grow"
+      positionOffset: 30,   
+      fontSize: 10,
+      animation: "fade"
     });
 
-    var tip6 = new Phasetips(this, {
+    this.tip6 = new Phasetips(this.game, {
       targetObject: bulldozeBttn,
-      context: "Bulldoze: Allows you to destroy a building or a road",
+      context: "Bulldozer:\n  Used to destroy buildings and roads.",
+      width: 362,
+      height: 58,
       strokeColor: 0xff0000,
       position: "top",
-      positionOffset: 30,
-      animation: "grow"
+      positionOffset: 30,   
+      fontSize: 10,
+      animation: "fade"
     });
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -491,6 +501,7 @@ var PlayScene = {
     }
 
     function pauseTime(){
+      
       if(!this._escapeMenu) {
         this.paused = !this.paused;
         if(!this.paused && this._buildModeActive)
@@ -878,17 +889,17 @@ var PlayScene = {
           this._buildingModeSprite.tint = 0xFF0000;
       }
 
-      if (this.cursors.up.isDown || this.cursorsAlt.up.isDown)
-        this.game.camera.y -= 16;
+      if (this.cursors.up.isDown || this.cursorsAlt.up.isDown){
+        this.game.camera.y -= 16;}
 
-      else if (this.cursors.down.isDown || this.cursorsAlt.down.isDown)
-        this.game.camera.y += 16;
+      else if (this.cursors.down.isDown || this.cursorsAlt.down.isDown){
+        this.game.camera.y += 16;}
 
-      if (this.cursors.left.isDown || this.cursorsAlt.left.isDown)
-        this.game.camera.x -= 16;
+      if (this.cursors.left.isDown || this.cursorsAlt.left.isDown){
+        this.game.camera.x -= 16;}
 
-      else if (this.cursors.right.isDown || this.cursorsAlt.right.isDown)
-        this.game.camera.x += 16;
+      else if (this.cursors.right.isDown || this.cursorsAlt.right.isDown){
+        this.game.camera.x += 16;}
     }
   },
 

@@ -81,7 +81,7 @@ var Phasetips = function(localGame, options) {
         var _customArrow = _options.customArrow || false;
         var _enableCursor = _options.enableCursor || false;
         var _customBackground = _options.customBackground || false;
-        var _fixedToCamera = _options.fixedToCamera || false;
+        var _fixedToCamera = _options.fixedToCamera || true;
         // Option for rounded corners
         var _roundedCornersRadius = _options.roundedCornersRadius || 1;
         // Option for font style
@@ -286,7 +286,7 @@ var Phasetips = function(localGame, options) {
         mainGroup.update = function() {
             var worldPos = _options.targetObject ? _options.targetObject.world : game.world;
             if (worldPos.x !== mainGroup.initialWorldX) {
-                updatePosition();
+                //updatePosition();
             }
         }
     };
