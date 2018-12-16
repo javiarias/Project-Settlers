@@ -395,55 +395,55 @@ var PlayScene = {
 
     var tip1 = new Phasetips(this, {
       targetObject: roadBttn,
-      context: "Test",
+      context: "Road: Allows you to build on top of it",
       strokeColor: 0xff0000,
       position: "top",
-      positionOffset: 20,
-      animation: "grow"
+      positionOffset: 30,
+      animation: "grow",
     });
 
     var tip2 = new Phasetips(this, {
       targetObject: houseBttn,
-      context: "Test",
+      context: "House: Allows you to provide shelter for 2 citizens. Cost: 10 Wood",
       strokeColor: 0xff0000,
       position: "top",
-      positionOffset: 20,
+      positionOffset: 30,
       animation: "grow"
     });
 
     var tip3 = new Phasetips(this, {
       targetObject: cropBttn,
-      context: "Test",
+      context: "Farm: Allows you to obtain food. Cost: 10 Stone",
       strokeColor: 0xff0000,
       position: "top",
-      positionOffset: 20,
+      positionOffset: 30,
       animation: "grow"
     });
 
     var tip4 = new Phasetips(this, {
       targetObject: stoneBttn,
-      context: "Test",
+      context: "Quarry: Allows you to obtain stone. Cost: 10 Stone",
       strokeColor: 0xff0000,
       position: "top",
-      positionOffset: 20,
+      positionOffset: 30,
       animation: "grow"
     });
 
     var tip5 = new Phasetips(this, {
       targetObject: woodBttn,
-      context: "Test",
+      context: "Wooden camp: Allows you to obtain wood. Cost: 10",
       strokeColor: 0xff0000,
       position: "top",
-      positionOffset: 20,
+      positionOffset: 30,
       animation: "grow"
     });
 
     var tip6 = new Phasetips(this, {
       targetObject: bulldozeBttn,
-      context: "Test",
+      context: "Bulldoze: Allows you to destroy a building or a road",
       strokeColor: 0xff0000,
       position: "top",
-      positionOffset: 20,
+      positionOffset: 30,
       animation: "grow"
     });
 
