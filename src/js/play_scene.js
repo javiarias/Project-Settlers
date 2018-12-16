@@ -7,27 +7,19 @@ var PlayScene = {
   create: function () {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-        var logo = this.game.add.sprite(
-          this.game.world.centerX, this.game.world.centerY, 'logo');
-        logo.anchor.setTo(0.5, 0.5);
 
         this.map = this.game.add.tilemap('tilemap'); 
         this.map.addTilesetImage("Tileset","patronesTilemap");
 
-        this.game.physics.startSystem(Phaser.Physics.ARCADE); //inicia
-
         //layers
         this.map.waterLayer = this.map.createLayer ("water");
-        this.map.setCollision([60,61,62,66,80,81,82.83,84], true, this.map.waterLayer);
 
         this.map.groundLayer = this.map.createLayer ("soil");
         this.map.resourcesLayer = this.map.createLayer ("resources");
         this.map.obstaclesLayer = this.map.createLayer ("obstacles");
 
         this.map.waterLayer.resizeWorld();
-        this.map.groundLayer.resizeWorld();
-        this.map.resourcesLayer.resizeWorld();
-        this.map.obstaclesLayer.resizeWorld();
+
 
         //music
 
@@ -592,13 +584,15 @@ var PlayScene = {
 
       overlap = overlap || this.game.input.mousePointer.x < 6 || this.game.input.mousePointer.x > 640 || this.game.input.mousePointer.y < 44 || this.game.input.mousePointer.y > 539;
 
-      var roadOverlap = (this._buildingModeType == this.roadGroup);
+      var roadAdjacency;
       this.roadGroup.forEach(function (road){
-        roadOverlap = roadOverlap || this.checkAdjacency.call(this, this._buildingModeSprite, road);
+        roadAdjacency = roadAdjacency || this.checkAdjacency.call(this, this._buildingModeSprite, road);
       }, this);
 
+      var obstacle = this.checkObstacles.call(this, this._buildingModeSprite);
 
-      if(!overlap && roadOverlap && (this._buildingModeType == this.roadGroup || (this.wood >= 10 && this.stone >= 10))){
+
+      if(!overlap && (this._buildingModeType == this.roadGroup || (roadAdjacency && this.wood >= 10 && this.stone >= 10 && !obstacle))){
         var auxBuilding;
 
         var offset = 0;
@@ -714,19 +708,8 @@ var PlayScene = {
 
     this.checkObstacles = function(a){
 
-      var x = a.getBounds();
-
-      return this.game.physics.arcade.collide(x, this.game.waterlayer);
-      /*
-      x.width = x.width / 2;
-      x.y++;
-      x.x++;
-      var y = b.getBounds();
-
-      var corners = false;
-      corners = (x.y == y.bottom || x.bottom == y.y ) && (x.x == y.right || x.right == y.x);
-
-      return Phaser.Rectangle.intersects(x, y) && !corners;*/
+      return this.map.getTileWorldXY(a.x, a.y, this.map.tileWidth, this.map.tileHeight, "water") !== null || this.map.getTileWorldXY(a.x, a.y, this.map.tileWidth, this.map.tileHeight, "obstacles") !== null;
+      
     }
 
     function addCitizen()
@@ -881,24 +864,18 @@ var PlayScene = {
 
         overlap = overlap || this.game.input.mousePointer.x < 6 || this.game.input.mousePointer.x > 640 || this.game.input.mousePointer.y < 44 || this.game.input.mousePointer.y > 539;
 
-        var roadOverlap = (this._buildingModeType == this.roadGroup);
+        var roadAdjacency = (this._buildingModeType == this.roadGroup);
 
         this.roadGroup.forEach(function (road){
-          roadOverlap = roadOverlap || this.checkAdjacency.call(this, this._buildingModeSprite, road);
+          roadAdjacency = roadAdjacency || this.checkAdjacency.call(this, this._buildingModeSprite, road);
         }, this);
 
-        var obstacle = false;
+        var obstacle = this.checkObstacles.call(this, this._buildingModeSprite);
 
-        this.buildingGroup.forEach(function (group){
-          group.forEach(function(building){
-            obstacle = obstacle || this.checkObstacles.call(this, this._buildingModeSprite);
-          }, this)
-        }, this);
-
-        if (overlap || !roadOverlap || (this._buildingModeType == this.roadGroup && (this.wood <= 0 || this.stone <= 0)) || !obstacle)
-          this._buildingModeSprite.tint = 0xFF0000;
+        if(!overlap && (this._buildingModeType == this.roadGroup || (roadAdjacency && this.wood >= 10 && this.stone >= 10 && !obstacle)))
+          this._buildingModeSprite.tint = 0xFFFFFF; //el sprite se pone de color normal si se puede construir
         else
-          this._buildingModeSprite.tint = 0xFFFFFF;
+          this._buildingModeSprite.tint = 0xFF0000;
       }
 
       if (this.cursors.up.isDown || this.cursorsAlt.up.isDown)
