@@ -85,8 +85,8 @@ var Phasetips = function(localGame, options) {
         // Option for rounded corners
         var _roundedCornersRadius = _options.roundedCornersRadius || 1;
         // Option for font style
-        var _font = _options.font || '';
-        var _fontSize = _options.fontSize || 12;
+        var _font = _options.font || 'console';
+        var _fontSize = _options.fontSize || 17;
         var _fontFill = _options.fontFill || "#ffffff";
         var _fontStroke = _options.fontStroke || "#1e1e1e";
         var _fontStrokeThickness = _options.fontStrokeThickness || 1;
@@ -145,6 +145,8 @@ var Phasetips = function(localGame, options) {
             tooltipContent.update();
             tooltipContent.x = _padding / 2;
             tooltipContent.y = _padding / 2;
+            //tooltipContent.fontWeight = "bold";
+            tooltipContent.smoothing = false;
             var bounds = tooltipContent.getBounds();
             /* window.console.log(bounds);
              var debug = game.add.graphics(bounds.width, bounds.height);

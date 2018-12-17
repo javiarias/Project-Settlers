@@ -2,7 +2,6 @@
 
 var PlayScene = require('./play_scene.js');
 
-
 var BootScene = {
   init: function() {
 
@@ -24,12 +23,12 @@ var BootScene = {
 };
 
 var PreloaderScene = {
+
   preload: function () {
 
     // TODO: load here the assets for the game
     /*this.game.load.image('logo', 'images/HERO.png');
     this.game.load.image('test', 'images/Phaser.png');*/
-
 
     
     this.game.load.image("fade", "images/fade.png");
@@ -85,7 +84,7 @@ var PreloaderScene = {
     this.game.load.spritesheet('energyBttn', 'images/menu/UIButtons/energy.png', 55, 48);
     this.game.load.spritesheet('hospitalBttn', 'images/menu/UIButtons/hospital.png', 55, 48);
     this.game.load.spritesheet('bulldozeBttn', 'images/menu/UIButtons/bulldoze.png', 55, 48);
-
+    
   },
 
   create: function () {
@@ -93,12 +92,24 @@ var PreloaderScene = {
   }
 };
 
+var wfconfig = {
+  active: function() { 
+      console.log("font loaded");
+  },
+
+  custom: {
+      families: ['console'],
+      urls: ["fonts.css"]
+  }
+
+};
+
 var MainMenu = {
   create: function(){
     this.background = this.game.add.sprite(0, 0, "mainBkg");
     this.background.smoothed = false;
 
-    this.txt = this.game.add.text(this.game.camera.x + (this.game.width/2), this.game.camera.y + (this.game.height/5), "Project Settlers \n BETA!!", {font: "30px Arial", fill: "#ffffff", align: "center" });
+    this.txt = this.game.add.text(this.game.camera.x + (this.game.width/2), this.game.camera.y + (this.game.height/5), "Project Settlers \n BETA!!", {font: "console", fontSize: 60, fill: "#ffffff", align: "center" });
     this.txt.anchor.setTo(0.5, 0.5);
     this.txt.smoothed = false;
 
@@ -128,7 +139,7 @@ var MainMenu = {
 
     this.optionsMain.add(optionsBkg);
 
-    var volumeText = this.game.add.text(optionsBkg.x, optionsBkg.y - 20, this.volume);
+    var volumeText = this.game.add.text(optionsBkg.x, optionsBkg.y - 20, this.volume, {font: "50px console"});
     volumeText.anchor.setTo(0.5, 0.5);
     volumeText.fixedToCamera = true;
     volumeText.smoothed = false;
@@ -202,7 +213,10 @@ var MainMenu = {
 
 
 window.onload = function () {
+
   var game = new Phaser.Game(800, 600, Phaser.AUTO, 'game');
+
+  WebFont.load(wfconfig);
 
   game.state.add('boot', BootScene);
   game.state.add('preloader', PreloaderScene);

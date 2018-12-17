@@ -1,8 +1,338 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
+/**
+ * PHASETIPS is a tooltip plugin for Phaser.io HTML5 game framework
+ *
+ * COPYRIGHT-2015
+ * AUTHOR: MICHAEL DOBEKIDIS (NETGFX.COM)
+ *
+ **/
+
+var Phasetips = function(localGame, options) {
+
+    var _this = this;
+    var _options = options || {};
+    var game = localGame || game; // it looks for a game object or falls back to the global one
+
+    this.printOptions = function() {
+        window.console.log(_options);
+    };
+
+    this.onHoverOver = function() {
+        if (_this.tweenObj) {
+            _this.tweenObj.stop();
+        }
+        if (_options.animation === "fade") {
+            _this.tweenObj = game.add.tween(_this.mainGroup).to({
+                alpha: 1
+            }, _options.animationSpeedShow, Phaser.Easing.Linear.None, true, _options.animationDelay, 0, false);
+        } else if (_options.animation === "slide") {
+
+        } else if (_options.animation === "grow") {
+
+            _this.mainGroup.pivot.setTo(_this.mainGroup.width / 2, _this.mainGroup.height);
+            _this.mainGroup.pivot.setTo(_this.mainGroup.width / 2, _this.mainGroup.height);
+            _this.mainGroup.x = _this.mainGroup.initialX + _this.mainGroup.width / 2;
+            _this.mainGroup.y = _this.mainGroup.initialY + _this.mainGroup.height;
+            _this.mainGroup.scale.setTo(0, 0);
+            _this.mainGroup.alpha = 1;
+            _this.tweenObj = game.add.tween(_this.mainGroup.scale).to({
+                x: 1,
+                y: 1
+            }, _options.animationSpeedShow, Phaser.Easing.Linear.None, true, _options.animationDelay, 0, false);
+        } else {
+            _this.mainGroup.visible = true;
+            _this.mainGroup.alpha = 1;
+        }
+
+        if (_options.onHoverCallback) {
+            _options.onHoverCallback(_this);
+        }
+    };
+
+    this.onHoverOut = function() {
+        if (_this.tweenObj) {
+            _this.tweenObj.stop();
+        }
+
+        if (_options.animation === "fade") {
+            _this.tweenObj = game.add.tween(_this.mainGroup).to({
+                alpha: 0
+            }, _options.animationSpeedHide, Phaser.Easing.Linear.None, true, 0, 0, false);
+        } else {
+            _this.mainGroup.alpha = 0;
+        }
+
+        if (_options.onOutCallback) {
+            _options.onOutCallback(_this);
+        }
+    };
+
+    this.createTooltips = function() {
+
+        // layout
+        var _width = _options.width || "auto";
+        var _height = _options.height || "auto";
+        var _x = _options.x === undefined ? "auto" : _options.x;
+        var _y = _options.y === undefined ? "auto" : _options.y;
+        var _padding = _options.padding === undefined ? 20 : _options.padding;
+        var _positionOffset = _options.positionOffset === undefined ? 20 : _options.positionOffset;
+        var _bgColor = _options.backgroundColor || 0x000000;
+        var _strokeColor = _options.strokeColor || 0xffffff;
+        var _strokeWeight = _options.strokeWeight || 2;
+        var _customArrow = _options.customArrow || false;
+        var _enableCursor = _options.enableCursor || false;
+        var _customBackground = _options.customBackground || false;
+        var _fixedToCamera = _options.fixedToCamera || true;
+        // Option for rounded corners
+        var _roundedCornersRadius = _options.roundedCornersRadius || 1;
+        // Option for font style
+        var _font = _options.font || 'console';
+        var _fontSize = _options.fontSize || 17;
+        var _fontFill = _options.fontFill || "#ffffff";
+        var _fontStroke = _options.fontStroke || "#1e1e1e";
+        var _fontStrokeThickness = _options.fontStrokeThickness || 1;
+        var _fontWordWrap = _options.fontWordWrap || true;
+        var _fontWordWrapWidth = _options.fontWordWrapWidth || 200;
+        // Text style properties
+        var _textStyle = _options.textStyle || {
+            font: _font,
+            fontSize: _fontSize,
+            fill: _fontFill,
+            stroke: _fontStroke,
+            strokeThickness: _fontStrokeThickness,
+            wordWrap: _fontWordWrap,
+            wordWrapWidth: _fontWordWrapWidth
+        };
+
+        //
+        var _position = _options.position || "top"; // top, bottom, left, right, auto(?)
+        var _animation = _options.animation || "fade"; // fade, slide, grow, none to manually show it
+        var _animationDelay = _options.animationDelay || 0;
+        var _content = _options.context || "Hello World"; // string, bitmapText, text, sprite, image, group
+        var _object = _options.targetObject || game; // any object
+        var _animationSpeedShow = _options.animationSpeedShow || 300;
+        var _animationSpeedHide = _options.animationSpeedHide || 200;
+        var _onHoverCallback = _options.onHoverCallback || function() {};
+        var _onOutCallback = _options.onOutCallback || function() {};
+        // If alwaysOn option is set to true, the tooltip will not fade in or out upon hover.
+        var _initialOn = _options.initialOn || false;
+
+        // If disableInputEvents option is set to true, PHASETIPS will not add input events.
+        // Use simulateOnHoverOver, simulateOnHoverOut, hideTooltip or showTooltip methods to manually control the visibility.
+        var _disableInputEvents = _options.disableInputEvents || false;
+
+        _options.animation = _animation;
+        _options.animationDelay = _animationDelay;
+        _options.animationSpeedShow = _animationSpeedShow;
+        _options.animationSpeedHide = _animationSpeedHide;
+        _options.onHoverCallback = _onHoverCallback;
+        _options.onOutCallback = _onOutCallback;
+
+        ////////////////////////////////////////////////////////////////////////////////////
+        var tooltipBG;
+        var tooltipContent;
+        var tooltipArrow;
+
+        _this.mainGroup = game.add.group();
+        var mainGroup = _this.mainGroup;
+
+        // add content first to calculate width & height in case of auto
+        var type = typeof _content;
+
+        if (type === "string" || type === "number") {
+            tooltipContent = game.add.text(_padding / 2, _padding / 2, String(_content), _textStyle);
+            tooltipContent.lineSpacing = _textStyle.lineSpacing || 0;
+            tooltipContent.updateText();
+            tooltipContent.update();
+            tooltipContent.x = _padding / 2;
+            tooltipContent.y = _padding / 2;
+            //tooltipContent.fontWeight = "bold";
+            tooltipContent.smoothing = false;
+            var bounds = tooltipContent.getBounds();
+            /* window.console.log(bounds);
+             var debug = game.add.graphics(bounds.width, bounds.height);
+             debug.x = _padding/2;
+             debug.y = _padding/2;
+             debug.beginFill(0xff0000, 0.6);
+             debug.drawRect(0, 0, bounds.width, bounds.height, 1);
+             window.console.log(debug.x)*/
+        } else if (type === "object") {
+            tooltipContent = _content;
+        }
+
+        if (_width !== "auto" && _height !== "auto") {
+            mainGroup.width = _width;
+            mainGroup.height = _height;
+        } else {
+            if (_customBackground === false) {
+                mainGroup.width = tooltipContent.width + _padding;
+                mainGroup.height = tooltipContent.height + _padding;
+            } else {
+
+                if (_customBackground.width > tooltipContent.width) {
+                    mainGroup.width = _customBackground.width;
+                    mainGroup.height = _customBackground.height;
+                } else {
+                    mainGroup.width = tooltipContent.width;
+                    mainGroup.height = tooltipContent.height;
+                }
+            }
+        }
+
+        // Making it invisible
+        if(_initialOn !== true) {
+            mainGroup.alpha = 0;
+        }
+        //////////////////////
+        function updatePosition() {
+            var _origPosition = _position;
+            if (_x !== "auto" && _y !== "auto") {
+                var worldPos = _options.targetObject ? _options.targetObject.world : game.world;
+                mainGroup.x = _x;
+                mainGroup.y = _y;
+                if (_fixedToCamera == true) {
+                    mainGroup.fixedToCamera = true;
+                    mainGroup.cameraOffset.setTo(mainGroup.x, mainGroup.y);
+                }
+            } else {
+                var worldPos = _options.targetObject ? _options.targetObject.world : game.world;
+                objectX = worldPos.x || _options.targetObject.x;
+                objectY = worldPos.y || _options.targetObject.y;
+
+                // sanity check
+                if (_position === "bottom") {
+                    if (Math.round(objectY + _object.height + (_positionOffset)) + mainGroup._height > game.height) {
+                        _position = "top";
+                    }
+                } else if (_position === "top") {
+                    if (Math.round(objectY - (_positionOffset + mainGroup._height)) < 0) {
+                        _position = "bottom";
+                    }
+                }
+
+                if (_position === "top") {
+                    mainGroup.x = Math.round(objectX + ((_object.width / 2) - (mainGroup._width / 2)));
+                    mainGroup.y = Math.round(objectY - (_positionOffset + mainGroup._height));
+                } else if (_position === "bottom") {
+                    mainGroup.x = Math.round(objectX + ((_object.width / 2) - (mainGroup._width) / 2));
+                    mainGroup.y = Math.round(objectY + _object.height + (_positionOffset));
+                } else if (_position === "left") {
+                    mainGroup.x = Math.round(objectX - (_positionOffset + mainGroup._width));
+                    mainGroup.y = Math.round((objectY + _object.height / 2) - (mainGroup._height / 2));
+                    // mainGroup.scale.x = -1;
+                } else if (_position === "right") {
+                    mainGroup.x = Math.round(objectX + _object.width + _positionOffset);
+                    mainGroup.y = Math.round((objectY + _object.height / 2) - (mainGroup._height / 2));
+                }
+
+                if (_fixedToCamera == true) {
+                    mainGroup.fixedToCamera = true;
+                    mainGroup.cameraOffset.setTo(mainGroup.x, mainGroup.y);
+                }
+            }
+
+            // clone world position
+            mainGroup.initialWorldX = worldPos.x;
+            mainGroup.initialWorldY = worldPos.y;
+
+            mainGroup.initialX = mainGroup.x;
+            mainGroup.initialY = mainGroup.y;
+
+            // if the world position changes, there might be space for the tooltip
+            // to be in the original position.
+            _position = _origPosition;
+        }
+
+        updatePosition();
+
+        ///////////////////////////////////////////////////////////////////////////////////
+
+
+
+        if (_customBackground === false) {
+            /// create bg
+            tooltipBG = game.add.graphics(tooltipContent.width, tooltipContent.height);
+            tooltipBG.beginFill(_bgColor, 1);
+            tooltipBG.x = 0;
+            tooltipBG.y = 0;
+            tooltipBG.lineStyle(_strokeWeight, _strokeColor, 1);
+
+            // if roundedCornersRadius option is set to 1, drawRect will be used.
+            if( _roundedCornersRadius == 1 ) {
+                tooltipBG.drawRect(0, 0, tooltipContent.width + _padding, tooltipContent.height + _padding, 1);
+            } else {
+                tooltipBG.drawRoundedRect(0, 0, tooltipContent.width + _padding, tooltipContent.height + _padding, _roundedCornersRadius);
+            }
+        } else {
+            tooltipBG = _customBackground;
+        }
+
+        // add all to group
+        mainGroup.add(tooltipBG);
+        mainGroup.add(tooltipContent);
+        //if(debug)
+        //mainGroup.add(debug);
+
+        // add event listener
+        // if "disableInputEvents" option is set to true, the followings are ignored.
+        if(_disableInputEvents !== true) {
+            _object.inputEnabled = true;
+            if (_enableCursor) {
+                _object.input.useHandCursor = true;
+            }
+            _object.events.onInputOver.add(_this.onHoverOver, this);
+            _object.events.onInputDown.add(_this.onHoverOver, this);
+            _object.events.onInputOut.add(_this.onHoverOut, this);
+            _object.events.onInputUp.add(_this.onHoverOut, this);
+        }
+
+        mainGroup.update = function() {
+            var worldPos = _options.targetObject ? _options.targetObject.world : game.world;
+            if (worldPos.x !== mainGroup.initialWorldX) {
+                //updatePosition();
+            }
+        }
+    };
+
+    this.createTooltips();
+
+    return {
+        printOptions: function() {
+            _this.printOptions();
+        },
+        updatePosition: function(x, y) {
+            _this.mainGroup.x = x;
+            _this.mainGroup.y = y;
+        },
+        destroy: function() {
+            _this.mainGroup.removeChildren();
+            _this.mainGroup.destroy();
+        },
+        hideTooltip: function() {
+            _this.mainGroup.visible = false;
+            _this.mainGroup.alpha = 0;
+        },
+        showTooltip: function() {
+            _this.mainGroup.visible = true;
+            _this.mainGroup.alpha = 1;
+        },
+        simulateOnHoverOver: function () {
+            _this.onHoverOver();
+        },
+        simulateOnHoverOut: function () {
+            _this.onHoverOut();
+        }
+    };
+};
+
+if (typeof module === "object" && typeof module.exports === "object") {
+    module.exports = Phasetips;
+}
+
+},{}],2:[function(require,module,exports){
 function House(game, x, y, img) {
     Phaser.Sprite.call(this, game, x, y, img);
-    this.coziness = 0;
-    this._calculateCoziness();
+    this.coziness = this._calculateCoziness();
     this.residentA = undefined;
     this.residentB = undefined;
     this.hospitalNear = false;
@@ -15,23 +345,12 @@ House.constructor = House;
 House.prototype._calculateCoziness = function() {
     var coziness = 0;
 
-    /*for(i = -1; i <= 1; i++)
-        for(j = -1; j <= 1; j++)
-            if (this.x + i >= 0 && this.x + i < map.mapSize && this.y + j >= 0 && this.y + j < map.mapSize){
-                var aux = map.mapArray.get(x + i, y + j);
-                if(aux.terrain == 0 || aux.terrain == 3)
-                    coziness += 1;
-                else if(aux.terrain == 2)
-                    coziness += 2;
+    //cálculo de coziness
 
-                //CHECK IF THERE ARE DECORATIONS NEARBY
-            }*/
-
-    this.coziness = coziness;
+    return coziness;
 };
 
 House.prototype.add = function(citizen) {
-    var ret = true;
     if(this.residentA === undefined){
         this.residentA = citizen;
     }
@@ -40,29 +359,21 @@ House.prototype.add = function(citizen) {
         this.residentB = citizen;
     }
 
-    else
-        ret = false;
+    this.full = (this.residentA !== undefined && this.residentB !== undefined);
 
-    this.full = (this.countCitizens() == 2);
-
-    return ret;
+    return this.full;
 };
 
 House.prototype.kill = function(citizen) {
-    var ret = true;
     if(this.residentA == citizen){
         this.residentA = undefined;
-        full = false;
+        this.full = false;
     }
+
     else if(this.residentB == citizen){
         this.residentB = undefined;
-        full = false;
+        this.full = false;
     }
-
-    else
-        ret = false;
-
-    return ret;
 };
 
 House.prototype.bulldoze = function(homelessArray) {
@@ -226,11 +537,10 @@ module.exports = {
     Hospital: Hospital,
     Citizen: Citizen
 };
-},{}],2:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 'use strict';
 
 var PlayScene = require('./play_scene.js');
-
 
 var BootScene = {
   init: function() {
@@ -252,14 +562,17 @@ var BootScene = {
   }
 };
 
-
 var PreloaderScene = {
+
   preload: function () {
 
     // TODO: load here the assets for the game
-    this.game.load.image('logo', 'images/HERO.png');
-    this.game.load.image('test', 'images/Phaser.png');
+    /*this.game.load.image('logo', 'images/HERO.png');
+    this.game.load.image('test', 'images/Phaser.png');*/
+
+    
     this.game.load.image("fade", "images/fade.png");
+
 
     //building sprites
     this.game.load.image('Crops', 'images/buildings/Crops.png');
@@ -277,8 +590,6 @@ var PreloaderScene = {
     this.game.load.image('Water', 'images/buildings/Water.png');
     this.game.load.image('Wind', 'images/buildings/Wind.png');
     this.game.load.image('Wood', 'images/buildings/Wood.png');
-
-
   
     //map 
     this.game.load.tilemap('tilemap', 'images/map/map.json', null, Phaser.Tilemap.TILED_JSON);
@@ -301,8 +612,6 @@ var PreloaderScene = {
     this.game.load.spritesheet('backBttn', 'images/menu/back.png', 55, 48);
     this.game.load.spritesheet('muteBttn', 'images/menu/mute.png', 55, 48);
     this.game.load.spritesheet('playBttn', 'images/menu/play.png', 55, 48);
-
-
     this.game.load.spritesheet('houseBttn', 'images/menu/UIButtons/house.png', 55, 48);
     this.game.load.spritesheet('roadBttn', 'images/menu/UIButtons/road.png', 55, 48);
     this.game.load.spritesheet('waterBttn', 'images/menu/UIButtons/water.png', 55, 48);
@@ -315,7 +624,7 @@ var PreloaderScene = {
     this.game.load.spritesheet('energyBttn', 'images/menu/UIButtons/energy.png', 55, 48);
     this.game.load.spritesheet('hospitalBttn', 'images/menu/UIButtons/hospital.png', 55, 48);
     this.game.load.spritesheet('bulldozeBttn', 'images/menu/UIButtons/bulldoze.png', 55, 48);
-
+    
   },
 
   create: function () {
@@ -323,12 +632,24 @@ var PreloaderScene = {
   }
 };
 
+var wfconfig = {
+  active: function() { 
+      console.log("font loaded");
+  },
+
+  custom: {
+      families: ['console'],
+      urls: ["fonts.css"]
+  }
+
+};
+
 var MainMenu = {
   create: function(){
     this.background = this.game.add.sprite(0, 0, "mainBkg");
     this.background.smoothed = false;
 
-    this.txt = this.game.add.text(this.game.camera.x + (this.game.width/2), this.game.camera.y + (this.game.height/5), "Project Settlers \n BETA!!", {font: "30px Arial", fill: "#ffffff", align: "center" });
+    this.txt = this.game.add.text(this.game.camera.x + (this.game.width/2), this.game.camera.y + (this.game.height/5), "Project Settlers \n BETA!!", {font: "console", fontSize: 60, fill: "#ffffff", align: "center" });
     this.txt.anchor.setTo(0.5, 0.5);
     this.txt.smoothed = false;
 
@@ -348,7 +669,6 @@ var MainMenu = {
     this.options.anchor.setTo(.5, .5);
     this.options.smoothed = false;
 
-
     //volume menu
     this.optionsMain = this.game.add.group();
 
@@ -359,7 +679,7 @@ var MainMenu = {
 
     this.optionsMain.add(optionsBkg);
 
-    var volumeText = this.game.add.text(optionsBkg.x, optionsBkg.y - 20, this.volume);
+    var volumeText = this.game.add.text(optionsBkg.x, optionsBkg.y - 20, this.volume, {font: "50px console"});
     volumeText.anchor.setTo(0.5, 0.5);
     volumeText.fixedToCamera = true;
     volumeText.smoothed = false;
@@ -395,7 +715,6 @@ var MainMenu = {
     optionsMute.smoothed = false;
 
     this.optionsMain.add(optionsMute);
-
 
     this.optionsMain.visible = false;
 
@@ -434,7 +753,10 @@ var MainMenu = {
 
 
 window.onload = function () {
+
   var game = new Phaser.Game(800, 600, Phaser.AUTO, 'game');
+
+  WebFont.load(wfconfig);
 
   game.state.add('boot', BootScene);
   game.state.add('preloader', PreloaderScene);
@@ -444,57 +766,54 @@ window.onload = function () {
   game.state.start('boot');
 };
 
-},{"./play_scene.js":3}],3:[function(require,module,exports){
+},{"./play_scene.js":4}],4:[function(require,module,exports){
 'use strict';
 var Classes = require("./buildings.js");
+var Phasetips = require("./Phasetips.js");
 
 var PlayScene = {
   
   create: function () {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    var logo = this.game.add.sprite(
-      this.game.world.centerX, this.game.world.centerY, 'logo');
-    logo.anchor.setTo(0.5, 0.5);
 
-    this.map = this.game.add.tilemap('tilemap'); 
-    this.map.addTilesetImage("Tileset","patronesTilemap");
+        this.map = this.game.add.tilemap('tilemap'); 
+        this.map.addTilesetImage("Tileset","patronesTilemap");
 
-    //layers
-    this.map.waterLayer = this.map.createLayer ("water");
-    this.map.groundLayer = this.map.createLayer ("soil");
-    this.map.resourcesLayer = this.map.createLayer ("resources");
-    this.map.obstaclesLayer = this.map.createLayer ("obstacles");
+        //layers
+        this.map.waterLayer = this.map.createLayer ("water");
 
-    this.map.waterLayer.resizeWorld();
-    this.map.groundLayer.resizeWorld();
-    this.map.resourcesLayer.resizeWorld();
-    this.map.obstaclesLayer.resizeWorld();
+        this.map.groundLayer = this.map.createLayer ("soil");
+        this.map.resourcesLayer = this.map.createLayer ("resources");
+        this.map.obstaclesLayer = this.map.createLayer ("obstacles");
 
-    //music
+        this.map.waterLayer.resizeWorld();
 
-    this.volume = 50;
 
-    this.gameMusic = this.game.add.audio('gameSound'); 
+        //music
 
-    this.gameMusic.play();
-    this.gameMusic.loop = true;
-    this.gameMusic.volume = this.volume / 100;
+          this.volume = 50;
 
-    this.paused = true;
-    this.timeScale = 1;
-    this.currentTime = { "hour": 0, "buffer": 0};
-    this.homelessArray = [];
-    this.shiftStart = 8;
-    this.shiftEnd = 20;
-    this._tileSize = this.map.tileWidth / 2;
-    this._buildModeActive = false;
-    this._destroyModeActive = false;
-    this._escapeMenu = false;
-    this.fade;
+          this.gameMusic = this.game.add.audio('gameSound'); 
 
-    this._buildingModeSprite;
-    this._buildingModeType = "";
+          this.gameMusic.play();
+          this.gameMusic.loop = true;
+          this.gameMusic.volume = this.volume / 100;
+
+          this.paused = true;
+          this.timeScale = 1;
+          this.currentTime = { "hour": 0, "buffer": 0};
+          this.homelessArray = [];
+          this.shiftStart = 8;
+          this.shiftEnd = 20;
+          this._tileSize = this.map.tileWidth;
+          this._buildModeActive = false;
+          this._destroyModeActive = false;
+          this._escapeMenu = false;
+          this.fade;
+
+          this._buildingModeSprite;
+          this._buildingModeType = "";
 
     /////////GROUPS AND RESOURCES
     this.food = 100;
@@ -605,7 +924,7 @@ var PlayScene = {
 
     this.optionsMenu.add(optionsBkg);
 
-    var volumeText = this.game.add.text(optionsBkg.x, optionsBkg.y - 20, this.volume);
+    var volumeText = this.game.add.text(optionsBkg.x, optionsBkg.y - 20, this.volume, {font: "50px console"});
     volumeText.anchor.setTo(0.5, 0.5);
     volumeText.fixedToCamera = true;
     volumeText.smoothed = false;
@@ -794,57 +1113,118 @@ var PlayScene = {
 
 
 
-    this.timeTxt = this.game.add.text(719, 50, this.currentTime.hour + ":00", {fill: "red"});
+    this.timeTxt = this.game.add.text(719, 50, this.currentTime.hour + ":00", {font: "50px console", fill: "red"});
     this.timeTxt.anchor.setTo(.5, 0);
     this.timeTxt.fixedToCamera = true;
     this.timeTxt.smoothed = false;
 
     this.UI.add(this.timeTxt);
 
-    this.timescaleTxt = this.game.add.text(this.timeTxt.x, this.timeTxt.bottom + 5, "Speed: " + this.timeScale);
+    this.timescaleTxt = this.game.add.text(this.timeTxt.x, this.timeTxt.bottom + 5, "Speed: " + this.timeScale, {font: "30px console"});
     this.timescaleTxt.anchor.setTo(.5, 0);
     this.timescaleTxt.fixedToCamera = true;
     this.timescaleTxt.smoothed = false;
 
     this.UI.add(this.timescaleTxt);
     
-    this.foodTxt = this.game.add.text(this.timeTxt.x, this.timescaleTxt.bottom + 550/5, "Food: " + this.food, {font: "20px Arial"});
+    this.foodTxt = this.game.add.text(this.timeTxt.x, this.timescaleTxt.bottom + 550/5, "Food: " + this.food, {font: "30px console"});
     this.foodTxt.anchor.setTo(.5, 0);
     this.foodTxt.fixedToCamera = true;
     this.foodTxt.smoothed = false;
 
     this.UI.add(this.foodTxt);
     
-    this.woodTxt = this.game.add.text(this.timeTxt.x, this.foodTxt.bottom + 5, "Wood: " + this.wood, {font: "20px Arial"});
+    this.woodTxt = this.game.add.text(this.timeTxt.x, this.foodTxt.bottom + 5, "Wood: " + this.wood, {font: "30px console"});
     this.woodTxt.anchor.setTo(.5, 0);
     this.woodTxt.fixedToCamera = true;
     this.woodTxt.smoothed = false;
 
     this.UI.add(this.woodTxt);
     
-    this.stoneTxt = this.game.add.text(this.timeTxt.x, this.woodTxt.bottom + 5, "Stone: " + this.stone, {font: "20px Arial"});
+    this.stoneTxt = this.game.add.text(this.timeTxt.x, this.woodTxt.bottom + 5, "Stone: " + this.stone, {font: "30px console"});
     this.stoneTxt.anchor.setTo(.5, 0);
     this.stoneTxt.fixedToCamera = true;
     this.stoneTxt.smoothed = false;
 
     this.UI.add(this.stoneTxt);
     
-    this.citizensTxt = this.game.add.text(this.timeTxt.x + 3, this.stoneTxt.bottom + 550/5, "Total Citizens: 5", {font: "20px Arial"});
+    this.citizensTxt = this.game.add.text(this.timeTxt.x + 3, this.stoneTxt.bottom + 550/5, "Total Citizens: 5", {font: "30px console"});
     this.citizensTxt.anchor.setTo(.5, 0);
     this.citizensTxt.fixedToCamera = true;
     this.citizensTxt.smoothed = false;
 
     this.UI.add(this.citizensTxt);
     
-    this.homelessTxt = this.game.add.text(this.timeTxt.x, this.citizensTxt.bottom + 5, "Homeless: 5", {font: "20px Arial"});
+    this.homelessTxt = this.game.add.text(this.timeTxt.x, this.citizensTxt.bottom + 5, "Homeless: 5", {font: "30px console"});
     this.homelessTxt.anchor.setTo(.5, 0);
     this.homelessTxt.fixedToCamera = true;
     this.homelessTxt.smoothed = false;
 
     this.UI.add(this.homelessTxt);
+    
+    this.tip1 = new Phasetips(this.game, {
+      targetObject: roadBttn,
+      context: "Road:\n  You can build right above them.\nCost:\n  Free",
+      width: 150,
+      height: 100,
+      strokeColor: 0xff0000,
+      position: "top",
+      positionOffset: 30,   
+      
+      animation: "fade"
+    });
 
+    this.tip2 = new Phasetips(this.game, {
+      targetObject: houseBttn,
+      context: "House:\n  Provides shelter for 2 citizens.\nCost:\n  10 Wood, 10 Stone",
+      strokeColor: 0xff0000,
+      position: "top",
+      positionOffset: 30,   
+      
+      animation: "fade"
+    });
 
+    this.tip3 = new Phasetips(this.game, {
+      targetObject: cropBttn,
+      context: "Farm:\n  Provides food for your citizens.\nCost:\n  10 Wood, 10 Stone",
+      strokeColor: 0xff0000,
+      position: "top",
+      positionOffset: 30,   
+      
+      animation: "fade"
+    });
 
+    this.tip4 = new Phasetips(this.game, {
+      targetObject: stoneBttn,
+      context: "Quarry:\n  Used to mine stone for building.\nCost:\n  10 Wood, 10 Stone",
+      strokeColor: 0xff0000,
+      position: "top",
+      positionOffset: 30,   
+      
+      animation: "fade"
+    });
+
+    this.tip5 = new Phasetips(this.game, {
+      targetObject: woodBttn,
+      context: "Sawmill:\n  Used to cut wood for building.\nCost:\n  10 Wood, 10 Stone",
+      strokeColor: 0xff0000,
+      position: "top",
+      positionOffset: 30,   
+      
+      animation: "fade"
+    });
+
+    this.tip6 = new Phasetips(this.game, {
+      targetObject: bulldozeBttn,
+      context: "Bulldozer:\n  Used to destroy buildings and\n  roads.",
+      width: 362,
+      height: 80,
+      strokeColor: 0xff0000,
+      position: "top",
+      positionOffset: 30,   
+      
+      animation: "fade"
+    });
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -890,6 +1270,7 @@ var PlayScene = {
     }
 
     function pauseTime(){
+      
       if(!this._escapeMenu) {
         this.paused = !this.paused;
         if(!this.paused && this._buildModeActive)
@@ -939,6 +1320,8 @@ var PlayScene = {
           this.paused = true;
           this._buildModeActive = true;
           this.timeTxt.addColor("#ff0000", 0);
+
+          this.game.world.bringToTop(this.UI);
         }
 
         else {
@@ -981,19 +1364,26 @@ var PlayScene = {
 
       overlap = overlap || this.game.input.mousePointer.x < 6 || this.game.input.mousePointer.x > 640 || this.game.input.mousePointer.y < 44 || this.game.input.mousePointer.y > 539;
 
-      var roadOverlap = (this._buildingModeType == this.roadGroup);
+      var roadAdjacency;
       this.roadGroup.forEach(function (road){
-        roadOverlap = roadOverlap || this.checkAdjacency.call(this, this._buildingModeSprite, road);
+        roadAdjacency = roadAdjacency || this.checkAdjacency.call(this, this._buildingModeSprite, road);
       }, this);
 
+      var obstacle = this.checkObstacles.call(this, this._buildingModeSprite);
 
-      if(!overlap && roadOverlap && (this._buildingModeType == this.roadGroup || (this.wood >= 10 && this.stone >= 10))){
+
+      if(!overlap && (this._buildingModeType == this.roadGroup || (roadAdjacency && this.wood >= 10 && this.stone >= 10 && !obstacle))){
         var auxBuilding;
 
+        var offset = 0;
+
+        if((this._buildingModeSprite.height / 16) % 2 == 0)
+          offset = 8;
+
         if(this._buildingModeType == this.houseGroup)
-          auxBuilding = new Classes.House(this.game, Math.round(this.game.input.worldX / this._tileSize) * this._tileSize, Math.round(this.game.input.worldY / this._tileSize) * this._tileSize, this._buildingModeType.sprite, 1);
+          auxBuilding = new Classes.House(this.game, Math.round(this.game.input.worldX / this._tileSize) * this._tileSize, offset + Math.round(this.game.input.worldY / this._tileSize) * this._tileSize, this._buildingModeType.sprite, 1);
         else
-          auxBuilding = new Classes.Producer(this.game, Math.round(this.game.input.worldX / this._tileSize) * this._tileSize, Math.round(this.game.input.worldY / this._tileSize) * this._tileSize, this._buildingModeType.sprite, 1);
+          auxBuilding = new Classes.Producer(this.game, Math.round(this.game.input.worldX / this._tileSize) * this._tileSize, offset + Math.round(this.game.input.worldY / this._tileSize) * this._tileSize, this._buildingModeType.sprite, 1);
         auxBuilding.anchor.setTo(0.5, 0.5);
 
         auxBuilding.inputEnabled = true;
@@ -1056,6 +1446,7 @@ var PlayScene = {
           this.fade.height = this.game.camera.height;
           this.fade.alpha = 0.5;
           
+          this.game.world.bringToTop(this.fade);
           this.game.world.bringToTop(this.pauseMenu);
         }
 
@@ -1084,12 +1475,21 @@ var PlayScene = {
     this.checkAdjacency = function(a, b){
 
       var x = a.getBounds();
+      x.width = x.width / 2;
+      x.y++;
+      x.x++;
       var y = b.getBounds();
 
       var corners = false;
       corners = (x.y == y.bottom || x.bottom == y.y ) && (x.x == y.right || x.right == y.x);
 
       return Phaser.Rectangle.intersects(x, y) && !corners;
+    }
+
+    this.checkObstacles = function(a){
+
+      return this.map.getTileWorldXY(a.x, a.y, this.map.tileWidth, this.map.tileHeight, "water") !== null || this.map.getTileWorldXY(a.x, a.y, this.map.tileWidth, this.map.tileHeight, "obstacles") !== null;
+      
     }
 
     function addCitizen()
@@ -1225,8 +1625,14 @@ var PlayScene = {
       }
 
       else if(this._buildModeActive){
+
+        var offset = 0;
+
+        if((this._buildingModeSprite.height / 16) % 2 == 0)
+          offset = 8;
+
         this._buildingModeSprite.x = Math.round(this.game.input.worldX / this._tileSize) * this._tileSize;
-        this._buildingModeSprite.y = Math.round(this.game.input.worldY / this._tileSize) * this._tileSize;
+        this._buildingModeSprite.y = offset + Math.round(this.game.input.worldY / this._tileSize) * this._tileSize;
 
         var overlap = false;
 
@@ -1238,30 +1644,31 @@ var PlayScene = {
 
         overlap = overlap || this.game.input.mousePointer.x < 6 || this.game.input.mousePointer.x > 640 || this.game.input.mousePointer.y < 44 || this.game.input.mousePointer.y > 539;
 
-        var roadOverlap = (this._buildingModeType == this.roadGroup);
+        var roadAdjacency = (this._buildingModeType == this.roadGroup);
 
         this.roadGroup.forEach(function (road){
-          roadOverlap = roadOverlap || this.checkAdjacency.call(this, this._buildingModeSprite, road);
+          roadAdjacency = roadAdjacency || this.checkAdjacency.call(this, this._buildingModeSprite, road);
         }, this);
 
+        var obstacle = this.checkObstacles.call(this, this._buildingModeSprite);
 
-        if (overlap || !roadOverlap || (this._buildingModeType == this.roadGroup && (this.wood <= 0 || this.stone <= 0)))
-          this._buildingModeSprite.tint = 0xFF0000;
+        if(!overlap && (this._buildingModeType == this.roadGroup || (roadAdjacency && this.wood >= 10 && this.stone >= 10 && !obstacle)))
+          this._buildingModeSprite.tint = 0xFFFFFF; //el sprite se pone de color normal si se puede construir
         else
-          this._buildingModeSprite.tint = 0xFFFFFF;
+          this._buildingModeSprite.tint = 0xFF0000;
       }
 
-      if (this.cursors.up.isDown || this.cursorsAlt.up.isDown)
-        this.game.camera.y -= 16;
+      if (this.cursors.up.isDown || this.cursorsAlt.up.isDown){
+        this.game.camera.y -= 16;}
 
-      else if (this.cursors.down.isDown || this.cursorsAlt.down.isDown)
-        this.game.camera.y += 16;
+      else if (this.cursors.down.isDown || this.cursorsAlt.down.isDown){
+        this.game.camera.y += 16;}
 
-      if (this.cursors.left.isDown || this.cursorsAlt.left.isDown)
-        this.game.camera.x -= 16;
+      if (this.cursors.left.isDown || this.cursorsAlt.left.isDown){
+        this.game.camera.x -= 16;}
 
-      else if (this.cursors.right.isDown || this.cursorsAlt.right.isDown)
-        this.game.camera.x += 16;
+      else if (this.cursors.right.isDown || this.cursorsAlt.right.isDown){
+        this.game.camera.x += 16;}
     }
   },
 
@@ -1293,4 +1700,4 @@ var PlayScene = {
 
 module.exports = PlayScene;
 
-},{"./buildings.js":1}]},{},[2]);
+},{"./Phasetips.js":1,"./buildings.js":2}]},{},[3]);

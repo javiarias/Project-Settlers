@@ -155,7 +155,7 @@ var PlayScene = {
 
     this.optionsMenu.add(optionsBkg);
 
-    var volumeText = this.game.add.text(optionsBkg.x, optionsBkg.y - 20, this.volume);
+    var volumeText = this.game.add.text(optionsBkg.x, optionsBkg.y - 20, this.volume, {font: "50px console"});
     volumeText.anchor.setTo(0.5, 0.5);
     volumeText.fixedToCamera = true;
     volumeText.smoothed = false;
@@ -344,49 +344,49 @@ var PlayScene = {
 
 
 
-    this.timeTxt = this.game.add.text(719, 50, this.currentTime.hour + ":00", {fill: "red"});
+    this.timeTxt = this.game.add.text(719, 50, this.currentTime.hour + ":00", {font: "50px console", fill: "red"});
     this.timeTxt.anchor.setTo(.5, 0);
     this.timeTxt.fixedToCamera = true;
     this.timeTxt.smoothed = false;
 
     this.UI.add(this.timeTxt);
 
-    this.timescaleTxt = this.game.add.text(this.timeTxt.x, this.timeTxt.bottom + 5, "Speed: " + this.timeScale);
+    this.timescaleTxt = this.game.add.text(this.timeTxt.x, this.timeTxt.bottom + 5, "Speed: " + this.timeScale, {font: "30px console"});
     this.timescaleTxt.anchor.setTo(.5, 0);
     this.timescaleTxt.fixedToCamera = true;
     this.timescaleTxt.smoothed = false;
 
     this.UI.add(this.timescaleTxt);
     
-    this.foodTxt = this.game.add.text(this.timeTxt.x, this.timescaleTxt.bottom + 550/5, "Food: " + this.food, {font: "20px Arial"});
+    this.foodTxt = this.game.add.text(this.timeTxt.x, this.timescaleTxt.bottom + 550/5, "Food: " + this.food, {font: "30px console"});
     this.foodTxt.anchor.setTo(.5, 0);
     this.foodTxt.fixedToCamera = true;
     this.foodTxt.smoothed = false;
 
     this.UI.add(this.foodTxt);
     
-    this.woodTxt = this.game.add.text(this.timeTxt.x, this.foodTxt.bottom + 5, "Wood: " + this.wood, {font: "20px Arial"});
+    this.woodTxt = this.game.add.text(this.timeTxt.x, this.foodTxt.bottom + 5, "Wood: " + this.wood, {font: "30px console"});
     this.woodTxt.anchor.setTo(.5, 0);
     this.woodTxt.fixedToCamera = true;
     this.woodTxt.smoothed = false;
 
     this.UI.add(this.woodTxt);
     
-    this.stoneTxt = this.game.add.text(this.timeTxt.x, this.woodTxt.bottom + 5, "Stone: " + this.stone, {font: "20px Arial"});
+    this.stoneTxt = this.game.add.text(this.timeTxt.x, this.woodTxt.bottom + 5, "Stone: " + this.stone, {font: "30px console"});
     this.stoneTxt.anchor.setTo(.5, 0);
     this.stoneTxt.fixedToCamera = true;
     this.stoneTxt.smoothed = false;
 
     this.UI.add(this.stoneTxt);
     
-    this.citizensTxt = this.game.add.text(this.timeTxt.x + 3, this.stoneTxt.bottom + 550/5, "Total Citizens: 5", {font: "20px Arial"});
+    this.citizensTxt = this.game.add.text(this.timeTxt.x + 3, this.stoneTxt.bottom + 550/5, "Total Citizens: 5", {font: "30px console"});
     this.citizensTxt.anchor.setTo(.5, 0);
     this.citizensTxt.fixedToCamera = true;
     this.citizensTxt.smoothed = false;
 
     this.UI.add(this.citizensTxt);
     
-    this.homelessTxt = this.game.add.text(this.timeTxt.x, this.citizensTxt.bottom + 5, "Homeless: 5", {font: "20px Arial"});
+    this.homelessTxt = this.game.add.text(this.timeTxt.x, this.citizensTxt.bottom + 5, "Homeless: 5", {font: "30px console"});
     this.homelessTxt.anchor.setTo(.5, 0);
     this.homelessTxt.fixedToCamera = true;
     this.homelessTxt.smoothed = false;
@@ -397,11 +397,11 @@ var PlayScene = {
       targetObject: roadBttn,
       context: "Road:\n  You can build right above them.\nCost:\n  Free",
       width: 150,
-      height: 97,
+      height: 100,
       strokeColor: 0xff0000,
       position: "top",
       positionOffset: 30,   
-      fontSize: 10,
+      
       animation: "fade"
     });
 
@@ -411,7 +411,7 @@ var PlayScene = {
       strokeColor: 0xff0000,
       position: "top",
       positionOffset: 30,   
-      fontSize: 10,
+      
       animation: "fade"
     });
 
@@ -421,7 +421,7 @@ var PlayScene = {
       strokeColor: 0xff0000,
       position: "top",
       positionOffset: 30,   
-      fontSize: 10,
+      
       animation: "fade"
     });
 
@@ -431,7 +431,7 @@ var PlayScene = {
       strokeColor: 0xff0000,
       position: "top",
       positionOffset: 30,   
-      fontSize: 10,
+      
       animation: "fade"
     });
 
@@ -441,19 +441,19 @@ var PlayScene = {
       strokeColor: 0xff0000,
       position: "top",
       positionOffset: 30,   
-      fontSize: 10,
+      
       animation: "fade"
     });
 
     this.tip6 = new Phasetips(this.game, {
       targetObject: bulldozeBttn,
-      context: "Bulldozer:\n  Used to destroy buildings and roads.",
+      context: "Bulldozer:\n  Used to destroy buildings and\n  roads.",
       width: 362,
-      height: 58,
+      height: 80,
       strokeColor: 0xff0000,
       position: "top",
       positionOffset: 30,   
-      fontSize: 10,
+      
       animation: "fade"
     });
 
