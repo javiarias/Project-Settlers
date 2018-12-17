@@ -48,18 +48,25 @@ var PlayScene = {
 
     /////////GROUPS AND RESOURCES
     this.food = 100;
+    this.foodGain = 0;
 
     this.wood = 50;
+    this.woodGain = 0;
 
     this.coal = 0;
+    this.coalGain = 0;
 
     this.uranium = 0;
+    this.uraniumGain = 0;
 
     this.energy = 0;
+    this.energyGain = 0;
 
     this.water = 0;
+    this.waterGain = 0;
 
     this.stone = 50;
+    this.stoneGain = 0;
     
     //etc...
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -360,7 +367,7 @@ var PlayScene = {
 
       this.foodTxtGroup = this.game.add.group();
 
-      this.foodIcon = this.game.add.sprite(this.timeTxt.centerX, this.timescaleTxt.bottom + 550/5, "cropIcon");
+      this.foodIcon = this.game.add.sprite(this.timeTxt.left, this.timescaleTxt.bottom + 550/5, "cropIcon");
       this.foodIcon.anchor.setTo(1, 0);
       this.foodIcon.fixedToCamera = true;
       this.foodIcon.smoothed = false;
@@ -375,9 +382,24 @@ var PlayScene = {
 
       this.foodTxtGroup.add(this.foodTxt);
 
+
+      var auxSymbol = "";
+      var auxColor = "#FF0000";
+      if(this.foodGain >= 0){
+        auxSymbol = "+";
+        auxColor = "#008500";
+      }
+      this.foodTxtGain = this.game.add.text(this.foodTxt.right + 15, this.foodIcon.centerY + 3, auxSymbol + this.foodGain, {font: "30px console"});
+      this.foodTxtGain.anchor.setTo(0, .5);
+      this.foodTxtGain.fixedToCamera = true;
+      this.foodTxtGain.smoothed = false;
+      this.foodTxtGain.addColor(auxColor, 0);
+
+      this.foodTxtGroup.add(this.foodTxtGain);
+
       this.foodTxtTooltip = new Phasetips(this.game, {
         targetObject: this.foodIcon,
-        context: "Food",
+        context: "Food\n(Citizens eat once per day)",
         strokeColor: 0xff0000,
         position: "left",
         positionOffset: 30,   
@@ -402,6 +424,21 @@ var PlayScene = {
       this.woodTxt.smoothed = false;
 
       this.woodTxtGroup.add(this.woodTxt);
+
+      auxSymbol = "";
+      auxColor = "#FF0000";
+      if(this.woodGain >= 0){
+        auxSymbol = "+";
+        auxColor = "#008500";
+      }
+
+      this.woodTxtGain = this.game.add.text(this.foodTxtGain.x, this.woodIcon.centerY + 3, auxSymbol + this.woodGain, {font: "30px console"});
+      this.woodTxtGain.anchor.setTo(0, .5);
+      this.woodTxtGain.fixedToCamera = true;
+      this.woodTxtGain.smoothed = false;
+      this.woodTxtGain.addColor(auxColor, 0);
+
+      this.woodTxtGroup.add(this.woodTxtGain);
 
       this.woodTxtTooltip = new Phasetips(this.game, {
         targetObject: this.woodIcon,
@@ -428,6 +465,23 @@ var PlayScene = {
       this.stoneTxt.anchor.setTo(0, .5);
       this.stoneTxt.fixedToCamera = true;
       this.stoneTxt.smoothed = false;
+
+      this.stoneTxtGroup.add(this.stoneTxt);
+
+      auxSymbol = "";
+      auxColor = "#FF0000";
+      if(this.stoneGain >= 0){
+        auxSymbol = "+";
+        auxColor = "#008500";
+      }
+
+      this.stoneTxtGain = this.game.add.text(this.foodTxtGain.x, this.stoneIcon.centerY + 3, auxSymbol + this.stoneGain, {font: "30px console"});
+      this.stoneTxtGain.anchor.setTo(0, .5);
+      this.stoneTxtGain.fixedToCamera = true;
+      this.stoneTxtGain.smoothed = false;
+      this.stoneTxtGain.addColor(auxColor, 0);
+
+      this.stoneTxtGroup.add(this.stoneTxtGain);
 
       this.stoneTxtTooltip = new Phasetips(this.game, {
         targetObject: this.stoneIcon,
@@ -706,10 +760,11 @@ var PlayScene = {
         roadAdjacency = roadAdjacency || this.checkAdjacency.call(this, this._buildingModeSprite, road);
       }, this);
 
-      var obstacle = this.checkObstacles.call(this, this._buildingModeSprite);
+      var waterObstacle = this.checkObstacles.call(this, this._buildingModeSprite, "water");
+      var mountainObstacle = this.checkObstacles.call(this, this._buildingModeSprite, "mountain");
 
 
-      if(!overlap && (this._buildingModeType == this.roadGroup || (roadAdjacency && this.wood >= 10 && this.stone >= 10 && !obstacle))){
+      if(!overlap && !mountainObstacle && (this._buildingModeType == this.roadGroup || (roadAdjacency && this.wood >= 10 && this.stone >= 10 && !waterObstacle))){
         var auxBuilding;
 
         var offset = 0;
@@ -718,7 +773,7 @@ var PlayScene = {
           offset = 8;
 
         if(this._buildingModeType == this.houseGroup)
-          auxBuilding = new Classes.House(this.game, Math.round(this.game.input.worldX / this._tileSize) * this._tileSize, offset + Math.round(this.game.input.worldY / this._tileSize) * this._tileSize, this._buildingModeType.sprite, 1);
+          auxBuilding = new Classes.House(this.game, Math.round(this.game.input.worldX / this._tileSize) * this._tileSize, offset + Math.round(this.game.input.worldY / this._tileSize) * this._tileSize, this._buildingModeType.sprite);
         else
           auxBuilding = new Classes.Producer(this.game, Math.round(this.game.input.worldX / this._tileSize) * this._tileSize, offset + Math.round(this.game.input.worldY / this._tileSize) * this._tileSize, this._buildingModeType.sprite, 1);
         auxBuilding.anchor.setTo(0.5, 0.5);
@@ -734,8 +789,8 @@ var PlayScene = {
         if(this._buildingModeType != this.roadGroup){
           this.wood -= 10;
           this.stone -= 10;
-          this.woodTxt.text = "Wood: " + this.wood;
-          this.stoneTxt.text = "Stone: " + this.stone;
+          this.woodTxt.text = this.wood;
+          this.stoneTxt.text = this.stone;
         }
 
         this._buildingModeType.add(auxBuilding);
@@ -823,9 +878,13 @@ var PlayScene = {
       return Phaser.Rectangle.intersects(x, y) && !corners;
     }
 
-    this.checkObstacles = function(a){
+    this.checkObstacles = function(a, type){
 
-      return this.map.getTileWorldXY(a.x, a.y, this.map.tileWidth, this.map.tileHeight, "water") !== null || this.map.getTileWorldXY(a.x, a.y, this.map.tileWidth, this.map.tileHeight, "obstacles") !== null;
+      if(type == "water")
+        return this.map.getTileWorldXY(a.x, a.y, this.map.tileWidth, this.map.tileHeight, "water") !== null;
+
+      else if(type == "mountain")
+        return this.map.getTileWorldXY(a.x, a.y, this.map.tileWidth, this.map.tileHeight, "obstacles") !== null;
       
     }
 
@@ -894,9 +953,9 @@ var PlayScene = {
             }, this);
 
 
-            this.foodTxt.text = "Food: " + this.food;
-            this.woodTxt.text = "Wood: " + this.wood;
-            this.stoneTxt.text = "Stone: " + this.stone;
+            this.foodTxt.text = this.food;
+            this.woodTxt.text = this.wood;
+            this.stoneTxt.text = this.stone;
           }
 
           else if(this.currentTime.hour == 0){
@@ -919,7 +978,7 @@ var PlayScene = {
               this.homelessArray[i].tick(this.food, false, null, this.homelessArray, this.houseGroup);
             }
 
-            this.foodTxt.text = "Food: " + this.food;
+            this.foodTxt.text = this.food;
           }
 
           else
@@ -940,8 +999,45 @@ var PlayScene = {
 
           this.houseGroup.forEach(function(house){aux += house.countCitizens();});
           
-          this.homelessTxt.text = "Homeless: " + this.homelessArray.length;
-          this.citizensTxt.text = "Total Citizens: " + aux;
+          this.homelessTxt.text = this.homelessArray.length;
+          this.citizensTxt.text = aux;
+
+          this.foodGain = 0;
+          this.cropGroup.forEach(function(prod){this.foodGain += prod.amount * (this.shiftEnd - this.shiftStart)}, this);
+          this.foodGain -= (aux * 5);
+          var auxSymbol = "";
+          var auxColor = "#FF0000";
+          if(this.foodGain >= 0){
+            auxSymbol = "+";
+            auxColor = "#008500";
+          }
+          this.foodTxtGain.text = auxSymbol + this.foodGain;
+          this.foodTxtGain.addColor(auxColor, 0);
+
+
+          this.woodGain = 0;
+          this.woodGroup.forEach(function(prod){this.woodGain += prod.amount * (this.shiftEnd - this.shiftStart)}, this);
+          auxSymbol = "";
+          auxColor = "#FF0000";
+          if(this.woodGain >= 0){
+            auxSymbol = "+";
+            auxColor = "#008500";
+          }
+          this.woodTxtGain.text = auxSymbol + this.woodGain;
+          this.woodTxtGain.addColor(auxColor);
+
+
+          this.stoneGain = 0;
+          this.stoneGroup.forEach(function(prod){this.stoneGain += prod.amount * (this.shiftEnd - this.shiftStart)}, this);
+          auxSymbol = "";
+          auxColor = "#FF0000";
+          if(this.woodGain >= 0){
+            auxSymbol = "+";
+            auxColor = "#008500";
+          }
+          this.stoneTxtGain.text = auxSymbol + this.stoneGain;
+          this.stoneTxtGain.addColor(auxColor);
+          
 
           if(this.food < 5)
             this.foodTxt.addColor("#FF0000", 0);
@@ -987,9 +1083,11 @@ var PlayScene = {
           roadAdjacency = roadAdjacency || this.checkAdjacency.call(this, this._buildingModeSprite, road);
         }, this);
 
-        var obstacle = this.checkObstacles.call(this, this._buildingModeSprite);
+      var waterObstacle = this.checkObstacles.call(this, this._buildingModeSprite, "water");
+      var mountainObstacle = this.checkObstacles.call(this, this._buildingModeSprite, "mountain");
 
-        if(!overlap && (this._buildingModeType == this.roadGroup || (roadAdjacency && this.wood >= 10 && this.stone >= 10 && !obstacle)))
+
+      if(!overlap && !mountainObstacle && (this._buildingModeType == this.roadGroup || (roadAdjacency && this.wood >= 10 && this.stone >= 10 && !waterObstacle)))
           this._buildingModeSprite.tint = 0xFFFFFF; //el sprite se pone de color normal si se puede construir
         else
           this._buildingModeSprite.tint = 0xFF0000;

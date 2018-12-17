@@ -287,6 +287,8 @@ var Phasetips = function(localGame, options) {
 
         mainGroup.update = function() {
             var worldPos = _options.targetObject ? _options.targetObject.world : game.world;
+            game.world.bringToTop(tooltipContent);
+            game.world.bringToTop(tooltipBG);
             if (worldPos.x !== mainGroup.initialWorldX) {
                 //updatePosition();
             }

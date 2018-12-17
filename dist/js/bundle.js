@@ -288,6 +288,8 @@ var Phasetips = function(localGame, options) {
 
         mainGroup.update = function() {
             var worldPos = _options.targetObject ? _options.targetObject.world : game.world;
+            game.world.bringToTop(tooltipContent);
+            game.world.bringToTop(tooltipBG);
             if (worldPos.x !== mainGroup.initialWorldX) {
                 //updatePosition();
             }
@@ -603,6 +605,11 @@ var PreloaderScene = {
     this.game.load.image('UI', 'images/menu/UI.png');
     this.game.load.image('pauseBkg', 'images/menu/pauseMenu.png');
     this.game.load.image('mainBkg', 'images/menu/mainBkg.png');
+    this.game.load.image('cropIcon', 'images/menu/cropIcon.png');
+    this.game.load.image('stoneIcon', 'images/menu/stoneIcon.png');
+    this.game.load.image('woodIcon', 'images/menu/woodIcon.png');
+    this.game.load.image('citizenIcon', 'images/menu/citizenIcon.png');
+    this.game.load.image('noHouseIcon', 'images/menu/noHouseIcon.png');
     this.game.load.image('optionsBkg', 'images/menu/optionsMenu.png');
     this.game.load.spritesheet('exitBttn', 'images/menu/exit.png', 55, 48);
     this.game.load.spritesheet('minBttn', 'images/menu/minimize.png', 55, 48);
@@ -817,18 +824,25 @@ var PlayScene = {
 
     /////////GROUPS AND RESOURCES
     this.food = 100;
+    this.foodGain = 0;
 
     this.wood = 50;
+    this.woodGain = 0;
 
     this.coal = 0;
+    this.coalGain = 0;
 
     this.uranium = 0;
+    this.uraniumGain = 0;
 
     this.energy = 0;
+    this.energyGain = 0;
 
     this.water = 0;
+    this.waterGain = 0;
 
     this.stone = 50;
+    this.stoneGain = 0;
     
     //etc...
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1113,54 +1127,207 @@ var PlayScene = {
 
 
 
-    this.timeTxt = this.game.add.text(719, 50, this.currentTime.hour + ":00", {font: "50px console", fill: "red"});
-    this.timeTxt.anchor.setTo(.5, 0);
-    this.timeTxt.fixedToCamera = true;
-    this.timeTxt.smoothed = false;
+      this.timeTxt = this.game.add.text(719, 50, this.currentTime.hour + ":00", {font: "50px console", fill: "red"});
+      this.timeTxt.anchor.setTo(.5, 0);
+      this.timeTxt.fixedToCamera = true;
+      this.timeTxt.smoothed = false;
 
     this.UI.add(this.timeTxt);
 
-    this.timescaleTxt = this.game.add.text(this.timeTxt.x, this.timeTxt.bottom + 5, "Speed: " + this.timeScale, {font: "30px console"});
-    this.timescaleTxt.anchor.setTo(.5, 0);
-    this.timescaleTxt.fixedToCamera = true;
-    this.timescaleTxt.smoothed = false;
+      this.timescaleTxt = this.game.add.text(this.timeTxt.x, this.timeTxt.bottom + 5, "Speed: " + this.timeScale, {font: "30px console"});
+      this.timescaleTxt.anchor.setTo(.5, 0);
+      this.timescaleTxt.fixedToCamera = true;
+      this.timescaleTxt.smoothed = false;
 
     this.UI.add(this.timescaleTxt);
-    
-    this.foodTxt = this.game.add.text(this.timeTxt.x, this.timescaleTxt.bottom + 550/5, "Food: " + this.food, {font: "30px console"});
-    this.foodTxt.anchor.setTo(.5, 0);
-    this.foodTxt.fixedToCamera = true;
-    this.foodTxt.smoothed = false;
 
-    this.UI.add(this.foodTxt);
-    
-    this.woodTxt = this.game.add.text(this.timeTxt.x, this.foodTxt.bottom + 5, "Wood: " + this.wood, {font: "30px console"});
-    this.woodTxt.anchor.setTo(.5, 0);
-    this.woodTxt.fixedToCamera = true;
-    this.woodTxt.smoothed = false;
+      this.foodTxtGroup = this.game.add.group();
 
-    this.UI.add(this.woodTxt);
-    
-    this.stoneTxt = this.game.add.text(this.timeTxt.x, this.woodTxt.bottom + 5, "Stone: " + this.stone, {font: "30px console"});
-    this.stoneTxt.anchor.setTo(.5, 0);
-    this.stoneTxt.fixedToCamera = true;
-    this.stoneTxt.smoothed = false;
+      this.foodIcon = this.game.add.sprite(this.timeTxt.left, this.timescaleTxt.bottom + 550/5, "cropIcon");
+      this.foodIcon.anchor.setTo(1, 0);
+      this.foodIcon.fixedToCamera = true;
+      this.foodIcon.smoothed = false;
 
-    this.UI.add(this.stoneTxt);
-    
-    this.citizensTxt = this.game.add.text(this.timeTxt.x + 3, this.stoneTxt.bottom + 550/5, "Total Citizens: 5", {font: "30px console"});
-    this.citizensTxt.anchor.setTo(.5, 0);
-    this.citizensTxt.fixedToCamera = true;
-    this.citizensTxt.smoothed = false;
+      this.foodTxtGroup.add(this.foodIcon);
 
-    this.UI.add(this.citizensTxt);
-    
-    this.homelessTxt = this.game.add.text(this.timeTxt.x, this.citizensTxt.bottom + 5, "Homeless: 5", {font: "30px console"});
-    this.homelessTxt.anchor.setTo(.5, 0);
-    this.homelessTxt.fixedToCamera = true;
-    this.homelessTxt.smoothed = false;
+      
+      this.foodTxt = this.game.add.text(this.foodIcon.right + 15, this.foodIcon.centerY + 3, this.food, {font: "30px console"});
+      this.foodTxt.anchor.setTo(0, .5);
+      this.foodTxt.fixedToCamera = true;
+      this.foodTxt.smoothed = false;
 
-    this.UI.add(this.homelessTxt);
+      this.foodTxtGroup.add(this.foodTxt);
+
+
+      var auxSymbol = "";
+      var auxColor = "#FF0000";
+      if(this.foodGain >= 0){
+        auxSymbol = "+";
+        auxColor = "#008500";
+      }
+      this.foodTxtGain = this.game.add.text(this.foodTxt.right + 15, this.foodIcon.centerY + 3, auxSymbol + this.foodGain, {font: "30px console"});
+      this.foodTxtGain.anchor.setTo(0, .5);
+      this.foodTxtGain.fixedToCamera = true;
+      this.foodTxtGain.smoothed = false;
+      this.foodTxtGain.addColor(auxColor, 0);
+
+      this.foodTxtGroup.add(this.foodTxtGain);
+
+      this.foodTxtTooltip = new Phasetips(this.game, {
+        targetObject: this.foodIcon,
+        context: "Food\n(Citizens eat once per day)",
+        strokeColor: 0xff0000,
+        position: "left",
+        positionOffset: 30,   
+        
+        animation: "fade"
+      });
+
+    this.UI.add(this.foodTxtGroup);
+
+      this.woodTxtGroup = this.game.add.group();
+
+      this.woodIcon = this.game.add.sprite(this.foodIcon.centerX, this.foodIcon.bottom + 7, "woodIcon");
+      this.woodIcon.anchor.setTo(.5, 0);
+      this.woodIcon.fixedToCamera = true;
+      this.woodIcon.smoothed = false;
+
+      this.woodTxtGroup.add(this.woodIcon);
+      
+      this.woodTxt = this.game.add.text(this.foodTxt.x, this.woodIcon.centerY + 4, this.wood, {font: "30px console"});
+      this.woodTxt.anchor.setTo(0, .5);
+      this.woodTxt.fixedToCamera = true;
+      this.woodTxt.smoothed = false;
+
+      this.woodTxtGroup.add(this.woodTxt);
+
+      auxSymbol = "";
+      auxColor = "#FF0000";
+      if(this.woodGain >= 0){
+        auxSymbol = "+";
+        auxColor = "#008500";
+      }
+
+      this.woodTxtGain = this.game.add.text(this.foodTxtGain.x, this.woodIcon.centerY + 3, auxSymbol + this.woodGain, {font: "30px console"});
+      this.woodTxtGain.anchor.setTo(0, .5);
+      this.woodTxtGain.fixedToCamera = true;
+      this.woodTxtGain.smoothed = false;
+      this.woodTxtGain.addColor(auxColor, 0);
+
+      this.woodTxtGroup.add(this.woodTxtGain);
+
+      this.woodTxtTooltip = new Phasetips(this.game, {
+        targetObject: this.woodIcon,
+        context: "Wood",
+        strokeColor: 0xff0000,
+        position: "left",
+        positionOffset: 30,   
+        
+        animation: "fade"
+      });
+
+    this.UI.add(this.woodTxtGroup);
+
+      this.stoneTxtGroup = this.game.add.group();
+
+      this.stoneIcon = this.game.add.sprite(this.foodIcon.centerX, this.woodIcon.bottom + 7, "stoneIcon");
+      this.stoneIcon.anchor.setTo(.5, 0);
+      this.stoneIcon.fixedToCamera = true;
+      this.stoneIcon.smoothed = false;
+
+      this.stoneTxtGroup.add(this.stoneIcon);
+
+      this.stoneTxt = this.game.add.text(this.foodTxt.x, this.stoneIcon.centerY + 4, this.stone, {font: "30px console"});
+      this.stoneTxt.anchor.setTo(0, .5);
+      this.stoneTxt.fixedToCamera = true;
+      this.stoneTxt.smoothed = false;
+
+      this.stoneTxtGroup.add(this.stoneTxt);
+
+      auxSymbol = "";
+      auxColor = "#FF0000";
+      if(this.stoneGain >= 0){
+        auxSymbol = "+";
+        auxColor = "#008500";
+      }
+
+      this.stoneTxtGain = this.game.add.text(this.foodTxtGain.x, this.stoneIcon.centerY + 3, auxSymbol + this.stoneGain, {font: "30px console"});
+      this.stoneTxtGain.anchor.setTo(0, .5);
+      this.stoneTxtGain.fixedToCamera = true;
+      this.stoneTxtGain.smoothed = false;
+      this.stoneTxtGain.addColor(auxColor, 0);
+
+      this.stoneTxtGroup.add(this.stoneTxtGain);
+
+      this.stoneTxtTooltip = new Phasetips(this.game, {
+        targetObject: this.stoneIcon,
+        context: "Stone",
+        strokeColor: 0xff0000,
+        position: "left",
+        positionOffset: 30,   
+        
+        animation: "fade"
+      });
+
+      this.stoneTxtGroup.add(this.stoneTxt);
+
+    this.UI.add(this.stoneTxtGroup);
+
+      this.citizensTxtGroup = this.game.add.group();
+
+      this.citizensIcon = this.game.add.sprite(this.foodIcon.centerX, this.stoneIcon.bottom + 550/5, "citizenIcon");
+      this.citizensIcon.anchor.setTo(.5, 0);
+      this.citizensIcon.fixedToCamera = true;
+      this.citizensIcon.smoothed = false;
+
+      this.citizensTxtGroup.add(this.citizensIcon);
+
+      this.citizensTxt = this.game.add.text(this.foodTxt.x, this.citizensIcon.centerY + 3, "5", {font: "30px console"});
+      this.citizensTxt.anchor.setTo(0, .5);
+      this.citizensTxt.fixedToCamera = true;
+      this.citizensTxt.smoothed = false;
+
+      this.citizensTxtGroup.add(this.citizensTxt);
+
+      this.citizensTxtTooltip = new Phasetips(this.game, {
+        targetObject: this.citizensIcon,
+        context: "Citizen Total",
+        strokeColor: 0xff0000,
+        position: "left",
+        positionOffset: 30,   
+        
+        animation: "fade"
+      });
+
+    this.UI.add(this.citizensTxtGroup);
+
+      this.homelessTxtGroup = this.game.add.group();
+
+      this.homelessIcon = this.game.add.sprite(this.foodIcon.centerX, this.citizensIcon.bottom + 7, "noHouseIcon");
+      this.homelessIcon.anchor.setTo(.5, 0);
+      this.homelessIcon.fixedToCamera = true;
+      this.homelessIcon.smoothed = false;
+
+      this.homelessTxtGroup.add(this.homelessIcon);
+
+      this.homelessTxt = this.game.add.text(this.foodTxt.x, this.homelessIcon.centerY + 4, "5", {font: "30px console"});
+      this.homelessTxt.anchor.setTo(0, .5);
+      this.homelessTxt.fixedToCamera = true;
+      this.homelessTxt.smoothed = false;
+
+      this.homelessTxtGroup.add(this.homelessTxt);
+
+      this.homelessTxtTooltip = new Phasetips(this.game, {
+        targetObject: this.homelessIcon,
+        context: "Homeless Citizens",
+        strokeColor: 0xff0000,
+        position: "left",
+        positionOffset: 30,   
+        
+        animation: "fade"
+      });
+
+    this.UI.add(this.homelessTxtGroup);
     
     this.tip1 = new Phasetips(this.game, {
       targetObject: roadBttn,
@@ -1369,10 +1536,11 @@ var PlayScene = {
         roadAdjacency = roadAdjacency || this.checkAdjacency.call(this, this._buildingModeSprite, road);
       }, this);
 
-      var obstacle = this.checkObstacles.call(this, this._buildingModeSprite);
+      var waterObstacle = this.checkObstacles.call(this, this._buildingModeSprite, "water");
+      var mountainObstacle = this.checkObstacles.call(this, this._buildingModeSprite, "mountain");
 
 
-      if(!overlap && (this._buildingModeType == this.roadGroup || (roadAdjacency && this.wood >= 10 && this.stone >= 10 && !obstacle))){
+      if(!overlap && !mountainObstacle && (this._buildingModeType == this.roadGroup || (roadAdjacency && this.wood >= 10 && this.stone >= 10 && !waterObstacle))){
         var auxBuilding;
 
         var offset = 0;
@@ -1381,7 +1549,7 @@ var PlayScene = {
           offset = 8;
 
         if(this._buildingModeType == this.houseGroup)
-          auxBuilding = new Classes.House(this.game, Math.round(this.game.input.worldX / this._tileSize) * this._tileSize, offset + Math.round(this.game.input.worldY / this._tileSize) * this._tileSize, this._buildingModeType.sprite, 1);
+          auxBuilding = new Classes.House(this.game, Math.round(this.game.input.worldX / this._tileSize) * this._tileSize, offset + Math.round(this.game.input.worldY / this._tileSize) * this._tileSize, this._buildingModeType.sprite);
         else
           auxBuilding = new Classes.Producer(this.game, Math.round(this.game.input.worldX / this._tileSize) * this._tileSize, offset + Math.round(this.game.input.worldY / this._tileSize) * this._tileSize, this._buildingModeType.sprite, 1);
         auxBuilding.anchor.setTo(0.5, 0.5);
@@ -1397,8 +1565,8 @@ var PlayScene = {
         if(this._buildingModeType != this.roadGroup){
           this.wood -= 10;
           this.stone -= 10;
-          this.woodTxt.text = "Wood: " + this.wood;
-          this.stoneTxt.text = "Stone: " + this.stone;
+          this.woodTxt.text = this.wood;
+          this.stoneTxt.text = this.stone;
         }
 
         this._buildingModeType.add(auxBuilding);
@@ -1486,9 +1654,13 @@ var PlayScene = {
       return Phaser.Rectangle.intersects(x, y) && !corners;
     }
 
-    this.checkObstacles = function(a){
+    this.checkObstacles = function(a, type){
 
-      return this.map.getTileWorldXY(a.x, a.y, this.map.tileWidth, this.map.tileHeight, "water") !== null || this.map.getTileWorldXY(a.x, a.y, this.map.tileWidth, this.map.tileHeight, "obstacles") !== null;
+      if(type == "water")
+        return this.map.getTileWorldXY(a.x, a.y, this.map.tileWidth, this.map.tileHeight, "water") !== null;
+
+      else if(type == "mountain")
+        return this.map.getTileWorldXY(a.x, a.y, this.map.tileWidth, this.map.tileHeight, "obstacles") !== null;
       
     }
 
@@ -1557,9 +1729,9 @@ var PlayScene = {
             }, this);
 
 
-            this.foodTxt.text = "Food: " + this.food;
-            this.woodTxt.text = "Wood: " + this.wood;
-            this.stoneTxt.text = "Stone: " + this.stone;
+            this.foodTxt.text = this.food;
+            this.woodTxt.text = this.wood;
+            this.stoneTxt.text = this.stone;
           }
 
           else if(this.currentTime.hour == 0){
@@ -1582,7 +1754,7 @@ var PlayScene = {
               this.homelessArray[i].tick(this.food, false, null, this.homelessArray, this.houseGroup);
             }
 
-            this.foodTxt.text = "Food: " + this.food;
+            this.foodTxt.text = this.food;
           }
 
           else
@@ -1603,8 +1775,45 @@ var PlayScene = {
 
           this.houseGroup.forEach(function(house){aux += house.countCitizens();});
           
-          this.homelessTxt.text = "Homeless: " + this.homelessArray.length;
-          this.citizensTxt.text = "Total Citizens: " + aux;
+          this.homelessTxt.text = this.homelessArray.length;
+          this.citizensTxt.text = aux;
+
+          this.foodGain = 0;
+          this.cropGroup.forEach(function(prod){this.foodGain += prod.amount * (this.shiftEnd - this.shiftStart)}, this);
+          this.foodGain -= (aux * 5);
+          var auxSymbol = "";
+          var auxColor = "#FF0000";
+          if(this.foodGain >= 0){
+            auxSymbol = "+";
+            auxColor = "#008500";
+          }
+          this.foodTxtGain.text = auxSymbol + this.foodGain;
+          this.foodTxtGain.addColor(auxColor, 0);
+
+
+          this.woodGain = 0;
+          this.woodGroup.forEach(function(prod){this.woodGain += prod.amount * (this.shiftEnd - this.shiftStart)}, this);
+          auxSymbol = "";
+          auxColor = "#FF0000";
+          if(this.woodGain >= 0){
+            auxSymbol = "+";
+            auxColor = "#008500";
+          }
+          this.woodTxtGain.text = auxSymbol + this.woodGain;
+          this.woodTxtGain.addColor(auxColor);
+
+
+          this.stoneGain = 0;
+          this.stoneGroup.forEach(function(prod){this.stoneGain += prod.amount * (this.shiftEnd - this.shiftStart)}, this);
+          auxSymbol = "";
+          auxColor = "#FF0000";
+          if(this.woodGain >= 0){
+            auxSymbol = "+";
+            auxColor = "#008500";
+          }
+          this.stoneTxtGain.text = auxSymbol + this.stoneGain;
+          this.stoneTxtGain.addColor(auxColor);
+          
 
           if(this.food < 5)
             this.foodTxt.addColor("#FF0000", 0);
@@ -1650,9 +1859,11 @@ var PlayScene = {
           roadAdjacency = roadAdjacency || this.checkAdjacency.call(this, this._buildingModeSprite, road);
         }, this);
 
-        var obstacle = this.checkObstacles.call(this, this._buildingModeSprite);
+      var waterObstacle = this.checkObstacles.call(this, this._buildingModeSprite, "water");
+      var mountainObstacle = this.checkObstacles.call(this, this._buildingModeSprite, "mountain");
 
-        if(!overlap && (this._buildingModeType == this.roadGroup || (roadAdjacency && this.wood >= 10 && this.stone >= 10 && !obstacle)))
+
+      if(!overlap && !mountainObstacle && (this._buildingModeType == this.roadGroup || (roadAdjacency && this.wood >= 10 && this.stone >= 10 && !waterObstacle)))
           this._buildingModeSprite.tint = 0xFFFFFF; //el sprite se pone de color normal si se puede construir
         else
           this._buildingModeSprite.tint = 0xFF0000;
