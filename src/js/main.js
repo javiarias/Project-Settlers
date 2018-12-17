@@ -63,6 +63,11 @@ var PreloaderScene = {
     this.game.load.image('UI', 'images/menu/UI.png');
     this.game.load.image('pauseBkg', 'images/menu/pauseMenu.png');
     this.game.load.image('mainBkg', 'images/menu/mainBkg.png');
+    this.game.load.image('cropIcon', 'images/menu/cropIcon.png');
+    this.game.load.image('stoneIcon', 'images/menu/stoneIcon.png');
+    this.game.load.image('woodIcon', 'images/menu/woodIcon.png');
+    this.game.load.image('citizenIcon', 'images/menu/citizenIcon.png');
+    this.game.load.image('noHouseIcon', 'images/menu/noHouseIcon.png');
     this.game.load.image('optionsBkg', 'images/menu/optionsMenu.png');
     this.game.load.spritesheet('exitBttn', 'images/menu/exit.png', 55, 48);
     this.game.load.spritesheet('minBttn', 'images/menu/minimize.png', 55, 48);

@@ -344,54 +344,160 @@ var PlayScene = {
 
 
 
-    this.timeTxt = this.game.add.text(719, 50, this.currentTime.hour + ":00", {font: "50px console", fill: "red"});
-    this.timeTxt.anchor.setTo(.5, 0);
-    this.timeTxt.fixedToCamera = true;
-    this.timeTxt.smoothed = false;
+      this.timeTxt = this.game.add.text(719, 50, this.currentTime.hour + ":00", {font: "50px console", fill: "red"});
+      this.timeTxt.anchor.setTo(.5, 0);
+      this.timeTxt.fixedToCamera = true;
+      this.timeTxt.smoothed = false;
 
     this.UI.add(this.timeTxt);
 
-    this.timescaleTxt = this.game.add.text(this.timeTxt.x, this.timeTxt.bottom + 5, "Speed: " + this.timeScale, {font: "30px console"});
-    this.timescaleTxt.anchor.setTo(.5, 0);
-    this.timescaleTxt.fixedToCamera = true;
-    this.timescaleTxt.smoothed = false;
+      this.timescaleTxt = this.game.add.text(this.timeTxt.x, this.timeTxt.bottom + 5, "Speed: " + this.timeScale, {font: "30px console"});
+      this.timescaleTxt.anchor.setTo(.5, 0);
+      this.timescaleTxt.fixedToCamera = true;
+      this.timescaleTxt.smoothed = false;
 
     this.UI.add(this.timescaleTxt);
-    
-    this.foodTxt = this.game.add.text(this.timeTxt.x, this.timescaleTxt.bottom + 550/5, "Food: " + this.food, {font: "30px console"});
-    this.foodTxt.anchor.setTo(.5, 0);
-    this.foodTxt.fixedToCamera = true;
-    this.foodTxt.smoothed = false;
 
-    this.UI.add(this.foodTxt);
-    
-    this.woodTxt = this.game.add.text(this.timeTxt.x, this.foodTxt.bottom + 5, "Wood: " + this.wood, {font: "30px console"});
-    this.woodTxt.anchor.setTo(.5, 0);
-    this.woodTxt.fixedToCamera = true;
-    this.woodTxt.smoothed = false;
+      this.foodTxtGroup = this.game.add.group();
 
-    this.UI.add(this.woodTxt);
-    
-    this.stoneTxt = this.game.add.text(this.timeTxt.x, this.woodTxt.bottom + 5, "Stone: " + this.stone, {font: "30px console"});
-    this.stoneTxt.anchor.setTo(.5, 0);
-    this.stoneTxt.fixedToCamera = true;
-    this.stoneTxt.smoothed = false;
+      this.foodIcon = this.game.add.sprite(this.timeTxt.centerX, this.timescaleTxt.bottom + 550/5, "cropIcon");
+      this.foodIcon.anchor.setTo(1, 0);
+      this.foodIcon.fixedToCamera = true;
+      this.foodIcon.smoothed = false;
 
-    this.UI.add(this.stoneTxt);
-    
-    this.citizensTxt = this.game.add.text(this.timeTxt.x + 3, this.stoneTxt.bottom + 550/5, "Total Citizens: 5", {font: "30px console"});
-    this.citizensTxt.anchor.setTo(.5, 0);
-    this.citizensTxt.fixedToCamera = true;
-    this.citizensTxt.smoothed = false;
+      this.foodTxtGroup.add(this.foodIcon);
 
-    this.UI.add(this.citizensTxt);
-    
-    this.homelessTxt = this.game.add.text(this.timeTxt.x, this.citizensTxt.bottom + 5, "Homeless: 5", {font: "30px console"});
-    this.homelessTxt.anchor.setTo(.5, 0);
-    this.homelessTxt.fixedToCamera = true;
-    this.homelessTxt.smoothed = false;
+      
+      this.foodTxt = this.game.add.text(this.foodIcon.right + 15, this.foodIcon.centerY + 3, this.food, {font: "30px console"});
+      this.foodTxt.anchor.setTo(0, .5);
+      this.foodTxt.fixedToCamera = true;
+      this.foodTxt.smoothed = false;
 
-    this.UI.add(this.homelessTxt);
+      this.foodTxtGroup.add(this.foodTxt);
+
+      this.foodTxtTooltip = new Phasetips(this.game, {
+        targetObject: this.foodIcon,
+        context: "Food",
+        strokeColor: 0xff0000,
+        position: "left",
+        positionOffset: 30,   
+        
+        animation: "fade"
+      });
+
+    this.UI.add(this.foodTxtGroup);
+
+      this.woodTxtGroup = this.game.add.group();
+
+      this.woodIcon = this.game.add.sprite(this.foodIcon.centerX, this.foodIcon.bottom + 7, "woodIcon");
+      this.woodIcon.anchor.setTo(.5, 0);
+      this.woodIcon.fixedToCamera = true;
+      this.woodIcon.smoothed = false;
+
+      this.woodTxtGroup.add(this.woodIcon);
+      
+      this.woodTxt = this.game.add.text(this.foodTxt.x, this.woodIcon.centerY + 4, this.wood, {font: "30px console"});
+      this.woodTxt.anchor.setTo(0, .5);
+      this.woodTxt.fixedToCamera = true;
+      this.woodTxt.smoothed = false;
+
+      this.woodTxtGroup.add(this.woodTxt);
+
+      this.woodTxtTooltip = new Phasetips(this.game, {
+        targetObject: this.woodIcon,
+        context: "Wood",
+        strokeColor: 0xff0000,
+        position: "left",
+        positionOffset: 30,   
+        
+        animation: "fade"
+      });
+
+    this.UI.add(this.woodTxtGroup);
+
+      this.stoneTxtGroup = this.game.add.group();
+
+      this.stoneIcon = this.game.add.sprite(this.foodIcon.centerX, this.woodIcon.bottom + 7, "stoneIcon");
+      this.stoneIcon.anchor.setTo(.5, 0);
+      this.stoneIcon.fixedToCamera = true;
+      this.stoneIcon.smoothed = false;
+
+      this.stoneTxtGroup.add(this.stoneIcon);
+
+      this.stoneTxt = this.game.add.text(this.foodTxt.x, this.stoneIcon.centerY + 4, this.stone, {font: "30px console"});
+      this.stoneTxt.anchor.setTo(0, .5);
+      this.stoneTxt.fixedToCamera = true;
+      this.stoneTxt.smoothed = false;
+
+      this.stoneTxtTooltip = new Phasetips(this.game, {
+        targetObject: this.stoneIcon,
+        context: "Stone",
+        strokeColor: 0xff0000,
+        position: "left",
+        positionOffset: 30,   
+        
+        animation: "fade"
+      });
+
+      this.stoneTxtGroup.add(this.stoneTxt);
+
+    this.UI.add(this.stoneTxtGroup);
+
+      this.citizensTxtGroup = this.game.add.group();
+
+      this.citizensIcon = this.game.add.sprite(this.foodIcon.centerX, this.stoneIcon.bottom + 550/5, "citizenIcon");
+      this.citizensIcon.anchor.setTo(.5, 0);
+      this.citizensIcon.fixedToCamera = true;
+      this.citizensIcon.smoothed = false;
+
+      this.citizensTxtGroup.add(this.citizensIcon);
+
+      this.citizensTxt = this.game.add.text(this.foodTxt.x, this.citizensIcon.centerY + 3, "5", {font: "30px console"});
+      this.citizensTxt.anchor.setTo(0, .5);
+      this.citizensTxt.fixedToCamera = true;
+      this.citizensTxt.smoothed = false;
+
+      this.citizensTxtGroup.add(this.citizensTxt);
+
+      this.citizensTxtTooltip = new Phasetips(this.game, {
+        targetObject: this.citizensIcon,
+        context: "Citizen Total",
+        strokeColor: 0xff0000,
+        position: "left",
+        positionOffset: 30,   
+        
+        animation: "fade"
+      });
+
+    this.UI.add(this.citizensTxtGroup);
+
+      this.homelessTxtGroup = this.game.add.group();
+
+      this.homelessIcon = this.game.add.sprite(this.foodIcon.centerX, this.citizensIcon.bottom + 7, "noHouseIcon");
+      this.homelessIcon.anchor.setTo(.5, 0);
+      this.homelessIcon.fixedToCamera = true;
+      this.homelessIcon.smoothed = false;
+
+      this.homelessTxtGroup.add(this.homelessIcon);
+
+      this.homelessTxt = this.game.add.text(this.foodTxt.x, this.homelessIcon.centerY + 4, "5", {font: "30px console"});
+      this.homelessTxt.anchor.setTo(0, .5);
+      this.homelessTxt.fixedToCamera = true;
+      this.homelessTxt.smoothed = false;
+
+      this.homelessTxtGroup.add(this.homelessTxt);
+
+      this.homelessTxtTooltip = new Phasetips(this.game, {
+        targetObject: this.homelessIcon,
+        context: "Homeless Citizens",
+        strokeColor: 0xff0000,
+        position: "left",
+        positionOffset: 30,   
+        
+        animation: "fade"
+      });
+
+    this.UI.add(this.homelessTxtGroup);
     
     this.tip1 = new Phasetips(this.game, {
       targetObject: roadBttn,
