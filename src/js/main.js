@@ -1,6 +1,7 @@
 'use strict';
 
 var PlayScene = require('./play_scene.js');
+var Tutorial = require('./tutorial.js');
 
 var BootScene = {
   init: function() {
@@ -56,9 +57,8 @@ var PreloaderScene = {
     this.game.load.image('patronesTilemap', 'images/map/tileset.png');
 
     //sounds
-    //this.game.load.audio('menuSound', ['audio/menu.mp3', 'audio/menu.ogg']);
+    this.game.load.audio('menuSound', ['audio/menu.mp3', 'audio/menu.ogg']);
     this.game.load.audio('gameSound', ['audio/game.mp3', 'audio/game.ogg']);
-    this.game.load.audio('menuSound', ['audio/soviet.mp3', 'audio/soviet.ogg']);
 
     //menus
     this.game.load.image('UI', 'images/menu/UI.png');
@@ -78,6 +78,7 @@ var PreloaderScene = {
     this.game.load.spritesheet('backBttn', 'images/menu/back.png', 55, 48);
     this.game.load.spritesheet('muteBttn', 'images/menu/mute.png', 55, 48);
     this.game.load.spritesheet('playBttn', 'images/menu/play.png', 55, 48);
+    this.game.load.spritesheet('tutorialBttn', 'images/menu/tuto.png', 55, 48);
     this.game.load.spritesheet('houseBttn', 'images/menu/UIButtons/house.png', 55, 48);
     this.game.load.spritesheet('roadBttn', 'images/menu/UIButtons/road.png', 55, 48);
     this.game.load.spritesheet('waterBttn', 'images/menu/UIButtons/water.png', 55, 48);
@@ -119,10 +120,15 @@ var MainMenu = {
     this.txt.anchor.setTo(0.5, 0.5);
     this.txt.smoothed = false;
 
-    this.play = this.game.add.button(this.game.camera.x + (this.game.width/2), this.game.camera.y + 2 * (this.game.height/4), 'playBttn', gameStart, this, 0, 0, 1);
+    this.play = this.game.add.button(this.game.camera.x + (this.game.width/2), this.game.camera.y + 1.8 * (this.game.height/4), 'playBttn', gameStart, this, 0, 0, 1);
     this.play.anchor.setTo(0.5, 0.5);
-    this.play.scale.setTo(4, 4);
+    this.play.scale.setTo(3, 3);
     this.play.smoothed = false;
+
+    this.tutorial = this.game.add.button(this.game.camera.x + (this.game.width/2), this.game.camera.y + 3 * (this.game.height/4), 'tutorialBttn', tutorialStart, this, 0, 0, 1);
+    this.tutorial.anchor.setTo(0.5, 0.5);
+    this.tutorial.scale.setTo(3, 3);
+    this.tutorial.smoothed = false;
 
     this.volume = 20;
 
@@ -131,7 +137,7 @@ var MainMenu = {
     this.menuMusic.loop = true;
     this.menuMusic.volume = this.volume / 100;
 
-    this.options = this.game.add.button(this.game.camera.x + (this.game.width/2), this.game.camera.y + 3.5 * (this.game.height/4), "settBttn", function(){this.optionsMain.visible = true; this.game.world.bringToTop(this.optionsMain); this.play.inputEnabled = false; this.options.inputEnabled = false;}, this, 0, 0, 1);
+    this.options = this.game.add.button(this.game.camera.x + (this.game.width/2), this.game.camera.y + 5 * (this.game.height/4), "settBttn", function(){this.optionsMain.visible = true; this.game.world.bringToTop(this.optionsMain); this.play.inputEnabled = false; this.options.inputEnabled = false;}, this, 0, 0, 1);
     this.options.anchor.setTo(.5, .5);
     this.options.smoothed = false;
 
@@ -214,6 +220,12 @@ var MainMenu = {
       this.optionsMain.destroy();
       this.game.state.start('play');
     }
+
+    function tutorialStart() {
+      this.menuMusic.stop();
+      this.optionsMain.destroy();
+      this.game.state.start('tutorial');
+    }
   }
 };
 
@@ -227,6 +239,7 @@ window.onload = function () {
   game.state.add('boot', BootScene);
   game.state.add('preloader', PreloaderScene);
   game.state.add('main', MainMenu);
+  game.state.add('tutorial', Tutorial)
   game.state.add('play', PlayScene);
 
   game.state.start('boot');
