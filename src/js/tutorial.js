@@ -689,13 +689,19 @@ var Tutorial = {
 
     //Condiciones tutorial
 
-    //var Roadcheck = new Boolean(false);
-    var HouseCheck = false;
-    var CropCheck = false;
-    var StoneCheck = false;
-    var WoodCheck = false;
-    var BulldozeCheck = false;
-    //var CitizenCheck = false;
+    this.roadCheck = false;
+    this.houseCheck = false;
+    this.cropCheck = false;
+    this.stoneCheck = false;
+    this.woodCheck = false;
+    this.bulldozeCheck = false;
+    this.citizenCheck = false;
+    this.cameraCheck = false;
+    this.cameraCheckUp = false;
+    this.cameraCheckDown = false;
+    this.cameraCheckLeft = false;
+    this.cameraCheckRight = false;
+    this.timeCheck = false;
 
 
     function setTimescale(key){
@@ -786,8 +792,8 @@ var Tutorial = {
           sprite.bulldoze(this.homelessArray);
         sprite.destroy();
 
-        if (!BulldozeCheck)
-          BulldozeCheck = true;
+        if (!this.bulldozeCheck)
+          this.bulldozeCheck = true;
       }
     }
 
@@ -822,21 +828,21 @@ var Tutorial = {
         if(this._buildingModeType == this.houseGroup)
         {
           auxBuilding = new Classes.House(this.game, Math.round(this.game.input.worldX / this._tileSize) * this._tileSize, offset + Math.round(this.game.input.worldY / this._tileSize) * this._tileSize, this._buildingModeType.sprite);
-          if (!HouseCheck)
-            HouseCheck = true;
+          if (!this.houseCheck)
+            this.houseCheck = true;
         }
         else
         {
           auxBuilding = new Classes.Producer(this.game, Math.round(this.game.input.worldX / this._tileSize) * this._tileSize, offset + Math.round(this.game.input.worldY / this._tileSize) * this._tileSize, this._buildingModeType.sprite, 1);
         
-          if (!CropCheck && this._buildingModeType.sprite == 'Crops')
-            CropCheck = true;
+          if (!this.cropCheck && this._buildingModeType.sprite == 'Crops')
+            this.cropCheck = true;
 
-          if (!StoneCheck && this._buildingModeType.sprite == 'Stone')
-            StoneCheck = true;
+          if (!this.stoneCheck && this._buildingModeType.sprite == 'Stone')
+            this.stoneCheck = true;
 
-          if (!WoodCheck && this._buildingModeType.sprite == 'Wood')
-            WoodCheck = true;
+          if (!this.woodCheck && this._buildingModeType.sprite == 'Wood')
+            this.woodCheck = true;
         }
         
         auxBuilding.anchor.setTo(0.5, 0.5);
@@ -963,22 +969,15 @@ var Tutorial = {
 
   update: function () {
 
-    var CameraCheck = false;
-    var CameraCheckUp = false;
-    var CameraCheckDown = false;
-    var CameraCheckLeft = false;
-    var CameraCheckRight = false;
-    var TimeCheck = false;
-
     //comprobación condiciones, tooltip correspondiente con una condicion diferente para no dejarlo todo lleno
-    if (CameraCheckUp && CameraCheckDown && CameraCheckLeft && CameraCheckRight)
+    if (this.cameraCheckUp && this.cameraCheckDown && this.cameraCheckLeft && this.cameraCheckRight)
     {
         //condicion para cuando la tip haga fade (asegurarse de que se lee?)
-        CameraCheck = true;
+        this.cameraCheck = true;
 
     }
     
-    if (!CameraCheck)
+    if (!this.cameraCheck)
     {
       this.tipTutorial1 = new Phasetips(this.game, {
         targetObject: this.citizensIcon,
@@ -993,7 +992,7 @@ var Tutorial = {
       });
     }
 
-    if (CameraCheck)
+    if (this.cameraCheck)
     {
       this.citizensIcon.visible = false;
       this.citizensTxt.visible = false;
@@ -1012,16 +1011,16 @@ var Tutorial = {
         //animation: "fade"
       });
 
-      Roadcheck = true;
+      this.roadCheck = true;
     }  
     
-    if (Roadcheck)
+    if (this.roadCheck)
     {    
      roadBttn.visible = true;
      roadBttn.input.enabled = true;
     }
 
-    if (Roadcheck && !HouseCheck)
+    if (this.roadCheck && !this.houseCheck)
     {
       this.tipTutorial3 = new Phasetips(this.game, {
         targetObject: roadBttn,
@@ -1036,13 +1035,13 @@ var Tutorial = {
       });
     }
 
-    if (HouseCheck) //condicion pasa a true al construir una carretera
+    if (this.houseCheck) //condicion pasa a true al construir una carretera
     {
       houseBttn.visible = true;
       houseBttn.input.enabled = true;
     }
 
-    if (HouseCheck && !CropCheck)
+    if (this.houseCheck && !this.cropCheck)
     {
       this.tipTutorial4 = new Phasetips(this.game, {
         targetObject: houseBttn,
@@ -1057,7 +1056,7 @@ var Tutorial = {
       });
     }
 
-    if (CropCheck) //condicion pasa a true al construir una casa
+    if (this.cropCheck) //condicion pasa a true al construir una casa
     {
       cropBttn.visible = true;
       cropBttn.input.enabled = true;
@@ -1066,7 +1065,7 @@ var Tutorial = {
       this.foodTxtGain.visible = true;
     }
 
-    if (CropCheck && !StoneCheck)
+    if (this.cropCheck && !this.stoneCheck)
     {
       this.tipTutorial5 = new Phasetips(this.game, {
         targetObject: cropBttn,
@@ -1081,7 +1080,7 @@ var Tutorial = {
       });
     }
 
-    if (StoneCheck) //condicion pasa a true al construir una granja
+    if (this.stoneCheck) //condicion pasa a true al construir una granja
     {
       stoneBttn.visible = true;
       stoneBttn.input.enabled = true;
@@ -1090,7 +1089,7 @@ var Tutorial = {
       this.stoneTxtGain.visible = true;
     }
 
-    if (StoneCheck && !WoodCheck)
+    if (this.stoneCheck && !this.woodCheck)
     {
       this.tipTutorial6 = new Phasetips(this.game, {
         targetObject: stoneBttn,
@@ -1105,7 +1104,7 @@ var Tutorial = {
       });
     }
 
-    if (WoodCheck) //condicion pasa a true al construir una cantera
+    if (this.woodCheck) //condicion pasa a true al construir una cantera
     {
       woodBttn.visible = true;
       woodBttn.input.enabled = true;
@@ -1114,7 +1113,7 @@ var Tutorial = {
       this.woodTxtGain.visible = true;
     }
 
-    if (WoodCheck && !BulldozeCheck)
+    if (this.woodCheck && !this.bulldozeCheck)
     {
       this.tipTutorial7 = new Phasetips(this.game, {
         targetObject: woodBttn,
@@ -1129,13 +1128,13 @@ var Tutorial = {
       });
     }
 
-    if (BulldozeCheck) //condicion pasa a true al construir una de madera
+    if (this.bulldozeCheck) //condicion pasa a true al construir una de madera
     {
       bulldozeBttn.visible = true;
       bulldozeBttn.input.enabled = true;
     }
 
-    if (BulldozeCheck && !TimeCheck)
+    if (this.bulldozeCheck && !this.timeCheck)
     {
       this.tipTutorial8 = new Phasetips(this.game, {
         targetObject: bulldozeBttn,
@@ -1150,7 +1149,7 @@ var Tutorial = {
       });
     }
 
-    if (TimeCheck) //condicion pasa a true al destruir un edificio
+    if (this.timeCheck) //condicion pasa a true al destruir un edificio
     {
       this.tipTutorial3 = new Phasetips(this.game, {
         targetObject: this.timeTxt,
@@ -1366,29 +1365,29 @@ var Tutorial = {
       if (this.cursors.up.isDown || this.cursorsAlt.up.isDown){
         this.game.camera.y -= 16;
         
-        if (!CameraCheckUp)
-          CameraCheckUp = true;
+        if (!this.cameraCheckUp)
+          this.cameraCheckUp = true;
       }
 
       else if (this.cursors.down.isDown || this.cursorsAlt.down.isDown){
         this.game.camera.y += 16;
       
-        if (!CameraCheckDown)
-        CameraCheckDown = true;
+        if (!this.cameraCheckDown)
+        this.cameraCheckDown = true;
       }
 
       if (this.cursors.left.isDown || this.cursorsAlt.left.isDown){
         this.game.camera.x -= 16;
       
-        if (!CameraCheckLeft)
-        CameraCheckLeft = true; 
+        if (!this.cameraCheckLeft)
+        this.cameraCheckLeft = true; 
       }
 
       else if (this.cursors.right.isDown || this.cursorsAlt.right.isDown){
         this.game.camera.x += 16;
       
-        if (!CameraCheckRight)
-        CameraCheckRight = true;
+        if (!this.cameraCheckRight)
+        this.cameraCheckRight = true;
       }
     }
   },
