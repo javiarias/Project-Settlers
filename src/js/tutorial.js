@@ -602,6 +602,7 @@ var Tutorial = {
 
     this.tip2 = new Phasetips(this.game, {
       targetObject: this.houseBttn,
+      width: 120,
       context: "House:\n  Provides shelter for 2 citizens.\nCost:\n  10 Wood, 10 Stone",
       strokeColor: 0xff0000,
       position: "top",
@@ -655,10 +656,10 @@ var Tutorial = {
     /*this.tipTutorial1 = new Phasetips(this.game, {
       targetObject: this.escapeBttn, //esto es temporal, no se donde ponerlo (objeto vacío que ocupe toda la pantalla?)
       context: "Good job, now you know how to move the camera",
-      width: 402,
+      width: 162,
       height: 80,
       strokeColor: 0xff0000,
-      position: "bottom",
+      position: "top",
       positionOffset: 30,   
       
       //animation: "fade"
@@ -667,11 +668,11 @@ var Tutorial = {
     this.tipTutorial2 = new Phasetips(this.game, {
       targetObject: this.citizensIcon,
       context: "Now you know where to find data about your citizens, let's continue",
-      width: 362,
-      height: 80,
+      width: 150,
+      height: 100,
       strokeColor: 0xff0000,
       position: "top",
-      positionOffset: 30,   
+      positionOffset: 0,   
       
       //animation: "fade"
     });
@@ -679,11 +680,11 @@ var Tutorial = {
     this.tipTutorial3 = new Phasetips(this.game, {
       targetObject: this.roadBttn,  
       context: "Roads are the base of Project Settlers, they allow you to build on top of them",
-      width: 362,
-      height: 80,
+      width: 150,
+      height: 100,
       strokeColor: 0xff0000,
       position: "top",
-      positionOffset: 30,   
+      positionOffset: 115,   
       
       //animation: "fade"
     });
@@ -691,11 +692,11 @@ var Tutorial = {
     this.tipTutorial4 = new Phasetips(this.game, {
       targetObject: this.houseBttn,
       context: "Your citizens need houses to live, let's build some for them",
-      width: 362,
-      height: 80,
+      width: 205,
+      height: 100,
       strokeColor: 0xff0000,
       position: "top",
-      positionOffset: 30,   
+      positionOffset: 100, 
       
       //animation: "fade"
     });
@@ -703,35 +704,35 @@ var Tutorial = {
     this.tipTutorial5 = new Phasetips(this.game, {
       targetObject: this.cropBttn,
       context: "As well, you will need food. Let's build a farm for it",
-      width: 362,
-      height: 80,
+      width: 210,
+      height: 95,
       strokeColor: 0xff0000,
       position: "top",
-      positionOffset: 30,   
+      positionOffset: 100,  
       
       //animation: "fade"
     });
 
     this.tipTutorial6 = new Phasetips(this.game, {
       targetObject: this.stoneBttn,
-      context: "Nothing is free, and you will need resources to create more buildings. Let's build a Quarry",
-      width: 362,
-      height: 80,
+      context: "You will need Wood as well, so we will build a Quarry",
+      width: 200,
+      height: 100,
       strokeColor: 0xff0000,
       position: "top",
-      positionOffset: 30,   
+      positionOffset: 100,  
       
       //animation: "fade"
     });
   
     this.tipTutorial7 = new Phasetips(this.game, {
       targetObject: this.woodBttn,
-      context: "You will need Wood as well, so we will build a Sawmill",
-      width: 362,
-      height: 80,
+      context: "Nothing is free, and you will need resources to create more buildings. Let's build a Sawmill",
+      width: 205,
+      height: 100,
       strokeColor: 0xff0000,
       position: "top",
-      positionOffset: 30,   
+      positionOffset: 115,   
       
       //animation: "fade"
     });
@@ -739,11 +740,11 @@ var Tutorial = {
     this.tipTutorial8 = new Phasetips(this.game, {
       targetObject: this.bulldozeBttn,
       context: "If you want to replace a building, you can bulldoze it. Let's go for it.",
-      width: 362,
-      height: 80,
+      width: 370,
+      height: 100,
       strokeColor: 0xff0000,
       position: "top",
-      positionOffset: 30,   
+      positionOffset: 85,  
       
       //animation: "fade"
     });
@@ -751,11 +752,11 @@ var Tutorial = {
     this.tipTutorial9 = new Phasetips(this.game, {
       targetObject: this.timeTxt,
       context: "Now you know the basic mechanichs to survive. Press SPACE to get the clock running",
-      width: 362,
-      height: 80,
+      width: 200,
+      height: 100,
       strokeColor: 0xff0000,
       position: "top",
-      positionOffset: 30,   
+      positionOffset: 100,   
       
       //animation: "fade"
     });
@@ -950,13 +951,13 @@ var Tutorial = {
             this.houseCheck = true;
           }
 
-          if (!this.stoneCheck && this._buildingModeType.sprite == 'Crops')
+          if (!this.stoneCheck && this._buildingModeType.sprite == 'Wood')
             this.stoneCheck = true;
 
-          if (!this.woodCheck && this._buildingModeType.sprite == 'Stone')
+          if (!this.woodCheck && this._buildingModeType.sprite == 'Crops')
             this.woodCheck = true;
 
-          if (!this.bulldozeCheck && this._buildingModeType.sprite == 'Wood')
+          if (!this.bulldozeCheck && this._buildingModeType.sprite == 'Stone')
             this.bulldozeCheck = true;
         }
         
@@ -1107,20 +1108,12 @@ var Tutorial = {
       this.roadBttn.input.enabled = true;
     }
 
-    if (this.roadCheck && !this.houseCheck)
-    {
-    }
-
     if (this.houseCheck) //condicion pasa a true al construir una carretera
     {
       this.houseBttn.visible = true;
       this.houseBttn.input.enabled = true;
     }
 
-    if (this.houseCheck && !this.cropCheck)
-    {
-      
-    }
 
     if (this.cropCheck) //condicion pasa a true al construir una casa
     {
@@ -1131,26 +1124,7 @@ var Tutorial = {
       this.foodTxtGain.visible = true;
     }
 
-    if (this.cropCheck && !this.stoneCheck)
-    {
-      
-    }
-
-    if (this.stoneCheck) //condicion pasa a true al construir una granja
-    {
-      this.stoneBttn.visible = true;
-      this.stoneBttn.input.enabled = true;
-      this.stoneIcon.visible = true;
-      this.stoneTxt.visible = true;
-      this.stoneTxtGain.visible = true;
-    }
-
-    if (this.stoneCheck && !this.woodCheck)
-    {
-      
-    }
-
-    if (this.woodCheck) //condicion pasa a true al construir una cantera
+    if (this.woodCheck) //condicion pasa a true al construir una granja
     {
       this.woodBttn.visible = true;
       this.woodBttn.input.enabled = true;
@@ -1159,20 +1133,19 @@ var Tutorial = {
       this.woodTxtGain.visible = true;
     }
 
-    if (this.woodCheck && !this.bulldozeCheck)
+    if (this.stoneCheck) //condicion pasa a true al construir una cantera
     {
-      
+      this.stoneBttn.visible = true;
+      this.stoneBttn.input.enabled = true;
+      this.stoneIcon.visible = true;
+      this.stoneTxt.visible = true;
+      this.stoneTxtGain.visible = true;
     }
 
     if (this.bulldozeCheck) //condicion pasa a true al construir una de madera
     {
       this.bulldozeBttn.visible = true;
       this.bulldozeBttn.input.enabled = true;
-    }
-
-    if (this.bulldozeCheck && !this.timeCheck)
-    {
-      
     }
 
     if (this.timeCheck) //condicion pasa a true al destruir un edificio
