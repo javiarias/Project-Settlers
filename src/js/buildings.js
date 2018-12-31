@@ -93,15 +93,39 @@ House.prototype.countCitizens = function(){
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
 function Producer(game, x, y, img, amount, consumes = "none", consumed = 0) { 
     Phaser.Sprite.call(this, game, x, y, img); //img needs to be filtered depending on resource. Done outside the function?
-    this.amount = amount;
     this.consumes = consumes;
     this.consumed = consumed;
+    this.WorkerA = undefined;
+    this.WorkerB = undefined;
+    this.full = false;
+
+    if (this.WorkerA === undefined && this.WorkerB === undefined)
+        this.amount = 0;
+
+    else if (!this.full)
+        this.amount = 0.5 * amount;
+
+    else
+        this.amount = amount;
 }
 Producer.prototype = Object.create(Phaser.Sprite.prototype);
 Producer.constructor = Producer;
+
+Producer.prototype.add = function(citizen) {
+    if(this.WorkerA === undefined){
+        this.WorkerA = citizen;
+    }
+
+    else if(this.WorkerB === undefined){
+        this.WorkerB = citizen;
+    }
+
+    this.full = (this.WorkerA !== undefined && this.WorkerB !== undefined);
+
+    return this.full;
+};
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -136,15 +160,17 @@ Decor.constructor = Decor;
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-function Citizen(homelessArray) {
+function Citizen(homelessArray, unemployedArray) {
     this.name = (Math.random() * 100) + 1;
     this.age = 0; //De momento no es necesario
     this.health = 100; //Valor modificable
     this.sick = false;
     this.homeless = true;
+    this.unemployed = true;
     this.birthCooldown = 0;
     this.givingBirth = false;
     homelessArray.unshift(this);
+    unemployedArray.unshift(this);
 }
 Citizen.constructor = Citizen;
 
@@ -156,6 +182,21 @@ Citizen.prototype.addToHouse = function (homelessArray, houseGroup){
             if(house.add(this)){
                 found = true;
                 this.homeless = false;
+            }
+        }
+    }, this);
+
+    return found;
+};
+
+Citizen.prototype.addToProducer = function (unemployedArray, ProducerGroup){
+    var found = false;
+
+    ProducerGroup.forEach(function (Producer) {
+        if(!Producer.full && !found){
+            if(Producer.add(this)){
+                found = true;
+                this.unemployed = false;
             }
         }
     }, this);
