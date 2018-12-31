@@ -69,6 +69,7 @@ var PreloaderScene = {
     this.game.load.image('woodIcon', 'images/menu/woodIcon.png');
     this.game.load.image('citizenIcon', 'images/menu/citizenIcon.png');
     this.game.load.image('noHouseIcon', 'images/menu/noHouseIcon.png');
+    this.game.load.image('joblessIcon', 'images/menu/joblessIcon.png');
     this.game.load.image('optionsBkg', 'images/menu/optionsMenu.png');
     this.game.load.spritesheet('exitBttn', 'images/menu/exit.png', 55, 48);
     this.game.load.spritesheet('minBttn', 'images/menu/minimize.png', 55, 48);
@@ -120,12 +121,12 @@ var MainMenu = {
     this.txt.anchor.setTo(0.5, 0.5);
     this.txt.smoothed = false;
 
-    this.play = this.game.add.button(this.game.camera.x + (this.game.width/2), this.game.camera.y + 1.8 * (this.game.height/4), 'playBttn', gameStart, this, 0, 0, 1);
+    this.play = this.game.add.button(this.game.camera.x + (this.game.width/2 - 100), this.game.camera.y + (this.game.height/1.8), 'playBttn', gameStart, this, 0, 0, 1);
     this.play.anchor.setTo(0.5, 0.5);
     this.play.scale.setTo(3, 3);
     this.play.smoothed = false;
 
-    this.tutorial = this.game.add.button(this.game.camera.x + (this.game.width/2), this.game.camera.y + 3 * (this.game.height/4), 'tutorialBttn', tutorialStart, this, 0, 0, 1);
+    this.tutorial = this.game.add.button(this.game.camera.x + (this.game.width/2 + 100), this.game.camera.y + (this.game.height/1.8), 'tutorialBttn', tutorialStart, this, 0, 0, 1);
     this.tutorial.anchor.setTo(0.5, 0.5);
     this.tutorial.scale.setTo(3, 3);
     this.tutorial.smoothed = false;
@@ -137,7 +138,7 @@ var MainMenu = {
     this.menuMusic.loop = true;
     this.menuMusic.volume = this.volume / 100;
 
-    this.options = this.game.add.button(this.game.camera.x + (this.game.width/2), this.game.camera.y + 5 * (this.game.height/4), "settBttn", function(){this.optionsMain.visible = true; this.game.world.bringToTop(this.optionsMain); this.play.inputEnabled = false; this.options.inputEnabled = false;}, this, 0, 0, 1);
+    this.options = this.game.add.button(this.game.camera.x + (this.game.width/2), this.game.camera.y + 3.55 * (this.game.height/4), "settBttn", function(){this.optionsMain.visible = true; this.game.world.bringToTop(this.optionsMain); this.play.inputEnabled = false; this.options.inputEnabled = false;}, this, 0, 0, 1);
     this.options.anchor.setTo(.5, .5);
     this.options.smoothed = false;
 

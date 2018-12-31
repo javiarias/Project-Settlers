@@ -19,17 +19,22 @@ House.prototype._calculateCoziness = function() {
 };
 
 House.prototype.add = function(citizen) {
+
+    var added = false;
+
     if(this.residentA === undefined){
         this.residentA = citizen;
+        added = true;
     }
 
     else if(this.residentB === undefined){
         this.residentB = citizen;
+        added = true;
     }
 
     this.full = (this.residentA !== undefined && this.residentB !== undefined);
 
-    return this.full;
+    return added;
 };
 
 House.prototype.kill = function(citizen) {
@@ -101,31 +106,41 @@ function Producer(game, x, y, img, amount, consumes = "none", consumed = 0) {
     this.workerB = undefined;
     this.full = false;
 
-    if (this.workerA === undefined && this.workerB === undefined)
-        this.amount = 0;
-
-    else if (!this.full)
-        this.amount = 0.5 * amount;
-
-    else
-        this.amount = amount;
+    this.totalAmount = amount;
+    this.amount = 0;
 }
 Producer.prototype = Object.create(Phaser.Sprite.prototype);
 Producer.constructor = Producer;
 
 Producer.prototype.add = function(citizen) {
+
+    var added = false;
+
     if(this.workerA === undefined){
         this.workerA = citizen;
+        added = true;
     }
 
     else if(this.workerB === undefined){
         this.workerB = citizen;
+        added = true;
     }
 
     this.full = (this.workerA !== undefined && this.workerB !== undefined);
 
-    return this.full;
+    return added;
 };
+
+Producer.prototype.updateAmount = function() {
+    if (this.workerA === undefined && this.workerB === undefined)
+        this.amount = 0;
+
+    else if (!this.full)
+        this.amount = 0.5 * this.totalAmount;
+
+    else
+        this.amount = this.totalAmount;
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -192,13 +207,15 @@ Citizen.prototype.addToHouse = function (houseGroup){
 Citizen.prototype.addToProducer = function (producerGroup){
     var found = false;
 
-    producerGroup.forEach(function (producer) {
-        if(!producer.full && !found){
-            if(producer.add(this)){
-                found = true;
-                this.unemployed = false;
+    producerGroup.forEach(function (group) {
+        group.forEach(function (producer) {
+            if(!producer.full && !found){
+                if(producer.add(this)){
+                    found = true;
+                    this.unemployed = false;
+                }
             }
-        }
+        }, this);
     }, this);
 
     return found;

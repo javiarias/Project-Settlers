@@ -84,7 +84,7 @@ var PlayScene = {
     this.producerGroup.add(this.woodGroup);
     this.woodGroup.sprite = 'Wood';
 
-    this.coalGroup = this.game.add.group(); //Comentado de momento, añado un grupo Mine y ya vemos como hacer el reparto de recursos (¿Stone + Coal?)
+    this.coalGroup = this.game.add.group();
     this.buildingGroup.add(this.coalGroup);
     this.producerGroup.add(this.coalGroup);
     this.coalGroup.sprite = 'Coal'
@@ -106,7 +106,7 @@ var PlayScene = {
 
     this.roadGroup = this.game.add.group();
     this.buildingGroup.add(this.roadGroup);
-    this.roadGroup.sprite = 'Road'; //Grupo de sprites (?)
+    this.roadGroup.sprite = 'Road';
 
     this.waterGroup = this.game.add.group();
     this.buildingGroup.add(this.waterGroup);
@@ -242,13 +242,13 @@ var PlayScene = {
 
     this.UI = this.game.add.group();
 
-    var UIBkg = this.game.add.sprite(0, 0, "UI");
-    UIBkg.fixedToCamera = true;
-    UIBkg.smoothed = false;
+    this.UIBkg = this.game.add.sprite(0, 0, "UI");
+    this.UIBkg.fixedToCamera = true;
+    this.UIBkg.smoothed = false;
 
-    this.UI.add(UIBkg);
+    this.UI.add(this.UIBkg);
 
-    var escapeBttn = this.game.add.button(UIBkg.right - 5, 5, "exitBttn", function(){escape.call(this);}, this, 0, 0, 1);
+    var escapeBttn = this.game.add.button(this.UIBkg.right - 5, 5, "exitBttn", function(){escape.call(this);}, this, 0, 0, 1);
     escapeBttn.anchor.setTo(1, 0);
     escapeBttn.fixedToCamera = true;
     escapeBttn.smoothed = false;
@@ -256,7 +256,7 @@ var PlayScene = {
 
     this.UI.add(escapeBttn);
 
-    var numberOfButtons = 6;
+    var numberOfButtons = 11;
     var scale = 1;
     if(637 < 60 * numberOfButtons)
       scale = 637 / (60 * numberOfButtons);
@@ -264,7 +264,7 @@ var PlayScene = {
     var buttonOffset = 637 / numberOfButtons - (55 * scale) + (55 * scale)/2; // 11 = número de botones, 55 = tamaño x del botón
     
 
-    var roadBttn = this.game.add.button(5 + buttonOffset - (buttonOffset - (55 * scale)/2)/2, UIBkg.bottom - 30, "roadBttn", function(){buildMode.call(this, this, this.roadGroup);}, this, 0, 0, 1);
+    var roadBttn = this.game.add.button(5 + buttonOffset - (buttonOffset - (55 * scale)/2)/2, this.UIBkg.bottom - 30, "roadBttn", function(){buildMode.call(this, this, this.roadGroup);}, this, 0, 0, 1);
     roadBttn.anchor.setTo(.5, .5);
     roadBttn.fixedToCamera = true;
     roadBttn.smoothed = false;
@@ -280,15 +280,15 @@ var PlayScene = {
 
     this.UI.add(houseBttn);
 
-    /*var waterBttn = this.game.add.button(houseBttn.right + buttonOffset,  roadBttn.centerY, "waterBttn", function(){}, this, 0, 0, 1);
+    var waterBttn = this.game.add.button(houseBttn.right + buttonOffset,  roadBttn.centerY, "waterBttn", function(){}, this, 0, 0, 1);
     waterBttn.anchor.setTo(.5, .5);
     waterBttn.fixedToCamera = true;
     waterBttn.smoothed = false;
     waterBttn.scale.setTo(scale, scale);
 
-    this.UI.add(waterBttn);*/
+    this.UI.add(waterBttn);
 
-    var cropBttn = this.game.add.button(houseBttn.right + buttonOffset,  roadBttn.centerY, "cropBttn", function(){buildMode.call(this, this, this.cropGroup);}, this, 0, 0, 1);
+    var cropBttn = this.game.add.button(waterBttn.right + buttonOffset,  roadBttn.centerY, "cropBttn", function(){buildMode.call(this, this, this.cropGroup);}, this, 0, 0, 1);
     cropBttn.anchor.setTo(.5, .5);
     cropBttn.fixedToCamera = true;
     cropBttn.smoothed = false;
@@ -318,9 +318,9 @@ var PlayScene = {
     coalBttn.smoothed = false;
     coalBttn.scale.setTo(scale, scale);
 
-    this.UI.add(coalBttn);
+    this.UI.add(coalBttn);*/
 
-    var uraniumBttn = this.game.add.button(coalBttn.right + buttonOffset,  roadBttn.centerY, "uraniumBttn", function(){}, this, 0, 0, 1);
+    var uraniumBttn = this.game.add.button(stoneBttn.right + buttonOffset,  roadBttn.centerY, "uraniumBttn", function(){}, this, 0, 0, 1);
     uraniumBttn.anchor.setTo(.5, .5);
     uraniumBttn.fixedToCamera = true;
     uraniumBttn.smoothed = false;
@@ -350,17 +350,15 @@ var PlayScene = {
     hospitalBttn.smoothed = false;
     hospitalBttn.scale.setTo(scale, scale);
 
-    this.UI.add(hospitalBttn);*/
+    this.UI.add(hospitalBttn);
 
-    var bulldozeBttn = this.game.add.button(stoneBttn.right + buttonOffset,  roadBttn.centerY, "bulldozeBttn", function(){destroyMode.call(this);}, this, 0, 0, 1);
+    var bulldozeBttn = this.game.add.button(hospitalBttn.right + buttonOffset,  roadBttn.centerY, "bulldozeBttn", function(){destroyMode.call(this);}, this, 0, 0, 1);
     bulldozeBttn.anchor.setTo(.5, .5);
     bulldozeBttn.fixedToCamera = true;
     bulldozeBttn.smoothed = false;
     bulldozeBttn.scale.setTo(scale, scale);
 
     this.UI.add(bulldozeBttn);
-
-
 
       this.timeTxt = this.game.add.text(719, 50, this.currentTime.hour + ":00", {font: "50px console", fill: "red"});
       this.timeTxt.anchor.setTo(.5, 0);
@@ -567,7 +565,7 @@ var PlayScene = {
 
     this.unemployedTxtGroup = this.game.add.group();
 
-    this.unemployedIcon = this.game.add.sprite(this.foodIcon.centerX, this.homelessIcon.bottom + 7, "noHouseIcon");
+    this.unemployedIcon = this.game.add.sprite(this.foodIcon.centerX, this.homelessIcon.bottom + 7, "joblessIcon");
     this.unemployedIcon.anchor.setTo(.5, 0);
     this.unemployedIcon.fixedToCamera = true;
     this.unemployedIcon.smoothed = false;
@@ -597,7 +595,7 @@ var PlayScene = {
     this.tip1 = new Phasetips(this.game, {
       targetObject: roadBttn,
       context: "Road:\n  You can build right above them.\nCost:\n  Free",
-      width: 150,
+      width: 100,
       height: 100,
       strokeColor: 0xff0000,
       position: "top",
@@ -649,7 +647,7 @@ var PlayScene = {
     this.tip6 = new Phasetips(this.game, {
       targetObject: bulldozeBttn,
       context: "Bulldozer:\n  Used to destroy buildings and\n  roads.",
-      width: 362,
+      width: 410,
       height: 80,
       strokeColor: 0xff0000,
       position: "top",
@@ -870,7 +868,6 @@ var PlayScene = {
       }
 
       else{
-
         this._escapeMenu = !this._escapeMenu;
 
         if(this._escapeMenu) {
@@ -887,6 +884,8 @@ var PlayScene = {
           this.fade.destroy();
 
         this.pauseMenu.visible = this._escapeMenu;
+        if(this.optionsMenu.visible && !this._escapeMenu)
+          this.optionsMenu.visible = false;
         this.UI.forEach(function(button){
           button.inputEnabled = !this._escapeMenu;
         }, this);
@@ -961,8 +960,8 @@ var PlayScene = {
               this.wood += prod.amount;
             }, this);
 
-            this.coalGroup.forEach(function(prod){
-              this.coal += prod.amount;
+            this.windGroup.forEach(function(prod){
+              this.energy += prod.amount;
             }, this);
 
             this.uraniumGroup.forEach(function(prod){
@@ -1009,7 +1008,7 @@ var PlayScene = {
               prod.tick(this.food, this.homelessArray);
 
               for(var i = prod.numberOfBirths; i > 0; i--)
-                var aux = new Classes.Citizen(this.homelessArray);
+                var aux = new Classes.Citizen(this.homelessArray, this.unemployedArray);
 
             }, this);
 
@@ -1036,14 +1035,14 @@ var PlayScene = {
               i += (this.homelessArray.length - originalLength);
           }
 
-          /*var originalLength = this.unemployedArray.length;
+          originalLength = this.unemployedArray.length;
           for (var i = this.unemployedArray.length - 1; i >= 0; i--) {
             if(!this.unemployedArray[i].unemployed || this.unemployedArray[i].health <= 0 || this.unemployedArray[i].addToProducer(this.producerGroup))
               this.unemployedArray.splice(i, 1);
 
             if(this.unemployedArray.length > originalLength)
               i += (this.unemployedArray.length - originalLength);
-          }*/
+          }
 
           this.timeTxt.text = this.currentTime.hour + ":00";
 
@@ -1158,6 +1157,8 @@ var PlayScene = {
       else if (this.cursors.right.isDown || this.cursorsAlt.right.isDown){
         this.game.camera.x += 16;}
     }
+
+    this.UIBkg.inputEnabled = false;
   },
 
   render: function() {
