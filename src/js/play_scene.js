@@ -1029,21 +1029,21 @@ var PlayScene = {
 
           var originalLength = this.homelessArray.length;
           for (var i = this.homelessArray.length - 1; i >= 0; i--) {
-            if(!this.homelessArray[i].homeless || this.homelessArray[i].health <= 0 || this.homelessArray[i].addToHouse(this.homelessArray, this.houseGroup))
+            if(!this.homelessArray[i].homeless || this.homelessArray[i].health <= 0 || this.homelessArray[i].addToHouse(this.houseGroup))
               this.homelessArray.splice(i, 1);
 
             if(this.homelessArray.length > originalLength)
               i += (this.homelessArray.length - originalLength);
           }
 
-          var originalLength = this.unemployedArray.length;
+          /*var originalLength = this.unemployedArray.length;
           for (var i = this.unemployedArray.length - 1; i >= 0; i--) {
-            if(!this.unemployedArray[i].unemployed || this.unemployedArray[i].health <= 0 || this.unemployedArray[i].addToHouse(this.homelessArray, this.producerGroup))
+            if(!this.unemployedArray[i].unemployed || this.unemployedArray[i].health <= 0 || this.unemployedArray[i].addToProducer(this.producerGroup))
               this.unemployedArray.splice(i, 1);
 
             if(this.unemployedArray.length > originalLength)
               i += (this.unemployedArray.length - originalLength);
-          }
+          }*/
 
           this.timeTxt.text = this.currentTime.hour + ":00";
 

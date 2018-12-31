@@ -97,11 +97,11 @@ function Producer(game, x, y, img, amount, consumes = "none", consumed = 0) {
     Phaser.Sprite.call(this, game, x, y, img); //img needs to be filtered depending on resource. Done outside the function?
     this.consumes = consumes;
     this.consumed = consumed;
-    this.WorkerA = undefined;
-    this.WorkerB = undefined;
+    this.workerA = undefined;
+    this.workerB = undefined;
     this.full = false;
 
-    if (this.WorkerA === undefined && this.WorkerB === undefined)
+    if (this.workerA === undefined && this.workerB === undefined)
         this.amount = 0;
 
     else if (!this.full)
@@ -114,15 +114,15 @@ Producer.prototype = Object.create(Phaser.Sprite.prototype);
 Producer.constructor = Producer;
 
 Producer.prototype.add = function(citizen) {
-    if(this.WorkerA === undefined){
-        this.WorkerA = citizen;
+    if(this.workerA === undefined){
+        this.workerA = citizen;
     }
 
-    else if(this.WorkerB === undefined){
-        this.WorkerB = citizen;
+    else if(this.workerB === undefined){
+        this.workerB = citizen;
     }
 
-    this.full = (this.WorkerA !== undefined && this.WorkerB !== undefined);
+    this.full = (this.workerA !== undefined && this.workerB !== undefined);
 
     return this.full;
 };
@@ -174,7 +174,7 @@ function Citizen(homelessArray, unemployedArray) {
 }
 Citizen.constructor = Citizen;
 
-Citizen.prototype.addToHouse = function (homelessArray, houseGroup){
+Citizen.prototype.addToHouse = function (houseGroup){
     var found = false;
 
     houseGroup.forEach(function (house) {
@@ -189,12 +189,12 @@ Citizen.prototype.addToHouse = function (homelessArray, houseGroup){
     return found;
 };
 
-Citizen.prototype.addToProducer = function (unemployedArray, ProducerGroup){
+Citizen.prototype.addToProducer = function (producerGroup){
     var found = false;
 
-    ProducerGroup.forEach(function (Producer) {
-        if(!Producer.full && !found){
-            if(Producer.add(this)){
+    producerGroup.forEach(function (producer) {
+        if(!producer.full && !found){
+            if(producer.add(this)){
                 found = true;
                 this.unemployed = false;
             }
