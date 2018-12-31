@@ -34,6 +34,7 @@ var Tutorial = {
           this.timeScale = 1;
           this.currentTime = { "hour": 0, "buffer": 0};
           this.homelessArray = [];
+          this.unemployedArray = [];
           this.shiftStart = 8;
           this.shiftEnd = 20;
           this._tileSize = this.map.tileWidth;
@@ -71,6 +72,7 @@ var Tutorial = {
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     this.buildingGroup = this.game.add.group();
+    this.producerGroup = this.game.add.group();
 
     this.houseGroup = this.game.add.group();
     this.buildingGroup.add(this.houseGroup);
@@ -78,22 +80,27 @@ var Tutorial = {
 
     this.woodGroup = this.game.add.group();
     this.buildingGroup.add(this.woodGroup);
+    this.producerGroup.add(this.woodGroup);
     this.woodGroup.sprite = 'Wood';
 
     this.coalGroup = this.game.add.group(); //Comentado de momento, añado un grupo Mine y ya vemos como hacer el reparto de recursos (¿Stone + Coal?)
     this.buildingGroup.add(this.coalGroup);
+    this.producerGroup.add(this.coalGroup);
     this.coalGroup.sprite = 'Coal'
 
     this.uraniumGroup = this.game.add.group();
     this.buildingGroup.add(this.uraniumGroup);
+    this.producerGroup.add(this.uraniumGroup);
     this.uraniumGroup.sprite = 'Uranium';
 
     this.energyGroup = this.game.add.group();
     this.buildingGroup.add(this.energyGroup);
+    this.producerGroup.add(this.energyGroup);
     this.energyGroup.sprite = 'Energy';
 
     this.windGroup = this.game.add.group();
     this.buildingGroup.add(this.windGroup);
+    this.producerGroup.add(this.windGroup);
     this.windGroup.sprite = 'Wind';
 
     this.roadGroup = this.game.add.group();
@@ -102,18 +109,22 @@ var Tutorial = {
 
     this.waterGroup = this.game.add.group();
     this.buildingGroup.add(this.waterGroup);
+    this.producerGroup.add(this.waterGroup);
     this.waterGroup.sprite = 'Water';
 
     this.hospitalGroup = this.game.add.group();
     this.buildingGroup.add(this.hospitalGroup);
+    this.producerGroup.add(this.hospitalGroup);
     this.hospitalGroup.sprite = 'Hospital';
 
     this.stoneGroup = this.game.add.group();
     this.buildingGroup.add(this.stoneGroup);
+    this.producerGroup.add(this.stoneGroup);
     this.stoneGroup.sprite = 'Stone';
 
     this.cropGroup = this.game.add.group();
     this.buildingGroup.add(this.cropGroup);
+    this.producerGroup.add(this.cropGroup);
     this.cropGroup.sprite = 'Crops';
 
     //etc.

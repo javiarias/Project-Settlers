@@ -35,6 +35,7 @@ var PlayScene = {
           this.timeScale = 1;
           this.currentTime = { "hour": 0, "buffer": 0};
           this.homelessArray = [];
+          this.unemployedArray = [];
           this.shiftStart = 8;
           this.shiftEnd = 20;
           this._tileSize = this.map.tileWidth;
@@ -72,6 +73,7 @@ var PlayScene = {
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     this.buildingGroup = this.game.add.group();
+    this.producerGroup = this.game.add.group();
 
     this.houseGroup = this.game.add.group();
     this.buildingGroup.add(this.houseGroup);
@@ -79,22 +81,27 @@ var PlayScene = {
 
     this.woodGroup = this.game.add.group();
     this.buildingGroup.add(this.woodGroup);
+    this.producerGroup.add(this.woodGroup);
     this.woodGroup.sprite = 'Wood';
 
     this.coalGroup = this.game.add.group(); //Comentado de momento, añado un grupo Mine y ya vemos como hacer el reparto de recursos (¿Stone + Coal?)
     this.buildingGroup.add(this.coalGroup);
+    this.producerGroup.add(this.coalGroup);
     this.coalGroup.sprite = 'Coal'
 
     this.uraniumGroup = this.game.add.group();
     this.buildingGroup.add(this.uraniumGroup);
+    this.producerGroup.add(this.uraniumGroup);
     this.uraniumGroup.sprite = 'Uranium';
 
     this.energyGroup = this.game.add.group();
     this.buildingGroup.add(this.energyGroup);
+    this.producerGroup.add(this.energyGroup);
     this.energyGroup.sprite = 'Energy';
 
     this.windGroup = this.game.add.group();
     this.buildingGroup.add(this.windGroup);
+    this.producerGroup.add(this.windGroup);
     this.windGroup.sprite = 'Wind';
 
     this.roadGroup = this.game.add.group();
@@ -103,18 +110,22 @@ var PlayScene = {
 
     this.waterGroup = this.game.add.group();
     this.buildingGroup.add(this.waterGroup);
+    this.producerGroup.add(this.waterGroup);
     this.waterGroup.sprite = 'Water';
 
     this.hospitalGroup = this.game.add.group();
     this.buildingGroup.add(this.hospitalGroup);
+    this.producerGroup.add(this.hospitalGroup);
     this.hospitalGroup.sprite = 'Hospital';
 
     this.stoneGroup = this.game.add.group();
     this.buildingGroup.add(this.stoneGroup);
+    this.producerGroup.add(this.stoneGroup);
     this.stoneGroup.sprite = 'Stone';
 
     this.cropGroup = this.game.add.group();
     this.buildingGroup.add(this.cropGroup);
+    this.producerGroup.add(this.cropGroup);
     this.cropGroup.sprite = 'Crops';
 
     //etc.
@@ -541,6 +552,7 @@ var PlayScene = {
 
       this.homelessTxtGroup.add(this.homelessTxt);
 
+
       this.homelessTxtTooltip = new Phasetips(this.game, {
         targetObject: this.homelessIcon,
         context: "Homeless Citizens",
@@ -552,6 +564,35 @@ var PlayScene = {
       });
 
     this.UI.add(this.homelessTxtGroup);
+
+    this.unemployedTxtGroup = this.game.add.group();
+
+    this.unemployedIcon = this.game.add.sprite(this.foodIcon.centerX, this.homelessIcon.bottom + 7, "noHouseIcon");
+    this.unemployedIcon.anchor.setTo(.5, 0);
+    this.unemployedIcon.fixedToCamera = true;
+    this.unemployedIcon.smoothed = false;
+
+    this.unemployedTxtGroup.add(this.unemployedIcon);
+
+    this.unemployedTxt = this.game.add.text(this.foodTxt.x, this.unemployedIcon.centerY + 4, "5", {font: "30px console"});
+    this.unemployedTxt.anchor.setTo(0, .5);
+    this.unemployedTxt.fixedToCamera = true;
+    this.unemployedTxt.smoothed = false;
+
+    this.unemployedTxtGroup.add(this.unemployedTxt);
+
+
+    this.unemployedTxtTooltip = new Phasetips(this.game, {
+      targetObject: this.unemployedIcon,
+      context: "Unemployed Citizens",
+      strokeColor: 0xff0000,
+      position: "left",
+      positionOffset: 30,   
+      
+      animation: "fade"
+    });
+
+  this.UI.add(this.unemployedTxtGroup);
     
     this.tip1 = new Phasetips(this.game, {
       targetObject: roadBttn,
@@ -890,7 +931,7 @@ var PlayScene = {
 
     function addCitizen()
     {
-      var citizen = new Classes.Citizen(this.homelessArray);
+      var citizen = new Classes.Citizen(this.homelessArray, this.unemployedArray);
     } 
 
     for(var i = 0; i < 5; i++)
@@ -978,6 +1019,8 @@ var PlayScene = {
               this.homelessArray[i].tick(this.food, false, null, this.homelessArray, this.houseGroup);
             }
 
+            
+
             this.foodTxt.text = this.food;
           }
 
@@ -993,6 +1036,15 @@ var PlayScene = {
               i += (this.homelessArray.length - originalLength);
           }
 
+          var originalLength = this.unemployedArray.length;
+          for (var i = this.unemployedArray.length - 1; i >= 0; i--) {
+            if(!this.unemployedArray[i].unemployed || this.unemployedArray[i].health <= 0 || this.unemployedArray[i].addToHouse(this.homelessArray, this.producerGroup))
+              this.unemployedArray.splice(i, 1);
+
+            if(this.unemployedArray.length > originalLength)
+              i += (this.unemployedArray.length - originalLength);
+          }
+
           this.timeTxt.text = this.currentTime.hour + ":00";
 
           var aux = this.homelessArray.length;
@@ -1000,6 +1052,7 @@ var PlayScene = {
           this.houseGroup.forEach(function(house){aux += house.countCitizens();});
           
           this.homelessTxt.text = this.homelessArray.length;
+          this.unemployedTxt.text = this.unemployedArray.length;
           this.citizensTxt.text = aux;
 
           this.foodGain = 0;
