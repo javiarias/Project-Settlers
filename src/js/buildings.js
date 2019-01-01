@@ -142,6 +142,30 @@ Producer.prototype.updateAmount = function() {
         this.amount = this.totalAmount;
 }
 
+Producer.prototype.kill = function(citizen) {
+    if(this.workerA == citizen){
+        this.workerA = undefined;
+        this.full = false;
+    }
+
+    else if(this.workerB == citizen){
+        this.workerB = undefined;
+        this.full = false;
+    }
+};
+
+Producer.prototype.bulldoze = function(unemployedArray) {
+    
+    if(this.workerA !== undefined){
+        this.workerA.unemployed = true;
+        unemployedArray.unshift(this.workerA);
+    }
+    if(this.workerB !== undefined){
+        this.workerB.unemployed = true;
+        unemployedArray.unshift(this.workerB);
+    }
+};
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 

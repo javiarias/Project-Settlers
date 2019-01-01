@@ -375,7 +375,7 @@ var PlayScene = {
 
       this.foodTxtGroup = this.game.add.group();
 
-      this.foodIcon = this.game.add.sprite(this.timeTxt.left, this.timescaleTxt.bottom + 550/5, "cropIcon");
+      this.foodIcon = this.game.add.sprite(this.timeTxt.left, this.timescaleTxt.bottom + 350/5, "cropIcon");
       this.foodIcon.anchor.setTo(1, 0);
       this.foodIcon.fixedToCamera = true;
       this.foodIcon.smoothed = false;
@@ -417,9 +417,52 @@ var PlayScene = {
 
     this.UI.add(this.foodTxtGroup);
 
+    this.waterTxtGroup = this.game.add.group();
+
+      this.waterIcon = this.game.add.sprite(this.foodIcon.centerX + 10, this.foodIcon.bottom + 7, "waterIcon");
+      this.waterIcon.anchor.setTo(1, 0);
+      this.waterIcon.fixedToCamera = true;
+      this.waterIcon.smoothed = false;
+
+      this.waterTxtGroup.add(this.waterIcon);
+
+      this.waterTxt = this.game.add.text(this.foodIcon.right + 15, this.waterIcon.centerY + 3, this.water, {font: "30px console"});
+      this.waterTxt.anchor.setTo(0, .5);
+      this.waterTxt.fixedToCamera = true;
+      this.waterTxt.smoothed = false;
+
+      this.foodTxtGroup.add(this.foodTxt);
+
+
+      var auxSymbol = "";
+      var auxColor = "#FF0000";
+      if(this.waterGain >= 0){
+        auxSymbol = "+";
+        auxColor = "#008500";
+      }
+      this.waterTxtGain = this.game.add.text(this.foodTxt.right + 15, this.waterIcon.centerY + 3, auxSymbol + this.waterGain, {font: "30px console"});
+      this.waterTxtGain.anchor.setTo(0, .5);
+      this.waterTxtGain.fixedToCamera = true;
+      this.waterTxtGain.smoothed = false;
+      this.waterTxtGain.addColor(auxColor, 0);
+
+      this.waterTxtGroup.add(this.waterTxtGain);
+
+      this.waterTxtTooltip = new Phasetips(this.game, {
+        targetObject: this.waterIcon,
+        context: "Water\n(Citizens drink once per day)",
+        strokeColor: 0xff0000,
+        position: "left",
+        positionOffset: 30,   
+        
+        animation: "fade"
+      });
+
+    this.UI.add(this.waterTxtGroup);
+
       this.woodTxtGroup = this.game.add.group();
 
-      this.woodIcon = this.game.add.sprite(this.foodIcon.centerX, this.foodIcon.bottom + 7, "woodIcon");
+      this.woodIcon = this.game.add.sprite(this.foodIcon.centerX, this.waterIcon.bottom + 7, "woodIcon");
       this.woodIcon.anchor.setTo(.5, 0);
       this.woodIcon.fixedToCamera = true;
       this.woodIcon.smoothed = false;
@@ -504,6 +547,96 @@ var PlayScene = {
       this.stoneTxtGroup.add(this.stoneTxt);
 
     this.UI.add(this.stoneTxtGroup);
+
+    this.uraniumTxtGroup = this.game.add.group();
+
+    this.uraniumIcon = this.game.add.sprite(this.foodIcon.centerX, this.stoneIcon.bottom + 7, "uraniumIcon");
+    this.uraniumIcon.anchor.setTo(.5, 0);
+    this.uraniumIcon.fixedToCamera = true;
+    this.uraniumIcon.smoothed = false;
+
+    this.uraniumTxtGroup.add(this.uraniumIcon);
+
+    this.uraniumTxt = this.game.add.text(this.foodTxt.x, this.uraniumIcon.centerY + 4, this.stone, {font: "30px console"});
+    this.uraniumTxt.anchor.setTo(0, .5);
+    this.uraniumTxt.fixedToCamera = true;
+    this.uraniumTxt.smoothed = false;
+
+    this.uraniumTxtGroup.add(this.uraniumTxt);
+
+    auxSymbol = "";
+    auxColor = "#FF0000";
+    if(this.uraniumGain >= 0){
+      auxSymbol = "+";
+      auxColor = "#008500";
+    }
+
+    this.uraniumTxtGain = this.game.add.text(this.foodTxtGain.x, this.uraniumIcon.centerY + 3, auxSymbol + this.uraniumGain, {font: "30px console"});
+    this.uraniumTxtGain.anchor.setTo(0, .5);
+    this.uraniumTxtGain.fixedToCamera = true;
+    this.uraniumTxtGain.smoothed = false;
+    this.uraniumTxtGain.addColor(auxColor, 0);
+
+    this.uraniumTxtGroup.add(this.uraniumTxtGain);
+
+    this.uraniumTxtTooltip = new Phasetips(this.game, {
+      targetObject: this.uraniumIcon,
+      context: "Uranium",
+      strokeColor: 0xff0000,
+      position: "left",
+      positionOffset: 30,   
+      
+      animation: "fade"
+    });
+
+    this.uraniumTxtGroup.add(this.uraniumTxt);
+
+  this.UI.add(this.uraniumTxtGroup);
+
+  this.energyTxtGroup = this.game.add.group();
+
+    this.energyIcon = this.game.add.sprite(this.foodIcon.centerX, this.uraniumIcon.bottom + 7, "energyIcon");
+    this.energyIcon.anchor.setTo(.5, 0);
+    this.energyIcon.fixedToCamera = true;
+    this.energyIcon.smoothed = false;
+
+    this.energyTxtGroup.add(this.energyIcon);
+
+    this.energyTxt = this.game.add.text(this.foodTxt.x, this.energyIcon.centerY + 4, this.stone, {font: "30px console"});
+    this.energyTxt.anchor.setTo(0, .5);
+    this.energyTxt.fixedToCamera = true;
+    this.energyTxt.smoothed = false;
+
+    this.energyTxtGroup.add(this.energyTxt);
+
+    auxSymbol = "";
+    auxColor = "#FF0000";
+    if(this.energyGain >= 0){
+      auxSymbol = "+";
+      auxColor = "#008500";
+    }
+
+    this.energyTxtGain = this.game.add.text(this.foodTxtGain.x, this.energyIcon.centerY + 3, auxSymbol + this.energyGain, {font: "30px console"});
+    this.energyTxtGain.anchor.setTo(0, .5);
+    this.energyTxtGain.fixedToCamera = true;
+    this.energyTxtGain.smoothed = false;
+    this.energyTxtGain.addColor(auxColor, 0);
+
+    this.energyTxtGroup.add(this.energyTxtGain);
+
+    this.uraniumTxtTooltip = new Phasetips(this.game, {
+      targetObject: this.energyIcon,
+      context: "Energy",
+      strokeColor: 0xff0000,
+      position: "left",
+      positionOffset: 30,   
+      
+      animation: "fade"
+    });
+
+    this.energyTxtGroup.add(this.energyTxt);
+
+  this.UI.add(this.energyTxtGroup);
 
       this.citizensTxtGroup = this.game.add.group();
 

@@ -406,146 +406,286 @@ var Tutorial = {
 
     this.UI.add(this.timescaleTxt);
 
-      this.foodTxtGroup = this.game.add.group();
+    this.foodTxtGroup = this.game.add.group();
 
-      this.foodIcon = this.game.add.sprite(this.timeTxt.left, this.timescaleTxt.bottom + 550/5, "cropIcon");
-      this.foodIcon.anchor.setTo(1, 0);
-      this.foodIcon.fixedToCamera = true;
-      this.foodIcon.smoothed = false;
-      this.foodIcon.visible = false;
+    this.foodIcon = this.game.add.sprite(this.timeTxt.left, this.timescaleTxt.bottom + 350/5, "cropIcon");
+    this.foodIcon.anchor.setTo(1, 0);
+    this.foodIcon.fixedToCamera = true;
+    this.foodIcon.smoothed = false;
+    this.foodIcon.visible = false;
 
-      this.foodTxtGroup.add(this.foodIcon);
+    this.foodTxtGroup.add(this.foodIcon);
 
+    
+    this.foodTxt = this.game.add.text(this.foodIcon.right + 15, this.foodIcon.centerY + 3, this.food, {font: "30px console"});
+    this.foodTxt.anchor.setTo(0, .5);
+    this.foodTxt.fixedToCamera = true;
+    this.foodTxt.smoothed = false;
+    this.foodTxt.visible = false;
+
+    this.foodTxtGroup.add(this.foodTxt);
+
+    var auxSymbol = "";
+    var auxColor = "#FF0000";
+    if(this.foodGain >= 0){
+      auxSymbol = "+";
+      auxColor = "#008500";
+    }
+    this.foodTxtGain = this.game.add.text(this.foodTxt.right + 15, this.foodIcon.centerY + 3, auxSymbol + this.foodGain, {font: "30px console"});
+    this.foodTxtGain.anchor.setTo(0, .5);
+    this.foodTxtGain.fixedToCamera = true;
+    this.foodTxtGain.smoothed = false;
+    this.foodTxtGain.visible = false;
+    this.foodTxtGain.addColor(auxColor, 0);
+
+    this.foodTxtGroup.add(this.foodTxtGain);
+
+    this.foodTxtTooltip = new Phasetips(this.game, {
+      targetObject: this.foodIcon,
+      context: "Food\n(Citizens eat once per day)",
+      strokeColor: 0xff0000,
+      position: "left",
+      positionOffset: 30,   
       
-      this.foodTxt = this.game.add.text(this.foodIcon.right + 15, this.foodIcon.centerY + 3, this.food, {font: "30px console"});
-      this.foodTxt.anchor.setTo(0, .5);
-      this.foodTxt.fixedToCamera = true;
-      this.foodTxt.smoothed = false;
-      this.foodTxt.visible = false;
+      animation: "fade"
+    });
 
-      this.foodTxtGroup.add(this.foodTxt);
+  this.UI.add(this.foodTxtGroup);
 
+  this.waterTxtGroup = this.game.add.group();
 
-      var auxSymbol = "";
-      var auxColor = "#FF0000";
-      if(this.foodGain >= 0){
-        auxSymbol = "+";
-        auxColor = "#008500";
-      }
-      this.foodTxtGain = this.game.add.text(this.foodTxt.right + 15, this.foodIcon.centerY + 3, auxSymbol + this.foodGain, {font: "30px console"});
-      this.foodTxtGain.anchor.setTo(0, .5);
-      this.foodTxtGain.fixedToCamera = true;
-      this.foodTxtGain.smoothed = false;
-      this.foodTxtGain.addColor(auxColor, 0);
-      this.foodTxtGain.visible = false;
+    this.waterIcon = this.game.add.sprite(this.foodIcon.centerX + 10, this.foodIcon.bottom + 7, "waterIcon");
+    this.waterIcon.anchor.setTo(1, 0);
+    this.waterIcon.fixedToCamera = true;
+    this.waterIcon.smoothed = false;
+    this.waterIcon.visible = false;
 
-      this.foodTxtGroup.add(this.foodTxtGain);
+    this.waterTxtGroup.add(this.waterIcon);
 
-      this.foodTxtTooltip = new Phasetips(this.game, {
-        targetObject: this.foodIcon,
-        context: "Food\n(Citizens eat once per day)",
-        strokeColor: 0xff0000,
-        position: "left",
-        positionOffset: 30,   
-        
-        animation: "fade"
-      });
+    this.waterTxt = this.game.add.text(this.foodIcon.right + 15, this.waterIcon.centerY + 3, this.water, {font: "30px console"});
+    this.waterTxt.anchor.setTo(0, .5);
+    this.waterTxt.fixedToCamera = true;
+    this.waterTxt.smoothed = false;
+    this.waterTxt.visible = false;
 
-    this.UI.add(this.foodTxtGroup);
+    this.foodTxtGroup.add(this.foodTxt);
 
-      this.woodTxtGroup = this.game.add.group();
+    var auxSymbol = "";
+    var auxColor = "#FF0000";
+    if(this.waterGain >= 0){
+      auxSymbol = "+";
+      auxColor = "#008500";
+    }
+    this.waterTxtGain = this.game.add.text(this.foodTxt.right + 15, this.waterIcon.centerY + 3, auxSymbol + this.waterGain, {font: "30px console"});
+    this.waterTxtGain.anchor.setTo(0, .5);
+    this.waterTxtGain.fixedToCamera = true;
+    this.waterTxtGain.smoothed = false;
+    this.waterTxtGain.visible = false;
+    this.waterTxtGain.addColor(auxColor, 0);
 
-      this.woodIcon = this.game.add.sprite(this.foodIcon.centerX, this.foodIcon.bottom + 7, "woodIcon");
-      this.woodIcon.anchor.setTo(.5, 0);
-      this.woodIcon.fixedToCamera = true;
-      this.woodIcon.smoothed = false;
-      this.woodIcon.visible = false;
+    this.waterTxtGroup.add(this.waterTxtGain);
 
-      this.woodTxtGroup.add(this.woodIcon);
+    this.waterTxtTooltip = new Phasetips(this.game, {
+      targetObject: this.waterIcon,
+      context: "Water\n(Citizens drink once per day)",
+      strokeColor: 0xff0000,
+      position: "left",
+      positionOffset: 30,   
       
-      this.woodTxt = this.game.add.text(this.foodTxt.x, this.woodIcon.centerY + 4, this.wood, {font: "30px console"});
-      this.woodTxt.anchor.setTo(0, .5);
-      this.woodTxt.fixedToCamera = true;
-      this.woodTxt.smoothed = false;
-      this.woodTxt.visible = false;
+      animation: "fade"
+    });
 
-      this.woodTxtGroup.add(this.woodTxt);
+  this.UI.add(this.waterTxtGroup);
 
-      auxSymbol = "";
-      auxColor = "#FF0000";
-      if(this.woodGain >= 0){
-        auxSymbol = "+";
-        auxColor = "#008500";
-      }
+    this.woodTxtGroup = this.game.add.group();
 
-      this.woodTxtGain = this.game.add.text(this.foodTxtGain.x, this.woodIcon.centerY + 3, auxSymbol + this.woodGain, {font: "30px console"});
-      this.woodTxtGain.anchor.setTo(0, .5);
-      this.woodTxtGain.fixedToCamera = true;
-      this.woodTxtGain.smoothed = false;
-      this.woodTxtGain.addColor(auxColor, 0);
-      this.woodTxtGain.visible = false;
+    this.woodIcon = this.game.add.sprite(this.foodIcon.centerX, this.waterIcon.bottom + 7, "woodIcon");
+    this.woodIcon.anchor.setTo(.5, 0);
+    this.woodIcon.fixedToCamera = true;
+    this.woodIcon.smoothed = false;
+    this.woodIcon.visible = false;
 
-      this.woodTxtGroup.add(this.woodTxtGain);
+    this.woodTxtGroup.add(this.woodIcon);
+    
+    this.woodTxt = this.game.add.text(this.foodTxt.x, this.woodIcon.centerY + 4, this.wood, {font: "30px console"});
+    this.woodTxt.anchor.setTo(0, .5);
+    this.woodTxt.fixedToCamera = true;
+    this.woodTxt.smoothed = false;
+    this.woodTxt.visible = false;
 
-      this.woodTxtTooltip = new Phasetips(this.game, {
-        targetObject: this.woodIcon,
-        context: "Wood",
-        strokeColor: 0xff0000,
-        position: "left",
-        positionOffset: 30,   
-        
-        animation: "fade"
-      });
+    this.woodTxtGroup.add(this.woodTxt);
 
-    this.UI.add(this.woodTxtGroup);
+    auxSymbol = "";
+    auxColor = "#FF0000";
+    if(this.woodGain >= 0){
+      auxSymbol = "+";
+      auxColor = "#008500";
+    }
 
-      this.stoneTxtGroup = this.game.add.group();
+    this.woodTxtGain = this.game.add.text(this.foodTxtGain.x, this.woodIcon.centerY + 3, auxSymbol + this.woodGain, {font: "30px console"});
+    this.woodTxtGain.anchor.setTo(0, .5);
+    this.woodTxtGain.fixedToCamera = true;
+    this.woodTxtGain.smoothed = false;
+    this.woodTxtGain.visible = false;
+    this.woodTxtGain.addColor(auxColor, 0);
 
-      this.stoneIcon = this.game.add.sprite(this.foodIcon.centerX, this.woodIcon.bottom + 7, "stoneIcon");
-      this.stoneIcon.anchor.setTo(.5, 0);
-      this.stoneIcon.fixedToCamera = true;
-      this.stoneIcon.smoothed = false;
-      this.stoneIcon.visible = false;
+    this.woodTxtGroup.add(this.woodTxtGain);
 
-      this.stoneTxtGroup.add(this.stoneIcon);
+    this.woodTxtTooltip = new Phasetips(this.game, {
+      targetObject: this.woodIcon,
+      context: "Wood",
+      strokeColor: 0xff0000,
+      position: "left",
+      positionOffset: 30,   
+      
+      animation: "fade"
+    });
 
-      this.stoneTxt = this.game.add.text(this.foodTxt.x, this.stoneIcon.centerY + 4, this.stone, {font: "30px console"});
-      this.stoneTxt.anchor.setTo(0, .5);
-      this.stoneTxt.fixedToCamera = true;
-      this.stoneTxt.smoothed = false;
-      this.stoneTxt.visible = false;
+  this.UI.add(this.woodTxtGroup);
 
-      this.stoneTxtGroup.add(this.stoneTxt);
+    this.stoneTxtGroup = this.game.add.group();
 
-      auxSymbol = "";
-      auxColor = "#FF0000";
-      if(this.stoneGain >= 0){
-        auxSymbol = "+";
-        auxColor = "#008500";
-      }
+    this.stoneIcon = this.game.add.sprite(this.foodIcon.centerX, this.woodIcon.bottom + 7, "stoneIcon");
+    this.stoneIcon.anchor.setTo(.5, 0);
+    this.stoneIcon.fixedToCamera = true;
+    this.stoneIcon.smoothed = false;
+    this.stoneIcon.visible = false;
 
-      this.stoneTxtGain = this.game.add.text(this.foodTxtGain.x, this.stoneIcon.centerY + 3, auxSymbol + this.stoneGain, {font: "30px console"});
-      this.stoneTxtGain.anchor.setTo(0, .5);
-      this.stoneTxtGain.fixedToCamera = true;
-      this.stoneTxtGain.smoothed = false;
-      this.stoneTxtGain.addColor(auxColor, 0);
-      this.stoneTxtGain.visible = false;
+    this.stoneTxtGroup.add(this.stoneIcon);
 
-      this.stoneTxtGroup.add(this.stoneTxtGain);
+    this.stoneTxt = this.game.add.text(this.foodTxt.x, this.stoneIcon.centerY + 4, this.stone, {font: "30px console"});
+    this.stoneTxt.anchor.setTo(0, .5);
+    this.stoneTxt.fixedToCamera = true;
+    this.stoneTxt.smoothed = false;
+    this.stoneTxt.visible = false;
 
-      this.stoneTxtTooltip = new Phasetips(this.game, {
-        targetObject: this.stoneIcon,
-        context: "Stone",
-        strokeColor: 0xff0000,
-        position: "left",
-        positionOffset: 30,   
-        
-        animation: "fade"
-      });
+    this.stoneTxtGroup.add(this.stoneTxt);
 
-      this.stoneTxtGroup.add(this.stoneTxt);
+    auxSymbol = "";
+    auxColor = "#FF0000";
+    if(this.stoneGain >= 0){
+      auxSymbol = "+";
+      auxColor = "#008500";
+    }
 
-    this.UI.add(this.stoneTxtGroup);
+    this.stoneTxtGain = this.game.add.text(this.foodTxtGain.x, this.stoneIcon.centerY + 3, auxSymbol + this.stoneGain, {font: "30px console"});
+    this.stoneTxtGain.anchor.setTo(0, .5);
+    this.stoneTxtGain.fixedToCamera = true;
+    this.stoneTxtGain.smoothed = false;
+    this.stoneTxtGain.visible = false;
+    this.stoneTxtGain.addColor(auxColor, 0);
+
+    this.stoneTxtGroup.add(this.stoneTxtGain);
+
+    this.stoneTxtTooltip = new Phasetips(this.game, {
+      targetObject: this.stoneIcon,
+      context: "Stone",
+      strokeColor: 0xff0000,
+      position: "left",
+      positionOffset: 30,   
+      
+      animation: "fade"
+    });
+
+    this.stoneTxtGroup.add(this.stoneTxt);
+
+  this.UI.add(this.stoneTxtGroup);
+
+  this.uraniumTxtGroup = this.game.add.group();
+
+  this.uraniumIcon = this.game.add.sprite(this.foodIcon.centerX, this.stoneIcon.bottom + 7, "uraniumIcon");
+  this.uraniumIcon.anchor.setTo(.5, 0);
+  this.uraniumIcon.fixedToCamera = true;
+  this.uraniumIcon.smoothed = false;
+  this.uraniumIcon.visible = false;
+
+  this.uraniumTxtGroup.add(this.uraniumIcon);
+
+  this.uraniumTxt = this.game.add.text(this.foodTxt.x, this.uraniumIcon.centerY + 4, this.stone, {font: "30px console"});
+  this.uraniumTxt.anchor.setTo(0, .5);
+  this.uraniumTxt.fixedToCamera = true;
+  this.uraniumTxt.smoothed = false;
+  this.uraniumTxt.visible = false;
+
+  this.uraniumTxtGroup.add(this.uraniumTxt);
+
+  auxSymbol = "";
+  auxColor = "#FF0000";
+  if(this.uraniumGain >= 0){
+    auxSymbol = "+";
+    auxColor = "#008500";
+  }
+
+  this.uraniumTxtGain = this.game.add.text(this.foodTxtGain.x, this.uraniumIcon.centerY + 3, auxSymbol + this.uraniumGain, {font: "30px console"});
+  this.uraniumTxtGain.anchor.setTo(0, .5);
+  this.uraniumTxtGain.fixedToCamera = true;
+  this.uraniumTxtGain.smoothed = false;
+  this.uraniumTxtGain.visible = false;
+  this.uraniumTxtGain.addColor(auxColor, 0);
+
+  this.uraniumTxtGroup.add(this.uraniumTxtGain);
+
+  this.uraniumTxtTooltip = new Phasetips(this.game, {
+    targetObject: this.uraniumIcon,
+    context: "Uranium",
+    strokeColor: 0xff0000,
+    position: "left",
+    positionOffset: 30,   
+    
+    animation: "fade"
+  });
+
+  this.uraniumTxtGroup.add(this.uraniumTxt);
+
+this.UI.add(this.uraniumTxtGroup);
+
+this.energyTxtGroup = this.game.add.group();
+
+  this.energyIcon = this.game.add.sprite(this.foodIcon.centerX, this.uraniumIcon.bottom + 7, "energyIcon");
+  this.energyIcon.anchor.setTo(.5, 0);
+  this.energyIcon.fixedToCamera = true;
+  this.energyIcon.smoothed = false;
+  this.energyIcon.visible = false;
+
+  this.energyTxtGroup.add(this.energyIcon);
+
+  this.energyTxt = this.game.add.text(this.foodTxt.x, this.energyIcon.centerY + 4, this.stone, {font: "30px console"});
+  this.energyTxt.anchor.setTo(0, .5);
+  this.energyTxt.fixedToCamera = true;
+  this.energyTxt.smoothed = false;
+  this.energyTxt.visible = false;
+
+  this.energyTxtGroup.add(this.energyTxt);
+
+  auxSymbol = "";
+  auxColor = "#FF0000";
+  if(this.energyGain >= 0){
+    auxSymbol = "+";
+    auxColor = "#008500";
+  }
+
+  this.energyTxtGain = this.game.add.text(this.foodTxtGain.x, this.energyIcon.centerY + 3, auxSymbol + this.energyGain, {font: "30px console"});
+  this.energyTxtGain.anchor.setTo(0, .5);
+  this.energyTxtGain.fixedToCamera = true;
+  this.energyTxtGain.smoothed = false;
+  this.energyTxtGain.visible = false;
+  this.energyTxtGain.addColor(auxColor, 0);
+
+  this.energyTxtGroup.add(this.energyTxtGain);
+
+  this.uraniumTxtTooltip = new Phasetips(this.game, {
+    targetObject: this.energyIcon,
+    context: "Energy",
+    strokeColor: 0xff0000,
+    position: "left",
+    positionOffset: 30,   
+    
+    animation: "fade"
+  });
+
+  this.energyTxtGroup.add(this.energyTxt);
+
+this.UI.add(this.energyTxtGroup);
 
       this.citizensTxtGroup = this.game.add.group();
 
@@ -1285,9 +1425,7 @@ var Tutorial = {
     //comprobación condiciones, tooltip correspondiente con una condicion diferente para no dejarlo todo lleno
     if (this.cameraCheckUp && this.cameraCheckDown && this.cameraCheckLeft && this.cameraCheckRight)
     {
-        //condicion para cuando la tip haga fade (asegurarse de que se lee?)
         this.cameraCheck = true;
-
     }
 
     if (this.cameraCheck)
@@ -1317,9 +1455,9 @@ var Tutorial = {
     {
       this.waterBttn.visible = true;
       this.waterBttn.input.enabled = true;
-      /*this.waterIcon.visible = true;
+      this.waterIcon.visible = true;
       this.waterTxt.visible = true;
-      this.waterTxtGain.visible = true;*/
+      this.waterTxtGain.visible = true;
     }
 
     if (this.cropCheck) //condicion pasa a true al construir una casa
@@ -1353,36 +1491,36 @@ var Tutorial = {
     {
       this.uraniumBttn.visible = true;
       this.uraniumBttn.input.enabled = true;
-      /*this.uraniumIcon.visible = true;
+      this.uraniumIcon.visible = true;
       this.uraniumTxt.visible = true;
-      this.uraniumTxtGain.visible = true;*/
+      this.uraniumTxtGain.visible = true;
     }
 
     if (this.energyCheck) //condicion pasa a true al construir una cantera
     {
       this.energyBttn.visible = true;
       this.energyBttn.input.enabled = true;
-      /*this.energyIcon.visible = true;
+      this.energyIcon.visible = true;
       this.energyTxt.visible = true;
-      this.energyTxtGain.visible = true;*/
+      this.energyTxtGain.visible = true;
     }
 
     if (this.windCheck) //condicion pasa a true al construir una cantera
     {
       this.windBttn.visible = true;
       this.windBttn.input.enabled = true;
-      /*this.windIcon.visible = true;
+      this.windIcon.visible = true;
       this.windTxt.visible = true;
-      this.windTxtGain.visible = true;*/
+      this.windTxtGain.visible = true;
     }
 
     if (this.hospitalCheck)
     {
       this.hospitalBttn.visible = true;
       this.hospitalBttn.input.enabled = true;
-      /*this.hospitalIcon.visible = true;
+      this.hospitalIcon.visible = true;
       this.windTxt.visible = true;
-      this.windTxtGain.visible = true;*/
+      this.windTxtGain.visible = true;
     }
 
     if (this.bulldozeCheck) //condicion pasa a true al construir una de madera
