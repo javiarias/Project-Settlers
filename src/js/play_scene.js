@@ -26,7 +26,6 @@ var PlayScene = {
           this.volume = 50;
 
           this.gameMusic = this.game.add.audio('gameSound'); 
-
           this.gameMusic.play();
           this.gameMusic.loop = true;
           this.gameMusic.volume = this.volume / 100;
@@ -63,7 +62,7 @@ var PlayScene = {
     this.energy = 0;
     this.energyGain = 0;
 
-    this.water = 0;
+    this.water = 50;
     this.waterGain = 0;
 
     this.stone = 50;
@@ -280,7 +279,7 @@ var PlayScene = {
 
     this.UI.add(houseBttn);
 
-    var waterBttn = this.game.add.button(houseBttn.right + buttonOffset,  roadBttn.centerY, "waterBttn", function(){}, this, 0, 0, 1);
+    var waterBttn = this.game.add.button(houseBttn.right + buttonOffset,  roadBttn.centerY, "waterBttn", function(){buildMode.call(this, this, this.waterGroup);}, this, 0, 0, 1);
     waterBttn.anchor.setTo(.5, .5);
     waterBttn.fixedToCamera = true;
     waterBttn.smoothed = false;
@@ -320,7 +319,7 @@ var PlayScene = {
 
     this.UI.add(coalBttn);*/
 
-    var uraniumBttn = this.game.add.button(stoneBttn.right + buttonOffset,  roadBttn.centerY, "uraniumBttn", function(){}, this, 0, 0, 1);
+    var uraniumBttn = this.game.add.button(stoneBttn.right + buttonOffset,  roadBttn.centerY, "uraniumBttn", function(){buildMode.call(this, this, this.uraniumGroup);}, this, 0, 0, 1);
     uraniumBttn.anchor.setTo(.5, .5);
     uraniumBttn.fixedToCamera = true;
     uraniumBttn.smoothed = false;
@@ -328,15 +327,7 @@ var PlayScene = {
 
     this.UI.add(uraniumBttn);
 
-    var windBttn = this.game.add.button(uraniumBttn.right + buttonOffset,  roadBttn.centerY, "windBttn", function(){}, this, 0, 0, 1);
-    windBttn.anchor.setTo(.5, .5);
-    windBttn.fixedToCamera = true;
-    windBttn.smoothed = false;
-    windBttn.scale.setTo(scale, scale);
-
-    this.UI.add(windBttn);
-
-    var energyBttn = this.game.add.button(windBttn.right + buttonOffset,  roadBttn.centerY, "energyBttn", function(){}, this, 0, 0, 1);
+    var energyBttn = this.game.add.button(uraniumBttn.right + buttonOffset,  roadBttn.centerY, "energyBttn", function(){buildMode.call(this, this, this.energyGroup);}, this, 0, 0, 1);
     energyBttn.anchor.setTo(.5, .5);
     energyBttn.fixedToCamera = true;
     energyBttn.smoothed = false;
@@ -344,7 +335,15 @@ var PlayScene = {
 
     this.UI.add(energyBttn);
 
-    var hospitalBttn = this.game.add.button(energyBttn.right + buttonOffset,  roadBttn.centerY, "hospitalBttn", function(){}, this, 0, 0, 1);
+    var windBttn = this.game.add.button(energyBttn.right + buttonOffset,  roadBttn.centerY, "windBttn", function(){buildMode.call(this, this, this.windGroup);}, this, 0, 0, 1);
+    windBttn.anchor.setTo(.5, .5);
+    windBttn.fixedToCamera = true;
+    windBttn.smoothed = false;
+    windBttn.scale.setTo(scale, scale);
+
+    this.UI.add(windBttn);
+
+    var hospitalBttn = this.game.add.button(windBttn.right + buttonOffset,  roadBttn.centerY, "hospitalBttn", function(){buildMode.call(this, this, this.hospitalGroup);}, this, 0, 0, 1);
     hospitalBttn.anchor.setTo(.5, .5);
     hospitalBttn.fixedToCamera = true;
     hospitalBttn.smoothed = false;
@@ -579,7 +578,6 @@ var PlayScene = {
 
     this.unemployedTxtGroup.add(this.unemployedTxt);
 
-
     this.unemployedTxtTooltip = new Phasetips(this.game, {
       targetObject: this.unemployedIcon,
       context: "Unemployed Citizens",
@@ -723,7 +721,6 @@ var PlayScene = {
     
     animation: "fade"
   });
-
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     //keyboard phaser
@@ -759,7 +756,6 @@ var PlayScene = {
     this.cursors = this.game.input.keyboard.createCursorKeys();
 
     this.cursorsAlt = this.game.input.keyboard.addKeys( { 'up': Phaser.KeyCode.W, 'down': Phaser.KeyCode.S, 'left': Phaser.KeyCode.A, 'right': Phaser.KeyCode.D } );
-
     
     function setTimescale(key){
       this.timeScale = parseInt(key.event.key);

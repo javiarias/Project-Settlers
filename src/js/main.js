@@ -77,7 +77,6 @@ var PreloaderScene = {
     this.game.load.image('noHouseIcon', 'images/menu/Icons/noHouseIcon.png');
     this.game.load.image('joblessIcon', 'images/menu/Icons/joblessIcon.png');
 
-
     this.game.load.spritesheet('exitBttn', 'images/menu/MenuButtons/exit.png', 55, 48);
     this.game.load.spritesheet('minBttn', 'images/menu/MenuButtons/minimize.png', 55, 48);
     this.game.load.spritesheet('settBttn', 'images/menu/MenuButtons/settings.png', 55, 48);
@@ -100,7 +99,6 @@ var PreloaderScene = {
     this.game.load.spritesheet('energyBttn', 'images/menu/UIButtons/energy.png', 55, 48);
     this.game.load.spritesheet('hospitalBttn', 'images/menu/UIButtons/hospital.png', 55, 48);
     this.game.load.spritesheet('bulldozeBttn', 'images/menu/UIButtons/bulldoze.png', 55, 48);
-    
   },
 
   create: function () {
@@ -117,7 +115,6 @@ var wfconfig = {
       families: ['console'],
       urls: ["fonts.css"]
   }
-
 };
 
 var MainMenu = {
