@@ -592,69 +592,137 @@ var PlayScene = {
 
   this.UI.add(this.unemployedTxtGroup);
     
-    this.tip1 = new Phasetips(this.game, {
-      targetObject: roadBttn,
-      context: "Road:\n  You can build right above them.\nCost:\n  Free",
-      width: 100,
-      height: 100,
-      strokeColor: 0xff0000,
-      position: "top",
-      positionOffset: 30,   
-      
-      animation: "fade"
-    });
+  this.tipRoad = new Phasetips(this.game, {
+    targetObject: roadBttn,
+    context: "Road:\n  You can build right above them.\nCost:\n  Free",
+    width: 100,
+    height: 80,
+    strokeColor: 0xff0000,
+    position: "top",
+    positionOffset: 50,   
+    
+    animation: "fade"
+  });
 
-    this.tip2 = new Phasetips(this.game, {
-      targetObject: houseBttn,
-      context: "House:\n  Provides shelter for 2 citizens.\nCost:\n  10 Wood, 10 Stone",
-      strokeColor: 0xff0000,
-      position: "top",
-      positionOffset: 30,   
-      
-      animation: "fade"
-    });
+  this.tipHouse = new Phasetips(this.game, {
+    targetObject: houseBttn,
+    width: 200,
+    height: 80,
+    context: "House:\n  Provides shelter for 2 citizens.\nCost:\n  10 Wood, 10 Stone",
+    strokeColor: 0xff0000,
+    position: "top",
+    positionOffset: 50,   
+    
+    animation: "fade"
+  });
 
-    this.tip3 = new Phasetips(this.game, {
-      targetObject: cropBttn,
-      context: "Farm:\n  Provides food for your citizens.\nCost:\n  10 Wood, 10 Stone",
-      strokeColor: 0xff0000,
-      position: "top",
-      positionOffset: 30,   
-      
-      animation: "fade"
-    });
+  this.tipWater = new Phasetips(this.game, {
+    targetObject: waterBttn,
+    width: 200,
+    height: 80,
+    context: "Water:\n  Gives potable water.\nCost:\n  10 Wood, 10 Stone",
+    strokeColor: 0xff0000,
+    position: "top",
+    positionOffset: 50,   
+    
+    animation: "fade"
+  });
 
-    this.tip4 = new Phasetips(this.game, {
-      targetObject: stoneBttn,
-      context: "Quarry:\n  Used to mine stone for building.\nCost:\n  10 Wood, 10 Stone",
-      strokeColor: 0xff0000,
-      position: "top",
-      positionOffset: 30,   
-      
-      animation: "fade"
-    });
+  this.tipCrop = new Phasetips(this.game, {
+    targetObject: cropBttn,
+    width: 250,
+    height: 80,
+    context: "Farm:\n  Provides food for your citizens.\nCost:\n  10 Wood, 10 Stone",
+    strokeColor: 0xff0000,
+    position: "top",
+    positionOffset: 50,   
+    
+    animation: "fade"
+  });
 
-    this.tip5 = new Phasetips(this.game, {
-      targetObject: woodBttn,
-      context: "Sawmill:\n  Used to cut wood for building.\nCost:\n  10 Wood, 10 Stone",
-      strokeColor: 0xff0000,
-      position: "top",
-      positionOffset: 30,   
-      
-      animation: "fade"
-    });
+  this.tipStone = new Phasetips(this.game, {
+    targetObject: stoneBttn,
+    width: 250,
+    height: 80,
+    context: "Quarry:\n  Used to mine stone for building.\nCost:\n  10 Wood, 10 Stone",
+    strokeColor: 0xff0000,
+    position: "top",
+    positionOffset: 50,   
+    
+    animation: "fade"
+  });
 
-    this.tip6 = new Phasetips(this.game, {
-      targetObject: bulldozeBttn,
-      context: "Bulldozer:\n  Used to destroy buildings and\n  roads.",
-      width: 410,
-      height: 80,
-      strokeColor: 0xff0000,
-      position: "top",
-      positionOffset: 30,   
-      
-      animation: "fade"
-    });
+  this.tipWood = new Phasetips(this.game, {
+    targetObject: woodBttn,
+    width: 250,
+    height: 80,
+    context: "Sawmill:\n  Used to cut wood for building.\nCost:\n  10 Wood, 10 Stone",
+    strokeColor: 0xff0000,
+    position: "top",
+    positionOffset: 50,   
+    
+    animation: "fade"
+  });
+  
+  this.tipUranium = new Phasetips(this.game, {
+    targetObject: uraniumBttn,
+    width: 200,
+    height: 80,
+    context: "Uranium Mine:\n  Used to produce uranium.\nCost:\n  10 Wood, 10 Stone",
+    strokeColor: 0xff0000,
+    position: "top",
+    positionOffset: 50,   
+    
+    animation: "fade"
+  });
+
+  this.tipWind = new Phasetips(this.game, {
+    targetObject: windBttn,
+    width: 250,
+    height: 80,
+    context: "Wind Turbine:\n  Used to produce wind energy.\nCost:\n  10 Wood, 10 Stone",
+    strokeColor: 0xff0000,
+    position: "top",
+    positionOffset: 50,   
+    
+    animation: "fade"
+  });
+
+  this.tipEnergy = new Phasetips(this.game, {
+    targetObject: energyBttn,
+    width: 250,
+    height: 100,
+    context: "Nuclear Central:\n  Used to produce energy from Uranium.\nCost:\n  10 Wood, 10 Stone",
+    strokeColor: 0xff0000,
+    position: "top",
+    positionOffset: 50,   
+    
+    animation: "fade"
+  });
+
+  this.tipHospital = new Phasetips(this.game, {
+    targetObject: hospitalBttn,
+    width: 250,
+    height: 80,
+    context: "Hospital:\n  Used to heal your citizens.\nCost:\n  10 Wood, 10 Stone",
+    strokeColor: 0xff0000,
+    position: "top",
+    positionOffset: 50,   
+    
+    animation: "fade"
+  });
+
+  this.tipBulldoze = new Phasetips(this.game, {
+    targetObject: bulldozeBttn,
+    width: 400,
+    height: 60,
+    context: "Bulldozer:\n  Used to destroy buildings and\n  roads.",
+    strokeColor: 0xff0000,
+    position: "top",
+    positionOffset: 50,   
+    
+    animation: "fade"
+  });
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
 

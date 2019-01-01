@@ -41,7 +41,7 @@ var PreloaderScene = {
     this.game.load.image('Hospital', 'images/buildings/Hospital.png');
     this.game.load.image('House', 'images/buildings/House.png');
     this.game.load.image('Stone', 'images/buildings/Stone.png');
-    this.game.load.image('Coal', 'images/buildings/Coal.png');
+    //this.game.load.image('Coal', 'images/buildings/Coal.png');
     this.game.load.image('Road', 'images/buildings/road.png');
     this.game.load.image('Road Down', 'images/buildings/road down.png');
     this.game.load.image('Road Left', 'images/buildings/road left.png');
@@ -61,32 +61,40 @@ var PreloaderScene = {
     this.game.load.audio('gameSound', ['audio/game.mp3', 'audio/game.ogg']);
 
     //menus
-    this.game.load.image('UI', 'images/menu/UI.png');
-    this.game.load.image('pauseBkg', 'images/menu/pauseMenu.png');
-    this.game.load.image('mainBkg', 'images/menu/mainBkg.png');
-    this.game.load.image('cropIcon', 'images/menu/cropIcon.png');
-    this.game.load.image('stoneIcon', 'images/menu/stoneIcon.png');
-    this.game.load.image('woodIcon', 'images/menu/woodIcon.png');
-    this.game.load.image('citizenIcon', 'images/menu/citizenIcon.png');
-    this.game.load.image('noHouseIcon', 'images/menu/noHouseIcon.png');
-    this.game.load.image('joblessIcon', 'images/menu/joblessIcon.png');
-    this.game.load.image('optionsBkg', 'images/menu/optionsMenu.png');
-    this.game.load.spritesheet('exitBttn', 'images/menu/exit.png', 55, 48);
-    this.game.load.spritesheet('minBttn', 'images/menu/minimize.png', 55, 48);
-    this.game.load.spritesheet('settBttn', 'images/menu/settings.png', 55, 48);
-    this.game.load.spritesheet('plusBttn', 'images/menu/plus.png', 55, 48);
-    this.game.load.spritesheet('minusBttn', 'images/menu/minus.png', 55, 48);
-    this.game.load.spritesheet('backBttn', 'images/menu/back.png', 55, 48);
-    this.game.load.spritesheet('muteBttn', 'images/menu/mute.png', 55, 48);
-    this.game.load.spritesheet('playBttn', 'images/menu/play.png', 55, 48);
-    this.game.load.spritesheet('tutorialBttn', 'images/menu/tuto.png', 55, 48);
+    this.game.load.image('UI', 'images/menu/UI/UI.png');
+    this.game.load.image('pauseBkg', 'images/menu/UI/pauseMenu.png');
+    this.game.load.image('mainBkg', 'images/menu/UI/mainBkg.png');
+    this.game.load.image('optionsBkg', 'images/menu/UI/optionsMenu.png');
+
+    this.game.load.image('cropIcon', 'images/menu/Icons/cropIcon.png');
+    this.game.load.image('stoneIcon', 'images/menu/Icons/stoneIcon.png');
+    this.game.load.image('woodIcon', 'images/menu/Icons/woodIcon.png');
+    this.game.load.image('energyIcon', 'images/menu/Icons/energyIcon.png');
+    this.game.load.image('hospitalIcon', 'images/menu/Icons/hospitalIcon.png');
+    this.game.load.image('uraniumIcon', 'images/menu/Icons/uraniumIcon.png');
+    this.game.load.image('waterIcon', 'images/menu/Icons/waterIcon.png');
+    this.game.load.image('citizenIcon', 'images/menu/Icons/citizenIcon.png');
+    this.game.load.image('noHouseIcon', 'images/menu/Icons/noHouseIcon.png');
+    this.game.load.image('joblessIcon', 'images/menu/Icons/joblessIcon.png');
+
+
+    this.game.load.spritesheet('exitBttn', 'images/menu/MenuButtons/exit.png', 55, 48);
+    this.game.load.spritesheet('minBttn', 'images/menu/MenuButtons/minimize.png', 55, 48);
+    this.game.load.spritesheet('settBttn', 'images/menu/MenuButtons/settings.png', 55, 48);
+    this.game.load.spritesheet('plusBttn', 'images/menu/MenuButtons/plus.png', 55, 48);
+    this.game.load.spritesheet('minusBttn', 'images/menu/MenuButtons/minus.png', 55, 48);
+    this.game.load.spritesheet('backBttn', 'images/menu/MenuButtons/back.png', 55, 48);
+    this.game.load.spritesheet('muteBttn', 'images/menu/MenuButtons/mute.png', 55, 48);
+    this.game.load.spritesheet('playBttn', 'images/menu/MenuButtons/play.png', 55, 48);
+    this.game.load.spritesheet('tutorialBttn', 'images/menu/MenuButtons/tuto.png', 55, 48);
+
     this.game.load.spritesheet('houseBttn', 'images/menu/UIButtons/house.png', 55, 48);
     this.game.load.spritesheet('roadBttn', 'images/menu/UIButtons/road.png', 55, 48);
     this.game.load.spritesheet('waterBttn', 'images/menu/UIButtons/water.png', 55, 48);
     this.game.load.spritesheet('cropBttn', 'images/menu/UIButtons/crop.png', 55, 48);
     this.game.load.spritesheet('woodBttn', 'images/menu/UIButtons/wood.png', 55, 48);
     this.game.load.spritesheet('stoneBttn', 'images/menu/UIButtons/stone.png', 55, 48);
-    this.game.load.spritesheet('coalBttn', 'images/menu/UIButtons/coal.png', 55, 48);
+    //this.game.load.spritesheet('coalBttn', 'images/menu/UIButtons/coal.png', 55, 48);
     this.game.load.spritesheet('uraniumBttn', 'images/menu/UIButtons/uranium.png', 55, 48);
     this.game.load.spritesheet('windBttn', 'images/menu/UIButtons/wind.png', 55, 48);
     this.game.load.spritesheet('energyBttn', 'images/menu/UIButtons/energy.png', 55, 48);
