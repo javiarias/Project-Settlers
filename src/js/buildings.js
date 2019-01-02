@@ -233,10 +233,11 @@ Citizen.prototype.addToProducer = function (producerGroup){
 
     producerGroup.forEach(function (group) {
         group.forEach(function (producer) {
-            if(!producer.full && !found){
+            if(!producer.full && !found && producer.consumes !== undefined){
                 if(producer.add(this)){
                     found = true;
                     this.unemployed = false;
+                    producer.updateAmount();
                 }
             }
         }, this);
@@ -245,7 +246,7 @@ Citizen.prototype.addToProducer = function (producerGroup){
     return found;
 };
 
-Citizen.prototype.tick = function(foodAmount, healing, house, homelessArray, houseGroup = null){
+Citizen.prototype.tick = function(foodAmount, waterAmount, healing, house, homelessArray, houseGroup = null){
     this.age++;
 
     if(this.birthCooldown > 0)
@@ -254,6 +255,8 @@ Citizen.prototype.tick = function(foodAmount, healing, house, homelessArray, hou
     if(this.sick)
         this.health -= 5;
     if(foodAmount <= 0)
+        this.health -= 5;
+    if(waterAmount <= 0)
         this.health -= 5;
     if(this.age > 100)
         this.health = this.health * .9;

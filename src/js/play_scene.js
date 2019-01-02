@@ -69,7 +69,6 @@ var PlayScene = {
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     this.buildingGroup = this.game.add.group();
-    this.producerGroup = this.game.add.group();
 
     this.houseGroup = this.game.add.group();
     this.buildingGroup.add(this.houseGroup);
@@ -77,22 +76,18 @@ var PlayScene = {
 
     this.woodGroup = this.game.add.group();
     this.buildingGroup.add(this.woodGroup);
-    this.producerGroup.add(this.woodGroup);
     this.woodGroup.sprite = 'Wood';
 
     this.uraniumGroup = this.game.add.group();
     this.buildingGroup.add(this.uraniumGroup);
-    this.producerGroup.add(this.uraniumGroup);
     this.uraniumGroup.sprite = 'Uranium';
 
     this.energyGroup = this.game.add.group();
     this.buildingGroup.add(this.energyGroup);
-    this.producerGroup.add(this.energyGroup);
     this.energyGroup.sprite = 'Energy';
 
     this.windGroup = this.game.add.group();
     this.buildingGroup.add(this.windGroup);
-    this.producerGroup.add(this.windGroup);
     this.windGroup.sprite = 'Wind';
 
     this.roadGroup = this.game.add.group();
@@ -101,22 +96,18 @@ var PlayScene = {
 
     this.waterGroup = this.game.add.group();
     this.buildingGroup.add(this.waterGroup);
-    this.producerGroup.add(this.waterGroup);
     this.waterGroup.sprite = 'Water';
 
     this.hospitalGroup = this.game.add.group();
     this.buildingGroup.add(this.hospitalGroup);
-    this.producerGroup.add(this.hospitalGroup);
     this.hospitalGroup.sprite = 'Hospital';
 
     this.stoneGroup = this.game.add.group();
     this.buildingGroup.add(this.stoneGroup);
-    this.producerGroup.add(this.stoneGroup);
     this.stoneGroup.sprite = 'Stone';
 
     this.cropGroup = this.game.add.group();
     this.buildingGroup.add(this.cropGroup);
-    this.producerGroup.add(this.cropGroup);
     this.cropGroup.sprite = 'Crops';
 
     //etc.
@@ -976,7 +967,7 @@ var PlayScene = {
       this.buildingGroup.forEach(function (group){
         group.forEach(function(building){
           overlap = overlap || this.checkOverlap.call(this, this._buildingModeSprite, building);
-        }, this)
+        }, this);
       }, this);
 
       overlap = overlap || this.game.input.mousePointer.x < 6 || this.game.input.mousePointer.x > 640 || this.game.input.mousePointer.y < 44 || this.game.input.mousePointer.y > 539;
@@ -1000,6 +991,8 @@ var PlayScene = {
 
         if(this._buildingModeType == this.houseGroup)
           auxBuilding = new Classes.House(this.game, Math.round(this.game.input.worldX / this._tileSize) * this._tileSize, offset + Math.round(this.game.input.worldY / this._tileSize) * this._tileSize, this._buildingModeType.sprite);
+        else if(this._buildingModeType == this.roadGroup)
+        auxBuilding = new Classes.Road(this.game, Math.round(this.game.input.worldX / this._tileSize) * this._tileSize, offset + Math.round(this.game.input.worldY / this._tileSize) * this._tileSize, this._buildingModeType.sprite);
         else
           auxBuilding = new Classes.Producer(this.game, Math.round(this.game.input.worldX / this._tileSize) * this._tileSize, offset + Math.round(this.game.input.worldY / this._tileSize) * this._tileSize, this._buildingModeType.sprite, 1);
         auxBuilding.anchor.setTo(0.5, 0.5);
@@ -1163,8 +1156,6 @@ var PlayScene = {
               this.stone += prod.amount;
             }, this);
 
-            //etc...
-
             //update consumers
             this.energyGroup.forEach(function(prod){
               this.energy += prod.amount;
@@ -1183,6 +1174,9 @@ var PlayScene = {
             this.foodTxt.text = this.food;
             this.woodTxt.text = this.wood;
             this.stoneTxt.text = this.stone;
+            this.waterTxt.text = this.water;
+            this.energyTxt.text = this.energy;
+            this.uraniumTxt.text = this.uranium;
           }
 
           else if(this.currentTime.hour == 0){
@@ -1190,8 +1184,10 @@ var PlayScene = {
             this.timeTxt.addColor("#000000", 0);
 
             this.houseGroup.forEach(function(prod){
-              if(this.food > 0)
-                this.food -= 5 * prod.countCitizens();
+              if(this.food >= 5)
+                this.food -= 5;
+              if(this.water >= 5)
+                this.water -= 5;
               prod.tick(this.food, this.homelessArray);
 
               for(var i = prod.numberOfBirths; i > 0; i--)
@@ -1200,14 +1196,17 @@ var PlayScene = {
             }, this);
 
             for (var i = this.homelessArray.length - 1; i >= 0; i--) {
-              if(this.food > 0)
+              if(this.food >= 5)
                 this.food -= 5;
-              this.homelessArray[i].tick(this.food, false, null, this.homelessArray, this.houseGroup);
+              if(this.water >= 5)
+                this.water -= 5;
+              this.homelessArray[i].tick(this.food, this.water, false, null, this.homelessArray, this.houseGroup);
             }
 
             
 
             this.foodTxt.text = this.food;
+            this.waterTxt.text = this.water;
           }
 
           else
@@ -1224,7 +1223,7 @@ var PlayScene = {
 
           originalLength = this.unemployedArray.length;
           for (var i = this.unemployedArray.length - 1; i >= 0; i--) {
-            if(!this.unemployedArray[i].unemployed || this.unemployedArray[i].health <= 0 || this.unemployedArray[i].addToProducer(this.producerGroup))
+            if(!this.unemployedArray[i].unemployed || this.unemployedArray[i].health <= 0 || this.unemployedArray[i].addToProducer(this.buildingGroup))
               this.unemployedArray.splice(i, 1);
 
             if(this.unemployedArray.length > originalLength)
@@ -1276,9 +1275,46 @@ var PlayScene = {
           }
           this.stoneTxtGain.text = auxSymbol + this.stoneGain;
           this.stoneTxtGain.addColor(auxColor);
-          
 
-          if(this.food < 5)
+          this.waterGain = 0;
+          this.waterGroup.forEach(function(prod){this.waterGain += prod.amount * (this.shiftEnd - this.shiftStart)}, this);
+          this.waterGain -= (aux * 5);
+          auxSymbol = "";
+          auxColor = "#FF0000";
+          if(this.waterGain >= 0){
+            auxSymbol = "+";
+            auxColor = "#008500";
+          }
+          this.waterTxtGain.text = auxSymbol + this.waterGain;
+          this.waterTxtGain.addColor(auxColor);
+
+
+          this.energyGain = 0;
+          this.energyGroup.forEach(function(prod){this.energyGain += prod.amount * (this.shiftEnd - this.shiftStart)}, this);
+          this.windGroup.forEach(function(prod){this.energyGain += prod.amount * (this.shiftEnd - this.shiftStart)}, this);
+          auxSymbol = "";
+          auxColor = "#FF0000";
+          if(this.energyGain >= 0){
+            auxSymbol = "+";
+            auxColor = "#008500";
+          }
+          this.energyTxtGain.text = auxSymbol + this.energyGain;
+          this.energyTxtGain.addColor(auxColor);
+
+
+          this.uraniumGain = 0;
+          this.uraniumGroup.forEach(function(prod){this.uraniumGain += prod.amount * (this.shiftEnd - this.shiftStart)}, this);
+          auxSymbol = "";
+          auxColor = "#FF0000";
+          if(this.uraniumGain >= 0){
+            auxSymbol = "+";
+            auxColor = "#008500";
+          }
+          this.uraniumTxtGain.text = auxSymbol + this.uraniumGain;
+          this.uraniumTxtGain.addColor(auxColor);
+
+
+          if(this.food < aux * 5)
             this.foodTxt.addColor("#FF0000", 0);
           else
             this.foodTxt.addColor("#000000", 0);
@@ -1292,6 +1328,20 @@ var PlayScene = {
             this.stoneTxt.addColor("#FF0000", 0);
           else
             this.stoneTxt.addColor("#000000", 0);
+
+          if(this.energy < 10)
+            this.energyTxt.addColor("#FF0000", 0);
+          else
+            this.energyTxt.addColor("#000000", 0);
+
+          var uraniumAux = 0;
+
+          this.energyGroup.forEach(function(prod){uraniumAux += prod.consumed * (this.shiftEnd - this.shiftStart)}, this);
+
+          if(this.uranium < uraniumAux)
+            this.uraniumTxt.addColor("#FF0000", 0);
+          else
+            this.uraniumTxt.addColor("#000000", 0);
 
         }
       }
@@ -1311,7 +1361,8 @@ var PlayScene = {
         this.buildingGroup.forEach(function (group){
           group.forEach(function(building){
             overlap = overlap || this.checkOverlap.call(this, this._buildingModeSprite, building);
-          }, this)
+          }, this);
+
         }, this);
 
         overlap = overlap || this.game.input.mousePointer.x < 6 || this.game.input.mousePointer.x > 640 || this.game.input.mousePointer.y < 44 || this.game.input.mousePointer.y > 539;
