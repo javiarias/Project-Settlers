@@ -61,11 +61,11 @@ House.prototype.bulldoze = function(homelessArray) {
     }
 };
 
-House.prototype.tick = function(foodAmount, homelessArray){
+House.prototype.tick = function(foodAmount, waterAmount, homelessArray){
     this.numberOfBirths = 0;
 
     if(this.residentA !== undefined){
-        this.residentA.tick(foodAmount, this.hospitalNear, this, homelessArray);
+        this.residentA.tick(foodAmount, waterAmount, this.hospitalNear, this, homelessArray);
         if(this.residentA.givingBirth){
             this.residentA.givingBirth = false;
             this.residentA.birthCooldown = 10;
@@ -165,16 +165,112 @@ Producer.prototype.bulldoze = function(unemployedArray) {
         unemployedArray.unshift(this.workerB);
     }
 };
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 function Hospital(game, x, y, img) {
     Phaser.Sprite.call(this, game, x, y, img);
     this.get = "fucked";
+    this.areaX = 200; //en pixeles
+    this.areaY = 200; //en pixeles
+    this.workerA = undefined;
+    this.workerB = undefined;
+    this.full = false;
+
+    this.totalAmount = amount;
+    this.amount = 0;
 }
 Hospital.prototype = Object.create(Phaser.Sprite.prototype);
 Hospital.constructor = Hospital;
+
+Hospital.prototype.add = function(citizen) {
+
+    var added = false;
+
+    if(this.workerA === undefined){
+        this.workerA = citizen;
+        added = true;
+    }
+
+    else if(this.workerB === undefined){
+        this.workerB = citizen;
+        added = true;
+    }
+
+    this.full = (this.workerA !== undefined && this.workerB !== undefined);
+
+    this.houseGroup.forEach(function(house){
+        if (this.checkOverlap(this, house))
+         {
+             house.hospitalNear = true;
+             console.log("Done");
+         }
+      }, this);
+
+    return added;
+};
+
+Hospital.prototype.updateAmount = function() {
+    if (this.workerA === undefined && this.workerB === undefined)
+        this.amount = 0;
+
+    else if (!this.full)
+        this.amount = 0.5 * this.totalAmount;
+
+    else
+        this.amount = this.totalAmount;
+}
+
+Hospital.prototype.kill = function(citizen) {
+    if(this.workerA == citizen){
+        this.workerA = undefined;
+        this.full = false;
+    }
+
+    else if(this.workerB == citizen){
+        this.workerB = undefined;
+        this.full = false;
+    }
+};
+
+Hospital.prototype.bulldoze = function(unemployedArray) {
+    
+    if(this.workerA !== undefined){
+        this.workerA.unemployed = true;
+        unemployedArray.unshift(this.workerA);
+    }
+    if(this.workerB !== undefined){
+        this.workerB.unemployed = true;
+        unemployedArray.unshift(this.workerB);
+    }
+};
+
+/*Hospital.prototype.healing = function(houseGroup) {
+  
+    forEach(function (houseGroup){
+        group.forEach(function(building){
+         if (this.checkOverlap(this.Sprite, building))
+         {
+             building.residentA.health++;
+             console.log(building.residentA.health);
+             building.residentB.health++;
+             console.log(building.residentB.health);
+         }
+        }, this);
+    }, this);
+};*/
+
+Hospital.prototype.checkOverlap = function(a, b){
+
+    var x = a.getBounds();
+    x.width =+ this.areaX - 1;
+    x.height =+ this.areaY - 1;
+    var y = b.getBounds();
+    y.width--;
+    y.height--;
+
+    return Phaser.Rectangle.intersects(x, y);
+  }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -279,7 +375,6 @@ Citizen.prototype.tick = function(foodAmount, waterAmount, healing, house, homel
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 module.exports = {
     Road: Road,

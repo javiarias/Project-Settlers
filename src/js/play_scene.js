@@ -1170,7 +1170,6 @@ var PlayScene = {
               }
             }, this);
 
-
             this.foodTxt.text = this.food;
             this.woodTxt.text = this.wood;
             this.stoneTxt.text = this.stone;
