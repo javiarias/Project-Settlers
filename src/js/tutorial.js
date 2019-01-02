@@ -53,9 +53,6 @@ var Tutorial = {
     this.wood = 200;
     this.woodGain = 0;
 
-    /*this.coal = 0;
-    this.coalGain = 0;*/
-
     this.uranium = 0;
     this.uraniumGain = 0;
 
@@ -82,11 +79,6 @@ var Tutorial = {
     this.buildingGroup.add(this.woodGroup);
     this.producerGroup.add(this.woodGroup);
     this.woodGroup.sprite = 'Wood';
-
-    /*this.coalGroup = this.game.add.group(); //Comentado de momento, añado un grupo Mine y ya vemos como hacer el reparto de recursos (¿Stone + Coal?)
-    this.buildingGroup.add(this.coalGroup);
-    this.producerGroup.add(this.coalGroup);
-    this.coalGroup.sprite = 'Coal'*/
 
     this.uraniumGroup = this.game.add.group();
     this.buildingGroup.add(this.uraniumGroup);
@@ -241,13 +233,13 @@ var Tutorial = {
 
     this.UI = this.game.add.group();
 
-    var UIBkg = this.game.add.sprite(0, 0, "UI");
-    UIBkg.fixedToCamera = true;
-    UIBkg.smoothed = false;
+    this.UIBkg = this.game.add.sprite(0, 0, "UI");
+    this.UIBkg.fixedToCamera = true;
+    this.UIBkg.smoothed = false;
 
-    this.UI.add(UIBkg);
+    this.UI.add(this.UIBkg);
 
-    var escapeBttn = this.game.add.button(UIBkg.right - 5, 5, "exitBttn", function(){escape.call(this);}, this, 0, 0, 1);
+    var escapeBttn = this.game.add.button(this.UIBkg.right - 5, 5, "exitBttn", function(){escape.call(this);}, this, 0, 0, 1);
     escapeBttn.anchor.setTo(1, 0);
     escapeBttn.fixedToCamera = true;
     escapeBttn.smoothed = false;
@@ -264,7 +256,7 @@ var Tutorial = {
     
   //Tutorial Roads
 
-    this.roadBttn = this.game.add.button(5 + buttonOffset - (buttonOffset - (55 * scale)/2)/2, UIBkg.bottom - 30, "roadBttn", function(){buildMode.call(this, this, this.roadGroup);}, this, 0, 0, 1);
+    this.roadBttn = this.game.add.button(5 + buttonOffset - (buttonOffset - (55 * scale)/2)/2, this.UIBkg.bottom - 30, "roadBttn", function(){buildMode.call(this, this, this.roadGroup);}, this, 0, 0, 1);
     this.roadBttn.anchor.setTo(.5, .5);
     this.roadBttn.fixedToCamera = true;
     this.roadBttn.smoothed = false;
@@ -806,7 +798,7 @@ this.UI.add(this.energyTxtGroup);
     targetObject: this.waterBttn,
     width: 200,
     height: 80,
-    context: "Water:\n  Gives potable water.\nCost:\n  10 Wood, 10 Stone",
+    context: "Water:\n  Gives drinkable water.\nCost:\n  10 Wood, 10 Stone",
     strokeColor: 0xff0000,
     position: "top",
     positionOffset: 50,   
@@ -854,7 +846,7 @@ this.UI.add(this.energyTxtGroup);
     targetObject: this.uraniumBttn,
     width: 200,
     height: 80,
-    context: "Uranium Mine:\n  Used to produce uranium.\nCost:\n  10 Wood, 10 Stone",
+    context: "Uranium Mine:\n  Used to mine uranium.\nCost:\n  10 Wood, 10 Stone",
     strokeColor: 0xff0000,
     position: "top",
     positionOffset: 50,   
@@ -878,7 +870,7 @@ this.UI.add(this.energyTxtGroup);
     targetObject: this.energyBttn,
     width: 250,
     height: 100,
-    context: "Nuclear Central:\n  Used to produce energy from Uranium.\nCost:\n  10 Wood, 10 Stone",
+    context: "Nuclear Plant:\n  Used to produce energy by consuming Uranium.\nCost:\n  10 Wood, 10 Stone",
     strokeColor: 0xff0000,
     position: "top",
     positionOffset: 50,   
@@ -910,23 +902,25 @@ this.UI.add(this.energyTxtGroup);
     animation: "fade"
   });
 
-    /*this.tipTutorial1 = new Phasetips(this.game, {
-      targetObject: this.escapeBttn, //esto es temporal, no se donde ponerlo (objeto vacío que ocupe toda la pantalla?)
-      context: "Good job, now you know how to move the camera",
+    this.tipTutorial1 = new Phasetips(this.game, {
+      targetObject: this.UIBkg, 
+      context: "Welcome to Project Settlers! \n First, to move the camera around you'll need to use the WASD keys",
+      x: this.game.camera.x + this.game.camera.width / 2 - 81,
+      y: this.game.camera.y + this.game.camera.height / 2 - 40,
+      strokeColor: 0xff0000,
+      position: "center",
       width: 162,
       height: 80,
-      strokeColor: 0xff0000,
-      position: "top",
       positionOffset: 30,   
       
       //animation: "fade"
-    });*/
+    });
 
     this.tipTutorialCitizen = new Phasetips(this.game, {
       targetObject: this.citizensIcon,
-      context: "Now you know where to find data about your citizens, let's continue",
-      width: 150,
-      height: 100,
+      context: "This is where you'll find information about your citizens. \n The icons represent total citizens, homeless citizens and unemployed citizens, respectively.",
+      width: 260,
+      height: 150,
       strokeColor: 0xff0000,
       position: "top",
       positionOffset: 0,   
@@ -936,7 +930,7 @@ this.UI.add(this.energyTxtGroup);
 
     this.tipTutorialRoad = new Phasetips(this.game, {
       targetObject: this.roadBttn,  
-      context: "Roads are the base of Project Settlers, they allow you to build on top of them",
+      context: "Roads are the core of Project Settlers, as they allow you to build above them",
       width: 100,
       height: 100,
       strokeColor: 0xff0000,
@@ -960,7 +954,7 @@ this.UI.add(this.energyTxtGroup);
 
     this.tipTutorialHouse = new Phasetips(this.game, {
       targetObject: this.houseBttn,
-      context: "Your citizens need houses to live, let's build some for them",
+      context: "Your citizens need a place to live in, so let's build it for them",
       width: 200,
       height: 95,
       strokeColor: 0xff0000,
@@ -972,7 +966,7 @@ this.UI.add(this.energyTxtGroup);
 
     this.tipTutorialCrop = new Phasetips(this.game, {
       targetObject: this.cropBttn,
-      context: "As well, you will need food. Let's build a farm for it",
+      context: "You will need food as well as water. Farms should take care of that",
       width: 250,
       height: 95,
       strokeColor: 0xff0000,
@@ -996,7 +990,7 @@ this.UI.add(this.energyTxtGroup);
 
     this.tipTutorialStone = new Phasetips(this.game, {
       targetObject: this.stoneBttn,
-      context: "You will need Wood as well, so we will build a Quarry",
+      context: "You will need Stone as well, so let's will build a Quarry",
       width: 250,
       height: 95,
       strokeColor: 0xff0000,
@@ -1056,7 +1050,7 @@ this.UI.add(this.energyTxtGroup);
   
     this.tipTutorialBulldoze = new Phasetips(this.game, {
       targetObject: this.bulldozeBttn,
-      context: "If you want to replace a building, you can bulldoze it. Let's go for it.",
+      context: "If you want to replace a building, you should bulldoze it first",
       width: 440,
       height: 90,
       strokeColor: 0xff0000,
@@ -1068,11 +1062,11 @@ this.UI.add(this.energyTxtGroup);
   
     this.tipTutorialTime = new Phasetips(this.game, {
       targetObject: this.timeTxt,
-      context: "Now you know the basic mechanichs to survive. Press SPACE to get the clock running",
-      width: 200,
-      height: 100,
+      context: "Now you know the basic mechanics to survive. Press SPACE to get the clock running, and 1, 2 or 3 to change the speed",
+      width: 0,
+      height: 0,
       strokeColor: 0xff0000,
-      position: "top",
+      position: "left",
       positionOffset: 100,   
       
       //animation: "fade"
@@ -1194,7 +1188,13 @@ this.UI.add(this.energyTxtGroup);
           this._buildModeActive = true;
           this.timeTxt.addColor("#ff0000", 0);
 
-          this.game.world.bringToTop(this.UI);
+          this.game.world.sendToBack(this._buildingModeSprite);
+          this.game.world.moveUp(this._buildingModeSprite);
+          this.game.world.moveUp(this._buildingModeSprite);
+          this.game.world.moveUp(this._buildingModeSprite);
+          this.game.world.moveUp(this._buildingModeSprite);
+          this.game.world.moveUp(this._buildingModeSprite);
+          this.game.world.moveUp(this._buildingModeSprite);
         }
 
         else {
@@ -1509,18 +1509,12 @@ this.UI.add(this.energyTxtGroup);
     {
       this.windBttn.visible = true;
       this.windBttn.input.enabled = true;
-      this.windIcon.visible = true;
-      this.windTxt.visible = true;
-      this.windTxtGain.visible = true;
     }
 
     if (this.hospitalCheck)
     {
       this.hospitalBttn.visible = true;
       this.hospitalBttn.input.enabled = true;
-      this.hospitalIcon.visible = true;
-      this.windTxt.visible = true;
-      this.windTxtGain.visible = true;
     }
 
     if (this.bulldozeCheck) //condicion pasa a true al construir una de madera
@@ -1554,10 +1548,6 @@ this.UI.add(this.energyTxtGroup);
 
             this.woodGroup.forEach(function(prod){
               this.wood += prod.amount;
-            }, this);
-
-            this.coalGroup.forEach(function(prod){
-              this.coal += prod.amount;
             }, this);
 
             this.uraniumGroup.forEach(function(prod){
@@ -1768,6 +1758,8 @@ this.UI.add(this.energyTxtGroup);
         this.cameraCheckRight = true;
       }
     }
+
+    this.UIBkg.inputEnabled = !this.cameraCheck;
   },
 
   render: function() {

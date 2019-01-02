@@ -53,9 +53,6 @@ var PlayScene = {
     this.wood = 50;
     this.woodGain = 0;
 
-    this.coal = 0;
-    this.coalGain = 0;
-
     this.uranium = 0;
     this.uraniumGain = 0;
 
@@ -82,11 +79,6 @@ var PlayScene = {
     this.buildingGroup.add(this.woodGroup);
     this.producerGroup.add(this.woodGroup);
     this.woodGroup.sprite = 'Wood';
-
-    this.coalGroup = this.game.add.group();
-    this.buildingGroup.add(this.coalGroup);
-    this.producerGroup.add(this.coalGroup);
-    this.coalGroup.sprite = 'Coal'
 
     this.uraniumGroup = this.game.add.group();
     this.buildingGroup.add(this.uraniumGroup);
@@ -310,14 +302,6 @@ var PlayScene = {
     stoneBttn.scale.setTo(scale, scale);
 
     this.UI.add(stoneBttn);
-
-    /*var coalBttn = this.game.add.button(stoneBttn.right + buttonOffset,  roadBttn.centerY, "coalBttn", function(){}, this, 0, 0, 1);
-    coalBttn.anchor.setTo(.5, .5);
-    coalBttn.fixedToCamera = true;
-    coalBttn.smoothed = false;
-    coalBttn.scale.setTo(scale, scale);
-
-    this.UI.add(coalBttn);*/
 
     var uraniumBttn = this.game.add.button(stoneBttn.right + buttonOffset,  roadBttn.centerY, "uraniumBttn", function(){buildMode.call(this, this, this.uraniumGroup);}, this, 0, 0, 1);
     uraniumBttn.anchor.setTo(.5, .5);
@@ -722,7 +706,7 @@ var PlayScene = {
     });
 
   this.UI.add(this.unemployedTxtGroup);
-    
+
   this.tipRoad = new Phasetips(this.game, {
     targetObject: roadBttn,
     context: "Road:\n  You can build right above them.\nCost:\n  Free",
@@ -751,7 +735,7 @@ var PlayScene = {
     targetObject: waterBttn,
     width: 200,
     height: 80,
-    context: "Water:\n  Gives potable water.\nCost:\n  10 Wood, 10 Stone",
+    context: "Water:\n  Gives drinkable water.\nCost:\n  10 Wood, 10 Stone",
     strokeColor: 0xff0000,
     position: "top",
     positionOffset: 50,   
@@ -799,7 +783,7 @@ var PlayScene = {
     targetObject: uraniumBttn,
     width: 200,
     height: 80,
-    context: "Uranium Mine:\n  Used to produce uranium.\nCost:\n  10 Wood, 10 Stone",
+    context: "Uranium Mine:\n  Used to mine uranium.\nCost:\n  10 Wood, 10 Stone",
     strokeColor: 0xff0000,
     position: "top",
     positionOffset: 50,   
@@ -823,7 +807,7 @@ var PlayScene = {
     targetObject: energyBttn,
     width: 250,
     height: 100,
-    context: "Nuclear Central:\n  Used to produce energy from Uranium.\nCost:\n  10 Wood, 10 Stone",
+    context: "Nuclear Plant:\n  Used to produce energy by consuming Uranium.\nCost:\n  10 Wood, 10 Stone",
     strokeColor: 0xff0000,
     position: "top",
     positionOffset: 50,   
@@ -948,7 +932,13 @@ var PlayScene = {
           this._buildModeActive = true;
           this.timeTxt.addColor("#ff0000", 0);
 
-          this.game.world.bringToTop(this.UI);
+          this.game.world.sendToBack(this._buildingModeSprite);
+          this.game.world.moveUp(this._buildingModeSprite);
+          this.game.world.moveUp(this._buildingModeSprite);
+          this.game.world.moveUp(this._buildingModeSprite);
+          this.game.world.moveUp(this._buildingModeSprite);
+          this.game.world.moveUp(this._buildingModeSprite);
+          this.game.world.moveUp(this._buildingModeSprite);
         }
 
         else {
