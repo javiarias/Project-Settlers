@@ -584,7 +584,7 @@ var Tutorial = {
 
   this.uraniumTxtGroup.add(this.uraniumIcon);
 
-  this.uraniumTxt = this.game.add.text(this.foodTxt.x, this.uraniumIcon.centerY + 4, this.stone, {font: "30px console"});
+  this.uraniumTxt = this.game.add.text(this.foodTxt.x, this.uraniumIcon.centerY + 4, this.uranium, {font: "30px console"});
   this.uraniumTxt.anchor.setTo(0, .5);
   this.uraniumTxt.fixedToCamera = true;
   this.uraniumTxt.smoothed = false;
@@ -632,7 +632,7 @@ this.energyTxtGroup = this.game.add.group();
 
   this.energyTxtGroup.add(this.energyIcon);
 
-  this.energyTxt = this.game.add.text(this.foodTxt.x, this.energyIcon.centerY + 4, this.stone, {font: "30px console"});
+  this.energyTxt = this.game.add.text(this.foodTxt.x, this.energyIcon.centerY + 4, this.energy, {font: "30px console"});
   this.energyTxt.anchor.setTo(0, .5);
   this.energyTxt.fixedToCamera = true;
   this.energyTxt.smoothed = false;
@@ -1664,7 +1664,7 @@ this.UI.add(this.energyTxtGroup);
             auxColor = "#008500";
           }
           this.woodTxtGain.text = auxSymbol + this.woodGain;
-          this.woodTxtGain.addColor(auxColor);
+          this.woodTxtGain.addColor(auxColor, 0);
 
 
           this.stoneGain = 0;
@@ -1676,7 +1676,7 @@ this.UI.add(this.energyTxtGroup);
             auxColor = "#008500";
           }
           this.stoneTxtGain.text = auxSymbol + this.stoneGain;
-          this.stoneTxtGain.addColor(auxColor);
+          this.stoneTxtGain.addColor(auxColor, 0);
           
 
           this.waterGain = 0;
@@ -1689,7 +1689,7 @@ this.UI.add(this.energyTxtGroup);
             auxColor = "#008500";
           }
           this.waterTxtGain.text = auxSymbol + this.waterGain;
-          this.waterTxtGain.addColor(auxColor);
+          this.waterTxtGain.addColor(auxColor, 0);
 
 
           this.energyGain = 0;
@@ -1702,7 +1702,7 @@ this.UI.add(this.energyTxtGroup);
             auxColor = "#008500";
           }
           this.energyTxtGain.text = auxSymbol + this.energyGain;
-          this.energyTxtGain.addColor(auxColor);
+          this.energyTxtGain.addColor(auxColor, 0);
 
 
           this.uraniumGain = 0;
@@ -1714,7 +1714,7 @@ this.UI.add(this.energyTxtGroup);
             auxColor = "#008500";
           }
           this.uraniumTxtGain.text = auxSymbol + this.uraniumGain;
-          this.uraniumTxtGain.addColor(auxColor);
+          this.uraniumTxtGain.addColor(auxColor, 0);
 
 
           if(this.food < aux * 5)
