@@ -955,8 +955,14 @@ var PlayScene = {
 
     function destroy(sprite){
       if(this._destroyModeActive){
-        if(sprite.full !== undefined)
-          sprite.bulldoze(this.homelessArray);
+        if(sprite.full !== undefined){
+          if(this.area !== undefined)
+            this.houseGroup.forEach(function (house) { house.updateHospitals(this.hospitalGroup); }, this);
+          else if(sprite.consumes !== undefined)
+            sprite.bulldoze(this.unemployedArray);
+          else
+            sprite.bulldoze(this.homelessArray);
+        }
         sprite.destroy();
       }
     }
@@ -991,10 +997,14 @@ var PlayScene = {
 
         if(this._buildingModeType == this.houseGroup)
           auxBuilding = new Classes.House(this.game, Math.round(this.game.input.worldX / this._tileSize) * this._tileSize, offset + Math.round(this.game.input.worldY / this._tileSize) * this._tileSize, this._buildingModeType.sprite);
+        
         else if(this._buildingModeType == this.roadGroup)
-        auxBuilding = new Classes.Road(this.game, Math.round(this.game.input.worldX / this._tileSize) * this._tileSize, offset + Math.round(this.game.input.worldY / this._tileSize) * this._tileSize, this._buildingModeType.sprite);
-        else if(this._buildingModeType == this.hospitalGroup)
-        auxBuilding = new Classes.Hospital(this.game, Math.round(this.game.input.worldX / this._tileSize) * this._tileSize, offset + Math.round(this.game.input.worldY / this._tileSize) * this._tileSize, this._buildingModeType.sprite, 1);
+          auxBuilding = new Classes.Road(this.game, Math.round(this.game.input.worldX / this._tileSize) * this._tileSize, offset + Math.round(this.game.input.worldY / this._tileSize) * this._tileSize, this._buildingModeType.sprite);
+        
+        else if(this._buildingModeType == this.hospitalGroup){
+          auxBuilding = new Classes.Hospital(this.game, Math.round(this.game.input.worldX / this._tileSize) * this._tileSize, offset + Math.round(this.game.input.worldY / this._tileSize) * this._tileSize, this._buildingModeType.sprite, 2);
+          this.houseGroup.forEach(function (house) { house.updateHospitals(this.hospitalGroup); }, this);
+        }
         else
           auxBuilding = new Classes.Producer(this.game, Math.round(this.game.input.worldX / this._tileSize) * this._tileSize, offset + Math.round(this.game.input.worldY / this._tileSize) * this._tileSize, this._buildingModeType.sprite, 1);
         auxBuilding.anchor.setTo(0.5, 0.5);
@@ -1160,15 +1170,32 @@ var PlayScene = {
 
             //update consumers
             this.energyGroup.forEach(function(prod){
-              this.energy += prod.amount;
-
-              switch(prod.consumes){
-
-                case "uranium":
+              if(this.uranium >= prod.consumed){
+                this.energy += prod.amount;
+              
                 this.uranium -= prod.consumed;
-                  break;
 
-                  //other cases for other consumers
+                prod.off = false;
+              }
+
+              else
+                prod.off = true;
+
+            }, this);
+
+            this.hospitalGroup.forEach(function(prod){
+              if(this.energy >= prod.amount){
+                this.energy -= prod.amount;
+
+                if(prod.off)
+                  this.houseGroup.forEach(function (house) { house.updateSingleHospital(prod, true); }, this);
+
+                prod.off = false
+              }
+              
+              else{
+                this.houseGroup.forEach(function (house) { house.updateSingleHospital(prod, false); }, this);
+                prod.off = true;
               }
             }, this);
 

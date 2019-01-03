@@ -37,6 +37,22 @@ House.prototype.add = function(citizen) {
     return added;
 };
 
+House.prototype.updateHospitals = function(hospitalGroup) {
+    this.hospitalNear = false;
+
+    hospitalGroup.forEach(function(hospital){
+        if(!this.hospitalNear)
+            this.hospitalNear = hospital.checkArea(this);
+    }, this);
+};
+
+House.prototype.updateSingleHospital = function(hospital, turnOn) {
+
+    if(hospital.checkArea(this))
+        this.hospitalNear = turnOn;
+
+};
+
 House.prototype.kill = function(citizen) {
     if(this.residentA == citizen){
         this.residentA = undefined;
@@ -99,7 +115,7 @@ House.prototype.countCitizens = function(){
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function Producer(game, x, y, img, amount, consumes = "none", consumed = 0) { 
-    Phaser.Sprite.call(this, game, x, y, img); //img needs to be filtered depending on resource. Done outside the function?
+    Phaser.Sprite.call(this, game, x, y, img);
     this.consumes = consumes;
     this.consumed = consumed;
     this.workerA = undefined;
@@ -108,6 +124,8 @@ function Producer(game, x, y, img, amount, consumes = "none", consumed = 0) {
 
     this.totalAmount = amount;
     this.amount = 0;
+
+    this.off = false;
 }
 Producer.prototype = Object.create(Phaser.Sprite.prototype);
 Producer.constructor = Producer;
@@ -170,15 +188,15 @@ Producer.prototype.bulldoze = function(unemployedArray) {
 
 function Hospital(game, x, y, img, amount) {
     Phaser.Sprite.call(this, game, x, y, img);
-    this.get = "fucked";
-    this.areaX = 200; //en pixeles
-    this.areaY = 200; //en pixeles
+    this.area = 16; //en tiles
     this.workerA = undefined;
     this.workerB = undefined;
     this.full = false;
 
     this.totalAmount = amount;
-    this.amount = 0;
+    this.amount = amount;
+
+    this.off = false;
 }
 Hospital.prototype = Object.create(Phaser.Sprite.prototype);
 Hospital.constructor = Hospital;
@@ -199,26 +217,18 @@ Hospital.prototype.add = function(citizen) {
 
     this.full = (this.workerA !== undefined && this.workerB !== undefined);
 
-    houseGroup.forEach(function(house){
-        if (this.checkOverlap(this, house))
-         {
-             house.hospitalNear = true;
-             console.log("Done");
-         }
-      }, this);
-
     return added;
 };
 
 Hospital.prototype.updateAmount = function() {
-    if (this.workerA === undefined && this.workerB === undefined)
+    /*if (this.workerA === undefined && this.workerB === undefined)
         this.amount = 0;
 
     else if (!this.full)
         this.amount = 0.5 * this.totalAmount;
 
     else
-        this.amount = this.totalAmount;
+        this.amount = this.totalAmount;*/
 }
 
 Hospital.prototype.kill = function(citizen) {
@@ -260,11 +270,11 @@ Hospital.prototype.bulldoze = function(unemployedArray) {
     }, this);
 };*/
 
-Hospital.prototype.checkOverlap = function(a, b){
+Hospital.prototype.checkArea = function(b){
 
-    var x = a.getBounds();
-    x.width =+ this.areaX - 1;
-    x.height =+ this.areaY - 1;
+    var x = this.getBounds();
+    x.width =+ this.area * 16 - 1;
+    x.height =+ this.area * 16 - 1;
     var y = b.getBounds();
     y.width--;
     y.height--;
