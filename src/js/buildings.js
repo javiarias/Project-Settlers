@@ -168,7 +168,7 @@ Producer.prototype.bulldoze = function(unemployedArray) {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-function Hospital(game, x, y, img) {
+function Hospital(game, x, y, img, amount) {
     Phaser.Sprite.call(this, game, x, y, img);
     this.get = "fucked";
     this.areaX = 200; //en pixeles
@@ -199,7 +199,7 @@ Hospital.prototype.add = function(citizen) {
 
     this.full = (this.workerA !== undefined && this.workerB !== undefined);
 
-    this.houseGroup.forEach(function(house){
+    houseGroup.forEach(function(house){
         if (this.checkOverlap(this, house))
          {
              house.hospitalNear = true;
