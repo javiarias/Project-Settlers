@@ -26,6 +26,8 @@ var PlayScene = {
           this.volume = 50;
 
           this.gameMusic = this.game.add.audio('gameSound'); 
+          this.buttonSound = this.game.add.audio('buttonSound');
+
           this.gameMusic.play();
           this.gameMusic.loop = true;
           this.gameMusic.volume = this.volume / 100;
@@ -126,21 +128,21 @@ var PlayScene = {
     pauseSettings.anchor.setTo(0.5, 0.5);
     pauseSettings.fixedToCamera = true;
     pauseSettings.smoothed = false;
-
+    pauseSettings.onDownSound = this.buttonSound;
     this.pauseMenu.add(pauseSettings);
 
     var pauseMinimize = this.game.add.button(pauseBkg.x, pauseBkg.y + 3, "minBttn", escape, this, 0, 0, 1);
     pauseMinimize.anchor.setTo(0.5, 0.5);
     pauseMinimize.fixedToCamera = true;
     pauseMinimize.smoothed = false;
-
+    pauseMinimize.onDownSound = this.buttonSound;
     this.pauseMenu.add(pauseMinimize);
     
     var pauseExit = this.game.add.button(pauseBkg.x + 72, pauseBkg.y + 3, "exitBttn", function(){this.game.state.start('main');}, this, 0, 0, 1);
     pauseExit.anchor.setTo(0.5, 0.5);
     pauseExit.fixedToCamera = true;
     pauseExit.smoothed = false;
-
+    pauseExit.onDownSound = this.buttonSound;
     this.pauseMenu.add(pauseExit);
 
     this.pauseMenu.visible = false;
@@ -152,35 +154,33 @@ var PlayScene = {
     optionsBkg.anchor.setTo(.5, .5);
     optionsBkg.fixedToCamera = true;
     optionsBkg.smoothed = false;
-
     this.optionsMenu.add(optionsBkg);
 
     var volumeText = this.game.add.text(optionsBkg.x, optionsBkg.y - 20, this.volume, {font: "50px console"});
     volumeText.anchor.setTo(0.5, 0.5);
     volumeText.fixedToCamera = true;
     volumeText.smoothed = false;
-
     this.optionsMenu.add(volumeText);
 
     var optionsMinus = this.game.add.button(optionsBkg.x - 77, optionsBkg.y - 20, "minusBttn", function(){updateVolume.call(this, -5);}, this, 0, 0, 1);
     optionsMinus.anchor.setTo(0.5, 0.5);
     optionsMinus.fixedToCamera = true;
     optionsMinus.smoothed = false;
-
+    optionsMinus.onDownSound = this.buttonSound;
     this.optionsMenu.add(optionsMinus);
     
     var optionsPlus = this.game.add.button(optionsBkg.x + 77, optionsBkg.y - 20, "plusBttn", function(){updateVolume.call(this, 5);}, this, 0, 0, 1);
     optionsPlus.anchor.setTo(0.5, 0.5);
     optionsPlus.fixedToCamera = true;
     optionsPlus.smoothed = false;
-
+    optionsPlus.onDownSound = this.buttonSound;
     this.optionsMenu.add(optionsPlus);
 
     var optionsBack = this.game.add.button(optionsBkg.x - 47, optionsBkg.y + 48, "backBttn", function(){this.optionsMenu.visible = false; this.pauseMenu.visible = true; this.game.world.bringToTop(this.pauseMenu);}, this, 0, 0, 1);
     optionsBack.anchor.setTo(0.5, 0.5);
     optionsBack.fixedToCamera = true;
     optionsBack.smoothed = false;
-
+    optionsBack.onDownSound = this.buttonSound;
     this.optionsMenu.add(optionsBack);
 
     var optionsMute = this.game.add.button(optionsBkg.x + 47, optionsBkg.y + 48, "muteBttn", function(){mute.call(this);}, this, 0, 0, 1);
@@ -189,9 +189,8 @@ var PlayScene = {
     optionsMute.anchor.setTo(0.5, 0.5);
     optionsMute.fixedToCamera = true;
     optionsMute.smoothed = false;
-
+    optionsMute.onDownSound = this.buttonSound;
     this.optionsMenu.add(optionsMute);
-
 
     this.optionsMenu.visible = false;
 
@@ -235,7 +234,7 @@ var PlayScene = {
     escapeBttn.fixedToCamera = true;
     escapeBttn.smoothed = false;
     escapeBttn.scale.setTo(0.7, 0.7);
-
+    escapeBttn.onDownSound = this.buttonSound;
     this.UI.add(escapeBttn);
 
     var numberOfButtons = 11;
@@ -251,7 +250,7 @@ var PlayScene = {
     roadBttn.fixedToCamera = true;
     roadBttn.smoothed = false;
     roadBttn.scale.setTo(scale, scale);
-
+    roadBttn.onDownSound = this.buttonSound;
     this.UI.add(roadBttn);
 
     var houseBttn = this.game.add.button(roadBttn.right + buttonOffset, roadBttn.centerY, "houseBttn", function(){buildMode.call(this, this, this.houseGroup);}, this, 0, 0, 1);
@@ -259,7 +258,7 @@ var PlayScene = {
     houseBttn.fixedToCamera = true;
     houseBttn.smoothed = false;
     houseBttn.scale.setTo(scale, scale);
-
+    houseBttn.onDownSound = this.buttonSound;
     this.UI.add(houseBttn);
 
     var waterBttn = this.game.add.button(houseBttn.right + buttonOffset,  roadBttn.centerY, "waterBttn", function(){buildMode.call(this, this, this.waterGroup);}, this, 0, 0, 1);
@@ -267,7 +266,7 @@ var PlayScene = {
     waterBttn.fixedToCamera = true;
     waterBttn.smoothed = false;
     waterBttn.scale.setTo(scale, scale);
-
+    waterBttn.onDownSound = this.buttonSound;
     this.UI.add(waterBttn);
 
     var cropBttn = this.game.add.button(waterBttn.right + buttonOffset,  roadBttn.centerY, "cropBttn", function(){buildMode.call(this, this, this.cropGroup);}, this, 0, 0, 1);
@@ -275,7 +274,7 @@ var PlayScene = {
     cropBttn.fixedToCamera = true;
     cropBttn.smoothed = false;
     cropBttn.scale.setTo(scale, scale);
-
+    cropBttn.onDownSound = this.buttonSound;
     this.UI.add(cropBttn);
 
     var woodBttn = this.game.add.button(cropBttn.right + buttonOffset,  roadBttn.centerY, "woodBttn", function(){buildMode.call(this, this, this.woodGroup);}, this, 0, 0, 1);
@@ -283,7 +282,7 @@ var PlayScene = {
     woodBttn.fixedToCamera = true;
     woodBttn.smoothed = false;
     woodBttn.scale.setTo(scale, scale);
-
+    woodBttn.onDownSound = this.buttonSound;
     this.UI.add(woodBttn);
 
     var stoneBttn = this.game.add.button(woodBttn.right + buttonOffset,  roadBttn.centerY, "stoneBttn", function(){buildMode.call(this, this, this.stoneGroup);}, this, 0, 0, 1);
@@ -291,7 +290,7 @@ var PlayScene = {
     stoneBttn.fixedToCamera = true;
     stoneBttn.smoothed = false;
     stoneBttn.scale.setTo(scale, scale);
-
+    stoneBttn.onDownSound = this.buttonSound;
     this.UI.add(stoneBttn);
 
     var uraniumBttn = this.game.add.button(stoneBttn.right + buttonOffset,  roadBttn.centerY, "uraniumBttn", function(){buildMode.call(this, this, this.uraniumGroup);}, this, 0, 0, 1);
@@ -299,7 +298,7 @@ var PlayScene = {
     uraniumBttn.fixedToCamera = true;
     uraniumBttn.smoothed = false;
     uraniumBttn.scale.setTo(scale, scale);
-
+    uraniumBttn.onDownSound = this.buttonSound;
     this.UI.add(uraniumBttn);
 
     var energyBttn = this.game.add.button(uraniumBttn.right + buttonOffset,  roadBttn.centerY, "energyBttn", function(){buildMode.call(this, this, this.energyGroup);}, this, 0, 0, 1);
@@ -307,7 +306,7 @@ var PlayScene = {
     energyBttn.fixedToCamera = true;
     energyBttn.smoothed = false;
     energyBttn.scale.setTo(scale, scale);
-
+    energyBttn.onDownSound = this.buttonSound;
     this.UI.add(energyBttn);
 
     var windBttn = this.game.add.button(energyBttn.right + buttonOffset,  roadBttn.centerY, "windBttn", function(){buildMode.call(this, this, this.windGroup);}, this, 0, 0, 1);
@@ -315,7 +314,7 @@ var PlayScene = {
     windBttn.fixedToCamera = true;
     windBttn.smoothed = false;
     windBttn.scale.setTo(scale, scale);
-
+    windBttn.onDownSound = this.buttonSound;
     this.UI.add(windBttn);
 
     var hospitalBttn = this.game.add.button(windBttn.right + buttonOffset,  roadBttn.centerY, "hospitalBttn", function(){buildMode.call(this, this, this.hospitalGroup);}, this, 0, 0, 1);
@@ -323,7 +322,7 @@ var PlayScene = {
     hospitalBttn.fixedToCamera = true;
     hospitalBttn.smoothed = false;
     hospitalBttn.scale.setTo(scale, scale);
-
+    hospitalBttn.onDownSound = this.buttonSound;
     this.UI.add(hospitalBttn);
 
     var bulldozeBttn = this.game.add.button(hospitalBttn.right + buttonOffset,  roadBttn.centerY, "bulldozeBttn", function(){destroyMode.call(this);}, this, 0, 0, 1);
@@ -331,6 +330,7 @@ var PlayScene = {
     bulldozeBttn.fixedToCamera = true;
     bulldozeBttn.smoothed = false;
     bulldozeBttn.scale.setTo(scale, scale);
+    bulldozeBttn.onDownSound = this.buttonSound;
 
     this.UI.add(bulldozeBttn);
 
@@ -1220,7 +1220,6 @@ var PlayScene = {
 
               for(var i = prod.numberOfBirths; i > 0; i--)
                 var aux = new Classes.Citizen(this.homelessArray, this.unemployedArray);
-
             }, this);
 
             for (var i = this.homelessArray.length - 1; i >= 0; i--) {

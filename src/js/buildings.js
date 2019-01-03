@@ -1,8 +1,12 @@
+var Phasetips = require("./Phasetips.js");
+
 function House(game, x, y, img) {
     Phaser.Sprite.call(this, game, x, y, img);
     this.coziness = this._calculateCoziness();
     this.residentA = undefined;
     this.residentB = undefined;
+    this.dataA = "";
+    this.dataB = "";
     this.hospitalNear = false;
     this.full = false;
     this.numberOfBirths = 0;
@@ -24,15 +28,27 @@ House.prototype.add = function(citizen) {
 
     if(this.residentA === undefined){
         this.residentA = citizen;
+        this.dataA = this.residentA.name;
         added = true;
     }
 
     else if(this.residentB === undefined){
         this.residentB = citizen;
+        this.dataB = this.residentB.name;
         added = true;
     }
 
     this.full = (this.residentA !== undefined && this.residentB !== undefined);
+
+    this.tooltip = new Phasetips(this.game, {
+        targetObject: this,
+        context: "ResidentA: " + (this.dataA) + "\nResidentB: " + (this.dataB),
+        strokeColor: 0xff0000,
+        position: "top",
+        positionOffset: 30,   
+        
+        animation: "fade"
+      });
 
     return added;
 };
@@ -120,6 +136,8 @@ function Producer(game, x, y, img, amount, consumes = "none", consumed = 0) {
     this.consumed = consumed;
     this.workerA = undefined;
     this.workerB = undefined;
+    this.dataA = "";
+    this.dataA = "";
     this.full = false;
 
     this.totalAmount = amount;
@@ -136,15 +154,27 @@ Producer.prototype.add = function(citizen) {
 
     if(this.workerA === undefined){
         this.workerA = citizen;
+        this.dataA = this.workerA.name;
         added = true;
     }
 
     else if(this.workerB === undefined){
         this.workerB = citizen;
+        this.dataB = this.workerB.name;
         added = true;
     }
 
     this.full = (this.workerA !== undefined && this.workerB !== undefined);
+
+    this.tooltip = new Phasetips(this.game, {
+        targetObject: this,
+        context: "ResidentA: " + (this.dataA) + "\nResidentB: " + (this.dataB),
+        strokeColor: 0xff0000,
+        position: "top",
+        positionOffset: 30,   
+        
+        animation: "fade"
+      });
 
     return added;
 };

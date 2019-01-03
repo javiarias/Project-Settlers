@@ -59,6 +59,7 @@ var PreloaderScene = {
     //sounds
     this.game.load.audio('menuSound', ['audio/menu.mp3', 'audio/menu.ogg']);
     this.game.load.audio('gameSound', ['audio/game.mp3', 'audio/game.ogg']);
+    this.game.load.audio('buttonSound', ['audio/button.mp3']);
 
     //menus
     this.game.load.image('UI', 'images/menu/UI/UI.png');
@@ -119,6 +120,8 @@ var wfconfig = {
 
 var MainMenu = {
   create: function(){
+    this.buttonSound = this.game.add.audio('buttonSound');
+
     this.background = this.game.add.sprite(0, 0, "mainBkg");
     this.background.smoothed = false;
 
@@ -130,11 +133,15 @@ var MainMenu = {
     this.play.anchor.setTo(0.5, 0.5);
     this.play.scale.setTo(3, 3);
     this.play.smoothed = false;
+    this.play.onDownSound = this.buttonSound;
+
 
     this.tutorial = this.game.add.button(this.game.camera.x + (this.game.width/2 + 100), this.game.camera.y + (this.game.height/1.8), 'tutorialBttn', tutorialStart, this, 0, 0, 1);
     this.tutorial.anchor.setTo(0.5, 0.5);
     this.tutorial.scale.setTo(3, 3);
     this.tutorial.smoothed = false;
+    this.tutorial.onDownSound = this.buttonSound;
+
 
     this.volume = 20;
 
@@ -146,6 +153,8 @@ var MainMenu = {
     this.options = this.game.add.button(this.game.camera.x + (this.game.width/2), this.game.camera.y + 3.55 * (this.game.height/4), "settBttn", function(){this.optionsMain.visible = true; this.game.world.bringToTop(this.optionsMain); this.play.inputEnabled = false; this.options.inputEnabled = false;}, this, 0, 0, 1);
     this.options.anchor.setTo(.5, .5);
     this.options.smoothed = false;
+    this.options.onDownSound = this.buttonSound;
+
 
     //volume menu
     this.optionsMain = this.game.add.group();
@@ -168,6 +177,7 @@ var MainMenu = {
     optionsMinus.anchor.setTo(0.5, 0.5);
     optionsMinus.fixedToCamera = true;
     optionsMinus.smoothed = false;
+    optionsMinus.onDownSound = this.buttonSound;
 
     this.optionsMain.add(optionsMinus);
     
@@ -175,6 +185,7 @@ var MainMenu = {
     optionsPlus.anchor.setTo(0.5, 0.5);
     optionsPlus.fixedToCamera = true;
     optionsPlus.smoothed = false;
+    optionsPlus.onDownSound = this.buttonSound;
 
     this.optionsMain.add(optionsPlus);
 
@@ -182,6 +193,7 @@ var MainMenu = {
     optionsBack.anchor.setTo(0.5, 0.5);
     optionsBack.fixedToCamera = true;
     optionsBack.smoothed = false;
+    optionsBack.onDownSound = this.buttonSound;
 
     this.optionsMain.add(optionsBack);
 
@@ -191,6 +203,7 @@ var MainMenu = {
     optionsMute.anchor.setTo(0.5, 0.5);
     optionsMute.fixedToCamera = true;
     optionsMute.smoothed = false;
+    optionsMute.onDownSound = this.buttonSound;
 
     this.optionsMain.add(optionsMute);
 

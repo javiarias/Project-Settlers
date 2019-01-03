@@ -25,6 +25,8 @@ var Tutorial = {
           this.volume = 50;
 
           this.gameMusic = this.game.add.audio('gameSound'); 
+          this.buttonSound = this.game.add.audio('buttonSound'); 
+
 
           this.gameMusic.play();
           this.gameMusic.loop = true;
@@ -126,21 +128,21 @@ var Tutorial = {
     pauseSettings.anchor.setTo(0.5, 0.5);
     pauseSettings.fixedToCamera = true;
     pauseSettings.smoothed = false;
-
+    pauseSettings.onDownSound = this.buttonSound;
     this.pauseMenu.add(pauseSettings);
 
     var pauseMinimize = this.game.add.button(pauseBkg.x, pauseBkg.y + 3, "minBttn", escape, this, 0, 0, 1);
     pauseMinimize.anchor.setTo(0.5, 0.5);
     pauseMinimize.fixedToCamera = true;
     pauseMinimize.smoothed = false;
-
+    pauseMinimize.onDownSound = this.buttonSound;
     this.pauseMenu.add(pauseMinimize);
     
     var pauseExit = this.game.add.button(pauseBkg.x + 72, pauseBkg.y + 3, "exitBttn", function(){this.game.state.start('main');}, this, 0, 0, 1);
     pauseExit.anchor.setTo(0.5, 0.5);
     pauseExit.fixedToCamera = true;
     pauseExit.smoothed = false;
-
+    pauseExit.onDownSound = this.buttonSound;
     this.pauseMenu.add(pauseExit);
 
     this.pauseMenu.visible = false;
@@ -152,35 +154,33 @@ var Tutorial = {
     optionsBkg.anchor.setTo(.5, .5);
     optionsBkg.fixedToCamera = true;
     optionsBkg.smoothed = false;
-
     this.optionsMenu.add(optionsBkg);
 
     var volumeText = this.game.add.text(optionsBkg.x, optionsBkg.y - 20, this.volume, {font: "50px console"});
     volumeText.anchor.setTo(0.5, 0.5);
     volumeText.fixedToCamera = true;
     volumeText.smoothed = false;
-
     this.optionsMenu.add(volumeText);
 
     var optionsMinus = this.game.add.button(optionsBkg.x - 77, optionsBkg.y - 20, "minusBttn", function(){updateVolume.call(this, -5);}, this, 0, 0, 1);
     optionsMinus.anchor.setTo(0.5, 0.5);
     optionsMinus.fixedToCamera = true;
     optionsMinus.smoothed = false;
-
+    optionsMinus.onDownSound = this.buttonSound;
     this.optionsMenu.add(optionsMinus);
     
     var optionsPlus = this.game.add.button(optionsBkg.x + 77, optionsBkg.y - 20, "plusBttn", function(){updateVolume.call(this, 5);}, this, 0, 0, 1);
     optionsPlus.anchor.setTo(0.5, 0.5);
     optionsPlus.fixedToCamera = true;
     optionsPlus.smoothed = false;
-
+    optionsPlus.onDownSound = this.buttonSound;
     this.optionsMenu.add(optionsPlus);
 
     var optionsBack = this.game.add.button(optionsBkg.x - 47, optionsBkg.y + 48, "backBttn", function(){this.optionsMenu.visible = false; this.pauseMenu.visible = true; this.game.world.bringToTop(this.pauseMenu);}, this, 0, 0, 1);
     optionsBack.anchor.setTo(0.5, 0.5);
     optionsBack.fixedToCamera = true;
     optionsBack.smoothed = false;
-
+    optionsBack.onDownSound = this.buttonSound;
     this.optionsMenu.add(optionsBack);
 
     var optionsMute = this.game.add.button(optionsBkg.x + 47, optionsBkg.y + 48, "muteBttn", function(){mute.call(this);}, this, 0, 0, 1);
@@ -189,7 +189,7 @@ var Tutorial = {
     optionsMute.anchor.setTo(0.5, 0.5);
     optionsMute.fixedToCamera = true;
     optionsMute.smoothed = false;
-
+    optionsMute.onDownSound = this.buttonSound;
     this.optionsMenu.add(optionsMute);
 
 
@@ -235,7 +235,7 @@ var Tutorial = {
     escapeBttn.fixedToCamera = true;
     escapeBttn.smoothed = false;
     escapeBttn.scale.setTo(0.7, 0.7);
-
+    escapeBttn.onDownSound = this.buttonSound;
     this.UI.add(escapeBttn);
 
     var numberOfButtons = 11;
@@ -254,6 +254,7 @@ var Tutorial = {
     this.roadBttn.scale.setTo(scale, scale);
     this.roadBttn.visible = false;
     this.roadBttn.input.enabled = false;
+    this.roadBttn.onDownSound = this.buttonSound;
     this.UI.add(this.roadBttn);
 
   //Tutorial Houses
@@ -266,7 +267,7 @@ var Tutorial = {
     this.houseBttn.scale.setTo(scale, scale);
     this.houseBttn.visible = false;
     this.houseBttn.input.enabled = false;
-
+    this.houseBttn.onDownSound = this.buttonSound;
     this.UI.add(this.houseBttn);
 
     this.waterBttn = this.game.add.button(this.houseBttn.right + buttonOffset,  this.roadBttn.centerY, "waterBttn", function(){buildMode.call(this, this, this.waterGroup);}, this, 0, 0, 1);
@@ -276,7 +277,7 @@ var Tutorial = {
     this.waterBttn.scale.setTo(scale, scale);
     this.waterBttn.visible = false;
     this.waterBttn.input.enabled = false;
-
+    this.waterBttn.onDownSound = this.buttonSound;
     this.UI.add(this.waterBttn);
 
     //Tutorial Granjas
@@ -288,7 +289,7 @@ var Tutorial = {
     this.cropBttn.scale.setTo(scale, scale);
     this.cropBttn.visible = false;
     this.cropBttn.input.enabled = false;
-
+    this.cropBttn.onDownSound = this.buttonSound;
     this.UI.add(this.cropBttn);
 
     //Tutorial Madera
@@ -300,7 +301,7 @@ var Tutorial = {
     this.woodBttn.scale.setTo(scale, scale);
     this.woodBttn.visible = false;
     this.woodBttn.input.enabled = false;
-
+    this.roadBttn.onDownSound = this.buttonSound;
     this.UI.add(this.woodBttn);
 
     //Tutorial piedra
@@ -312,7 +313,7 @@ var Tutorial = {
     this.stoneBttn.scale.setTo(scale, scale);
     this.stoneBttn.visible = false;
     this.stoneBttn.input.enabled = false;
-
+    this.woodBttn.onDownSound = this.buttonSound;
     this.UI.add(this.stoneBttn);
 
     /*var coalBttn = this.game.add.button(stoneBttn.right + buttonOffset,  roadBttn.centerY, "coalBttn", function(){}, this, 0, 0, 1);
@@ -330,7 +331,7 @@ var Tutorial = {
     this.uraniumBttn.scale.setTo(scale, scale);
     this.uraniumBttn.visible = false;
     this.uraniumBttn.input.enabled = false;
-
+    this.uraniumBttn.onDownSound = this.buttonSound;
     this.UI.add(this.uraniumBttn);
 
     this.energyBttn = this.game.add.button(this.uraniumBttn.right + buttonOffset,  this.roadBttn.centerY, "energyBttn", function(){buildMode.call(this, this, this.energyGroup);}, this, 0, 0, 1);
@@ -340,7 +341,7 @@ var Tutorial = {
     this.energyBttn.scale.setTo(scale, scale);
     this.energyBttn.visible = false;
     this.energyBttn.input.enabled = false;
-
+    this.energyBttn.onDownSound = this.buttonSound;
     this.UI.add(this.energyBttn);
 
     this.windBttn = this.game.add.button(this.energyBttn.right + buttonOffset,  this.roadBttn.centerY, "windBttn", function(){buildMode.call(this, this, this.windGroup);}, this, 0, 0, 1);
@@ -350,7 +351,7 @@ var Tutorial = {
     this.windBttn.scale.setTo(scale, scale);
     this.windBttn.visible = false;
     this.windBttn.input.enabled = false;
-
+    this.windBttn.onDownSound = this.buttonSound;
     this.UI.add(this.windBttn);
 
     this.hospitalBttn = this.game.add.button(this.windBttn.right + buttonOffset,  this.roadBttn.centerY, "hospitalBttn", function(){buildMode.call(this, this, this.hospitalGroup);}, this, 0, 0, 1);
@@ -359,8 +360,8 @@ var Tutorial = {
     this.hospitalBttn.smoothed = false;
     this.hospitalBttn.scale.setTo(scale, scale);
     this.hospitalBttn.visible = false;
-    this.hospitalBttn   .input.enabled = false;
-
+    this.hospitalBttn.input.enabled = false;
+    this.hospitalBttn.onDownSound = this.buttonSound;
     this.UI.add(this.hospitalBttn);
     
     this.bulldozeBttn = this.game.add.button(this.hospitalBttn.right + buttonOffset,  this.roadBttn.centerY, "bulldozeBttn", function(){destroyMode.call(this);}, this, 0, 0, 1);
@@ -370,7 +371,7 @@ var Tutorial = {
     this.bulldozeBttn.scale.setTo(scale, scale);
     this.bulldozeBttn.visible = false;
     this.bulldozeBttn.input.enabled = false;
-
+    this.bulldozeBttn.onDownSound = this.buttonSound;
     this.UI.add(this.bulldozeBttn);
 
       this.timeTxt = this.game.add.text(719, 50, this.currentTime.hour + ":00", {font: "50px console", fill: "red"});
@@ -396,7 +397,6 @@ var Tutorial = {
     this.foodIcon.fixedToCamera = true;
     this.foodIcon.smoothed = false;
     this.foodIcon.visible = false;
-
     this.foodTxtGroup.add(this.foodIcon);
 
     
@@ -405,7 +405,6 @@ var Tutorial = {
     this.foodTxt.fixedToCamera = true;
     this.foodTxt.smoothed = false;
     this.foodTxt.visible = false;
-
     this.foodTxtGroup.add(this.foodTxt);
 
     var auxSymbol = "";
@@ -420,7 +419,6 @@ var Tutorial = {
     this.foodTxtGain.smoothed = false;
     this.foodTxtGain.visible = false;
     this.foodTxtGain.addColor(auxColor, 0);
-
     this.foodTxtGroup.add(this.foodTxtGain);
 
     this.foodTxtTooltip = new Phasetips(this.game, {
@@ -442,7 +440,6 @@ var Tutorial = {
     this.waterIcon.fixedToCamera = true;
     this.waterIcon.smoothed = false;
     this.waterIcon.visible = false;
-
     this.waterTxtGroup.add(this.waterIcon);
 
     this.waterTxt = this.game.add.text(this.foodIcon.right + 15, this.waterIcon.centerY + 3, this.water, {font: "30px console"});
