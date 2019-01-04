@@ -136,7 +136,7 @@ function Producer(game, x, y, img, amount, consumes = "none", consumed = 0) {
     this.workerA = undefined;
     this.workerB = undefined;
     this.dataA = "";
-    this.dataA = "";
+    this.dataB = "";
     this.full = false;
 
     this.totalAmount = amount;
@@ -210,6 +210,76 @@ Producer.prototype.bulldoze = function(unemployedArray) {
         this.workerB.unemployed = true;
         unemployedArray.unshift(this.workerB);
     }
+};
+
+Producer.prototype.serialize = function() {
+        /*var saveObject = {};
+        //Falta la posición del sprite
+
+        saveObject.SpriteData = (this.Sprite.x, this.Sprite.y);
+        saveObject.consumes = this.consumes;
+        saveObject.consumed = this.consumed;
+        saveObject.workerA = this.workerA;
+        saveObject.workerB = this.workerB;
+        saveObject.dataA = "";
+        saveObject.dataB = "";
+        saveObject.full = this.full;
+        saveObject.totalAmount = this.totalAmount;
+        saveObject.amount = this.amount;
+
+        saveObject.off = this.off;*/
+
+        var fields = [
+            'consumes',
+            'consumed',
+            'workerA',
+            'workerB',
+            'dataA',
+            'dataB',
+            'full',
+            'totalAmount',
+            'off'
+        ];
+    
+        var obj = {};
+    
+        for (var i in fields) {
+            var field = fields[i];
+            obj[field] = this[field];
+        }
+
+        return JSON.stringify(obj);
+};
+
+Producer.Unserialize = function(state) {
+	// We should be able to accept an object or a string.
+	if (typeof state === 'string') {
+		state = JSON.parse(state);
+	}
+
+	// Default class name
+	var className = 'Character';
+
+	// Class name can be specified in the serialized data.
+	if (state.options.className) {
+		className = state.options.className;
+	}
+
+	// Call our character factory to make a new instance of className
+	var instance = Producer.Factory(
+		className,
+		game, // Game reference. Required
+		0, // x-pos. Required, but overridden by unserialize
+		0, // y-pos. Required, but overridden by unserialize
+		{} // options. Required, but overridden by unserialize
+	);
+
+	// Copy our saved state into the new object
+	for (var i in state) {
+		instance[i] = state[i];
+	}
+
+	return instance;
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

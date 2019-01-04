@@ -1626,6 +1626,18 @@ this.UI.add(this.energyTxtGroup);
           var aux = this.homelessArray.length;
 
           this.houseGroup.forEach(function(house){aux += house.countCitizens();});
+
+          if (aux === 0)
+          {
+            this.gameMusic.stop();
+            this.game.state.start('defeat');
+          }
+
+          if (aux === 1000000)
+          {
+            this.gameMusic.stop();
+            this.game.state.start('win');
+          }
           
           this.homelessTxt.text = this.homelessArray.length;
           this.unemployedTxt.text = this.unemployedArray.length;

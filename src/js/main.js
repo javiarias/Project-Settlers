@@ -135,6 +135,9 @@ var MainMenu = {
     this.play.smoothed = false;
     this.play.onDownSound = this.buttonSound;
 
+    this.playtxt = this.game.add.text(this.play.x, this.play.y + this.game.height/6, "Play", {font: "console", fontSize: 40, fill: "#ffffff", align: "center" });
+    this.playtxt.anchor.setTo(0.5, 0.5);
+    this.playtxt.smoothed = false;
 
     this.tutorial = this.game.add.button(this.game.camera.x + (this.game.width/2 + 100), this.game.camera.y + (this.game.height/1.8), 'tutorialBttn', tutorialStart, this, 0, 0, 1);
     this.tutorial.anchor.setTo(0.5, 0.5);
@@ -142,6 +145,9 @@ var MainMenu = {
     this.tutorial.smoothed = false;
     this.tutorial.onDownSound = this.buttonSound;
 
+    this.tutorialtxt = this.game.add.text(this.tutorial.x, this.tutorial.y + this.game.height/6, "Tutorial", {font: "console", fontSize: 40, fill: "#ffffff", align: "center" });
+    this.tutorialtxt.anchor.setTo(0.5, 0.5);
+    this.tutorialtxt.smoothed = false;
 
     this.volume = 20;
 
@@ -247,6 +253,270 @@ var MainMenu = {
   }
 };
 
+var DefeatState = {
+  create: function(){
+    this.buttonSound = this.game.add.audio('buttonSound');
+    
+    this.volume = 20;
+    this.menuMusic = this.game.add.sound('menuSound', .2, true);
+    this.menuMusic.play();
+    this.menuMusic.volume = this.volume / 100;
+
+    this.background = this.game.add.sprite(0, 0, "mainBkg");
+    this.background.smoothed = false;
+
+    this.play = this.game.add.button(this.game.camera.x + (this.game.width/2 - 100), this.game.camera.y + (this.game.height/1.8), 'playBttn', gameStart, this, 0, 0, 1);
+    this.play.anchor.setTo(0.5, 0.5);
+    this.play.scale.setTo(3, 3);
+    this.play.smoothed = false;
+    this.play.onDownSound = this.buttonSound;
+
+    this.playtxt = this.game.add.text(this.play.x, this.play.y + this.game.height/6, "Play Again", {font: "console", fontSize: 40, fill: "#ffffff", align: "center" });
+    this.playtxt.anchor.setTo(0.5, 0.5);
+    this.playtxt.smoothed = false;
+
+    this.menu = this.game.add.button(this.game.camera.x + (this.game.width/2 + 100), this.game.camera.y + (this.game.height/1.8), 'backBttn', goMenu, this, 0, 0, 1);
+    this.menu.anchor.setTo(0.5, 0.5);
+    this.menu.scale.setTo(3, 3);
+    this.menu.smoothed = false;
+    this.menu.onDownSound = this.buttonSound;
+
+    this.menutxt = this.game.add.text(this.menu.x, this.menu.y + this.game.height/6, "Main Menu", {font: "console", fontSize: 40, fill: "#ffffff", align: "center" });
+    this.menutxt.anchor.setTo(0.5, 0.5);
+    this.menutxt.smoothed = false;
+
+    this.txt = this.game.add.text(this.game.camera.x + (this.game.width/2), this.game.camera.y + (this.game.height/5), "All your citizens have died,\n you lost the game", {font: "console", fontSize: 60, fill: "#ffffff", align: "center" });
+    this.txt.anchor.setTo(0.5, 0.5);
+    this.txt.smoothed = false;
+
+    this.options = this.game.add.button(this.game.camera.x + (this.game.width/2), this.game.camera.y + 3.55 * (this.game.height/4), "settBttn", function(){this.optionsMain.visible = true; this.game.world.bringToTop(this.optionsMain); this.play.inputEnabled = false; this.options.inputEnabled = false;}, this, 0, 0, 1);
+    this.options.anchor.setTo(.5, .5);
+    this.options.smoothed = false;
+    this.options.onDownSound = this.buttonSound;
+    
+    this.optionsMain = this.game.add.group();
+
+    var optionsBkg = this.game.add.sprite(this.game.camera.x + this.game.camera.width / 2, this.game.camera.y + this.game.camera.height / 2, "optionsBkg");
+    optionsBkg.anchor.setTo(.5, .5);
+    optionsBkg.fixedToCamera = true;
+    optionsBkg.smoothed = false;
+
+    this.optionsMain.add(optionsBkg);
+
+    var volumeText = this.game.add.text(optionsBkg.x, optionsBkg.y - 20, this.volume, {font: "50px console"});
+    volumeText.anchor.setTo(0.5, 0.5);
+    volumeText.fixedToCamera = true;
+    volumeText.smoothed = false;
+
+    this.optionsMain.add(volumeText);
+
+    var optionsMinus = this.game.add.button(optionsBkg.x - 77, optionsBkg.y - 20, "minusBttn", function(){updateVolume.call(this, -5);}, this, 0, 0, 1);
+    optionsMinus.anchor.setTo(0.5, 0.5);
+    optionsMinus.fixedToCamera = true;
+    optionsMinus.smoothed = false;
+    optionsMinus.onDownSound = this.buttonSound;
+
+    this.optionsMain.add(optionsMinus);
+    
+    var optionsPlus = this.game.add.button(optionsBkg.x + 77, optionsBkg.y - 20, "plusBttn", function(){updateVolume.call(this, 5);}, this, 0, 0, 1);
+    optionsPlus.anchor.setTo(0.5, 0.5);
+    optionsPlus.fixedToCamera = true;
+    optionsPlus.smoothed = false;
+    optionsPlus.onDownSound = this.buttonSound;
+
+    this.optionsMain.add(optionsPlus);
+
+    var optionsBack = this.game.add.button(optionsBkg.x - 47, optionsBkg.y + 48, "backBttn", function(){this.optionsMain.visible = false; this.play.inputEnabled = true; this.options.inputEnabled = true;}, this, 0, 0, 1);
+    optionsBack.anchor.setTo(0.5, 0.5);
+    optionsBack.fixedToCamera = true;
+    optionsBack.smoothed = false;
+    optionsBack.onDownSound = this.buttonSound;
+
+    this.optionsMain.add(optionsBack);
+
+    var optionsMute = this.game.add.button(optionsBkg.x + 47, optionsBkg.y + 48, "muteBttn", function(){mute.call(this);}, this, 0, 0, 1);
+    if(this.game.sound.mute)
+      optionsMute.setFrames(2, 2, 3);
+    optionsMute.anchor.setTo(0.5, 0.5);
+    optionsMute.fixedToCamera = true;
+    optionsMute.smoothed = false;
+    optionsMute.onDownSound = this.buttonSound;
+
+    this.optionsMain.add(optionsMute);
+
+    this.optionsMain.visible = false;
+
+    function updateVolume(update){
+      if(this.volume + update >= 0 && this.volume + update <= 100){
+
+        this.volume += update;
+        this.menuMusic.volume = this.volume / 100;
+
+        this.optionsMain.forEach(function(text){
+          if (text.text !== null)
+            text.text = this.volume;
+          }, this);
+      }
+    }
+
+    function mute(){
+      this.game.sound.mute = !this.game.sound.mute;
+      this.optionsMain.forEach(function(button){
+        if(button.key == "muteBttn"){
+          if(this.game.sound.mute)
+            button.setFrames(2, 2, 3);
+          else
+            button.setFrames(0, 0, 1);
+        }
+      }, this);
+    }
+
+    function gameStart() {
+      this.menuMusic.stop();
+      this.optionsMain.destroy();
+      this.game.state.start('play');
+    }
+
+    function goMenu() {
+      this.menuMusic.stop();
+      this.optionsMain.destroy();
+      this.game.state.start('main');
+    }
+  }
+};
+
+var WinState = {
+  create: function(){
+    this.buttonSound = this.game.add.audio('buttonSound');
+    
+    this.volume = 20;
+    this.menuMusic = this.game.add.sound('menuSound', .2, true);
+    this.menuMusic.play();
+    this.menuMusic.volume = this.volume / 100;
+
+    this.background = this.game.add.sprite(0, 0, "mainBkg");
+    this.background.smoothed = false;
+
+    this.play = this.game.add.button(this.game.camera.x + (this.game.width/2 - 100), this.game.camera.y + (this.game.height/1.8), 'playBttn', gameStart, this, 0, 0, 1);
+    this.play.anchor.setTo(0.5, 0.5);
+    this.play.scale.setTo(3, 3);
+    this.play.smoothed = false;
+    this.play.onDownSound = this.buttonSound;
+
+    this.playtxt = this.game.add.text(this.play.x, this.play.y + this.game.height/6, "Play Again", {font: "console", fontSize: 40, fill: "#ffffff", align: "center" });
+    this.playtxt.anchor.setTo(0.5, 0.5);
+    this.playtxt.smoothed = false;
+
+    this.menu = this.game.add.button(this.game.camera.x + (this.game.width/2 + 100), this.game.camera.y + (this.game.height/1.8), 'backBttn', goMenu, this, 0, 0, 1);
+    this.menu.anchor.setTo(0.5, 0.5);
+    this.menu.scale.setTo(3, 3);
+    this.menu.smoothed = false;
+    this.menu.onDownSound = this.buttonSound;
+
+    this.menutxt = this.game.add.text(this.menu.x, this.menu.y + this.game.height/6, "Main Menu", {font: "console", fontSize: 40, fill: "#ffffff", align: "center" });
+    this.menutxt.anchor.setTo(0.5, 0.5);
+    this.menutxt.smoothed = false;
+
+    this.txt = this.game.add.text(this.game.camera.x + (this.game.width/2), this.game.camera.y + (this.game.height/5), "Congratulations,\n you won the game", {font: "console", fontSize: 60, fill: "#ffffff", align: "center" });
+    this.txt.anchor.setTo(0.5, 0.5);
+    this.txt.smoothed = false;
+
+    this.options = this.game.add.button(this.game.camera.x + (this.game.width/2), this.game.camera.y + 3.55 * (this.game.height/4), "settBttn", function(){this.optionsMain.visible = true; this.game.world.bringToTop(this.optionsMain); this.play.inputEnabled = false; this.options.inputEnabled = false;}, this, 0, 0, 1);
+    this.options.anchor.setTo(.5, .5);
+    this.options.smoothed = false;
+    this.options.onDownSound = this.buttonSound;
+    
+    this.optionsMain = this.game.add.group();
+
+    var optionsBkg = this.game.add.sprite(this.game.camera.x + this.game.camera.width / 2, this.game.camera.y + this.game.camera.height / 2, "optionsBkg");
+    optionsBkg.anchor.setTo(.5, .5);
+    optionsBkg.fixedToCamera = true;
+    optionsBkg.smoothed = false;
+
+    this.optionsMain.add(optionsBkg);
+
+    var volumeText = this.game.add.text(optionsBkg.x, optionsBkg.y - 20, this.volume, {font: "50px console"});
+    volumeText.anchor.setTo(0.5, 0.5);
+    volumeText.fixedToCamera = true;
+    volumeText.smoothed = false;
+
+    this.optionsMain.add(volumeText);
+
+    var optionsMinus = this.game.add.button(optionsBkg.x - 77, optionsBkg.y - 20, "minusBttn", function(){updateVolume.call(this, -5);}, this, 0, 0, 1);
+    optionsMinus.anchor.setTo(0.5, 0.5);
+    optionsMinus.fixedToCamera = true;
+    optionsMinus.smoothed = false;
+    optionsMinus.onDownSound = this.buttonSound;
+
+    this.optionsMain.add(optionsMinus);
+    
+    var optionsPlus = this.game.add.button(optionsBkg.x + 77, optionsBkg.y - 20, "plusBttn", function(){updateVolume.call(this, 5);}, this, 0, 0, 1);
+    optionsPlus.anchor.setTo(0.5, 0.5);
+    optionsPlus.fixedToCamera = true;
+    optionsPlus.smoothed = false;
+    optionsPlus.onDownSound = this.buttonSound;
+
+    this.optionsMain.add(optionsPlus);
+
+    var optionsBack = this.game.add.button(optionsBkg.x - 47, optionsBkg.y + 48, "backBttn", function(){this.optionsMain.visible = false; this.play.inputEnabled = true; this.options.inputEnabled = true;}, this, 0, 0, 1);
+    optionsBack.anchor.setTo(0.5, 0.5);
+    optionsBack.fixedToCamera = true;
+    optionsBack.smoothed = false;
+    optionsBack.onDownSound = this.buttonSound;
+
+    this.optionsMain.add(optionsBack);
+
+    var optionsMute = this.game.add.button(optionsBkg.x + 47, optionsBkg.y + 48, "muteBttn", function(){mute.call(this);}, this, 0, 0, 1);
+    if(this.game.sound.mute)
+      optionsMute.setFrames(2, 2, 3);
+    optionsMute.anchor.setTo(0.5, 0.5);
+    optionsMute.fixedToCamera = true;
+    optionsMute.smoothed = false;
+    optionsMute.onDownSound = this.buttonSound;
+
+    this.optionsMain.add(optionsMute);
+
+    this.optionsMain.visible = false;
+
+    function updateVolume(update){
+      if(this.volume + update >= 0 && this.volume + update <= 100){
+
+        this.volume += update;
+        this.menuMusic.volume = this.volume / 100;
+
+        this.optionsMain.forEach(function(text){
+          if (text.text !== null)
+            text.text = this.volume;
+          }, this);
+      }
+    }
+
+    function mute(){
+      this.game.sound.mute = !this.game.sound.mute;
+      this.optionsMain.forEach(function(button){
+        if(button.key == "muteBttn"){
+          if(this.game.sound.mute)
+            button.setFrames(2, 2, 3);
+          else
+            button.setFrames(0, 0, 1);
+        }
+      }, this);
+    }
+
+    function gameStart() {
+      this.menuMusic.stop();
+      this.optionsMain.destroy();
+      this.game.state.start('play');
+    }
+
+    function goMenu() {
+      this.menuMusic.stop();
+      this.optionsMain.destroy();
+      this.game.state.start('main');
+    }
+  }
+};
+
 
 window.onload = function () {
 
@@ -259,6 +529,8 @@ window.onload = function () {
   game.state.add('main', MainMenu);
   game.state.add('tutorial', Tutorial)
   game.state.add('play', PlayScene);
+  game.state.add('defeat', DefeatState);
+  game.state.add('win', WinState);
 
   game.state.start('boot');
 };

@@ -123,7 +123,7 @@ var PlayScene = {
     pauseBkg.smoothed = false;
     this.pauseMenu.add(pauseBkg);
 
-    var pauseSettings = this.game.add.button(pauseBkg.x - 72, pauseBkg.y + 3, "settBttn", function(){this.optionsMenu.visible = true; this.pauseMenu.visible = false; this.game.world.bringToTop(this.optionsMenu);}, this, 0, 0, 1);
+    var pauseSettings = this.game.add.button(pauseBkg.x + 72, pauseBkg.y + 3, "settBttn", function(){this.optionsMenu.visible = true; this.pauseMenu.visible = false; this.game.world.bringToTop(this.optionsMenu);}, this, 0, 0, 1);
     pauseSettings.anchor.setTo(0.5, 0.5);
     pauseSettings.fixedToCamera = true;
     pauseSettings.smoothed = false;
@@ -136,13 +136,27 @@ var PlayScene = {
     pauseMinimize.smoothed = false;
     pauseMinimize.onDownSound = this.buttonSound;
     this.pauseMenu.add(pauseMinimize);
-    
-    var pauseExit = this.game.add.button(pauseBkg.x + 72, pauseBkg.y + 3, "exitBttn", function(){this.gameMusic.stop();this.game.state.start('main');}, this, 0, 0, 1);
+
+    var pauseExit = this.game.add.button(pauseBkg.x + 144, pauseBkg.y + 3, "exitBttn", function(){this.gameMusic.stop();this.game.state.start('main');}, this, 0, 0, 1);
     pauseExit.anchor.setTo(0.5, 0.5);
     pauseExit.fixedToCamera = true;
     pauseExit.smoothed = false;
     pauseExit.onDownSound = this.buttonSound;
     this.pauseMenu.add(pauseExit);
+
+    var loadBttn = this.game.add.button(pauseBkg.x - 144, pauseBkg.y + 3, "uraniumIcon", function(){this.loadGame();}, this, 0, 0, 1);
+    loadBttn.anchor.setTo(0.5, 0.5);
+    loadBttn.fixedToCamera = true;
+    loadBttn.smoothed = false;
+    loadBttn.onDownSound = this.buttonSound;
+    this.pauseMenu.add(loadBttn);
+
+    var saveBttn = this.game.add.button(pauseBkg.x - 72, pauseBkg.y + 3, "hospitalIcon", function(){this.saveGame();;}, this, 0, 0, 1);
+    saveBttn.anchor.setTo(0.5, 0.5);
+    saveBttn.fixedToCamera = true;
+    saveBttn.smoothed = false;
+    saveBttn.onDownSound = this.buttonSound;
+    this.pauseMenu.add(saveBttn);
 
     this.pauseMenu.visible = false;
 
@@ -1219,9 +1233,7 @@ var PlayScene = {
                 this.water -= 5;
               this.homelessArray[i].tick(this.food, this.water, false, null, this.homelessArray, this.houseGroup);
             }
-
-            
-
+         
             this.foodTxt.text = this.food;
             this.waterTxt.text = this.water;
           }
@@ -1253,6 +1265,18 @@ var PlayScene = {
 
           this.houseGroup.forEach(function(house){aux += house.countCitizens();});
           
+          if (aux === 0)
+          {
+            this.gameMusic.stop();
+            this.game.state.start('defeat');
+          }
+
+          if (aux === 1000000)
+          {
+            this.gameMusic.stop();
+            this.game.state.start('win');
+          }
+
           this.homelessTxt.text = this.homelessArray.length;
           this.unemployedTxt.text = this.unemployedArray.length;
           this.citizensTxt.text = aux;
@@ -1414,6 +1438,64 @@ var PlayScene = {
     }
 
     this.UIBkg.inputEnabled = false;
+  },
+
+  saveGame:function()
+  {
+    var saveObject = {};
+
+    saveObject.buildings = {};
+
+    saveObject.buildings.woodGroup = {};
+
+    
+    saveObject.buildings.woodGroup = this.woodGroup.forEach(function(prod){
+      return prod.serialize();
+    }, this);
+
+    saveObject.buildings.windGroup = this.windGroup.forEach(function(prod){
+      return prod.serialize();
+    }, this);
+
+    saveObject.buildings.uraniumGroup = this.uraniumGroup.forEach(function(prod){
+      return prod.serialize();
+    }, this);
+
+    saveObject.buildings.cropGroup = this.cropGroup.forEach(function(prod){
+      return prod.serialize();
+    }, this);
+
+    saveObject.buildings.stoneGroup = this.stoneGroup.forEach(function(prod){
+      return prod.serialize();
+    }, this);
+
+    saveObject.buildings.energyGroup = this.energyGroup.forEach(function(prod){
+      return prod.serialize();
+    }, this);
+
+    saveObject.buildings.hospitalGroup = this.hospitalGroup.forEach(function(prod){
+      return prod.serialize();
+    }, this);
+
+    saveObject.buildings.houses = this.houseGroup.forEach(function(house){
+      return house.serialize();
+    }, this);
+
+    saveObject.citizen
+    
+    // localStorage only works with strings, so JSON.stringify first.
+    localStorage.setItem("save", JSON.stringify(saveObject));
+    //save buildings
+    //save houses (con esto ya se guardan los ciudadanos (?))
+  },
+
+  loadGame:function()
+  {
+    localStorage.getItem("save");
+    //load buildings
+    //load houses (con esto ya se guardan los ciudadanos (?))
+
+    //update arrays
   },
 
   render: function() {
