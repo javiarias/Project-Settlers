@@ -25,11 +25,10 @@ var PlayScene = {
 
           this.volume = 50;
 
-          this.gameMusic = this.game.add.audio('gameSound'); 
+          this.gameMusic = this.game.add.audio('gameSound', 1, true); 
           this.buttonSound = this.game.add.audio('buttonSound');
 
           this.gameMusic.play();
-          this.gameMusic.loop = true;
           this.gameMusic.volume = this.volume / 100;
 
           this.paused = true;
@@ -138,7 +137,7 @@ var PlayScene = {
     pauseMinimize.onDownSound = this.buttonSound;
     this.pauseMenu.add(pauseMinimize);
     
-    var pauseExit = this.game.add.button(pauseBkg.x + 72, pauseBkg.y + 3, "exitBttn", function(){this.game.state.start('main');}, this, 0, 0, 1);
+    var pauseExit = this.game.add.button(pauseBkg.x + 72, pauseBkg.y + 3, "exitBttn", function(){this.gameMusic.stop();this.game.state.start('main');}, this, 0, 0, 1);
     pauseExit.anchor.setTo(0.5, 0.5);
     pauseExit.fixedToCamera = true;
     pauseExit.smoothed = false;
@@ -386,7 +385,6 @@ var PlayScene = {
         strokeColor: 0xff0000,
         position: "left",
         positionOffset: 30,   
-        
         animation: "fade"
       });
 
@@ -429,7 +427,6 @@ var PlayScene = {
         strokeColor: 0xff0000,
         position: "left",
         positionOffset: 30,   
-        
         animation: "fade"
       });
 
@@ -472,7 +469,6 @@ var PlayScene = {
         strokeColor: 0xff0000,
         position: "left",
         positionOffset: 30,   
-        
         animation: "fade"
       });
 
@@ -515,7 +511,6 @@ var PlayScene = {
         strokeColor: 0xff0000,
         position: "left",
         positionOffset: 30,   
-        
         animation: "fade"
       });
 
@@ -560,8 +555,7 @@ var PlayScene = {
       strokeColor: 0xff0000,
       position: "left",
       positionOffset: 30,   
-      
-      animation: "fade"
+     animation: "fade"
     });
 
     this.uraniumTxtGroup.add(this.uraniumTxt);
@@ -605,7 +599,6 @@ var PlayScene = {
       strokeColor: 0xff0000,
       position: "left",
       positionOffset: 30,   
-      
       animation: "fade"
     });
 
@@ -635,7 +628,6 @@ var PlayScene = {
         strokeColor: 0xff0000,
         position: "left",
         positionOffset: 30,   
-        
         animation: "fade"
       });
 
@@ -664,7 +656,6 @@ var PlayScene = {
         strokeColor: 0xff0000,
         position: "left",
         positionOffset: 30,   
-        
         animation: "fade"
       });
 
@@ -692,7 +683,6 @@ var PlayScene = {
       strokeColor: 0xff0000,
       position: "left",
       positionOffset: 30,   
-      
       animation: "fade"
     });
 

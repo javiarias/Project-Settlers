@@ -145,9 +145,8 @@ var MainMenu = {
 
     this.volume = 20;
 
-    this.menuMusic = this.game.add.sound('menuSound');
+    this.menuMusic = this.game.add.sound('menuSound', 1, true);
     this.menuMusic.play();
-    this.menuMusic.loop = true;
     this.menuMusic.volume = this.volume / 100;
 
     this.options = this.game.add.button(this.game.camera.x + (this.game.width/2), this.game.camera.y + 3.55 * (this.game.height/4), "settBttn", function(){this.optionsMain.visible = true; this.game.world.bringToTop(this.optionsMain); this.play.inputEnabled = false; this.options.inputEnabled = false;}, this, 0, 0, 1);

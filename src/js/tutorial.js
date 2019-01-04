@@ -24,12 +24,11 @@ var Tutorial = {
 
           this.volume = 50;
 
-          this.gameMusic = this.game.add.audio('gameSound'); 
+          this.gameMusic = this.game.add.audio('gameSound', 1, true); 
           this.buttonSound = this.game.add.audio('buttonSound'); 
 
 
           this.gameMusic.play();
-          this.gameMusic.loop = true;
           this.gameMusic.volume = this.volume / 100;
 
           this.paused = true;
@@ -138,7 +137,7 @@ var Tutorial = {
     pauseMinimize.onDownSound = this.buttonSound;
     this.pauseMenu.add(pauseMinimize);
     
-    var pauseExit = this.game.add.button(pauseBkg.x + 72, pauseBkg.y + 3, "exitBttn", function(){this.game.state.start('main');}, this, 0, 0, 1);
+    var pauseExit = this.game.add.button(pauseBkg.x + 72, pauseBkg.y + 3, "exitBttn", function(){this.gameMusic.stop();this.game.state.start('main');}, this, 0, 0, 1);
     pauseExit.anchor.setTo(0.5, 0.5);
     pauseExit.fixedToCamera = true;
     pauseExit.smoothed = false;
@@ -245,8 +244,6 @@ var Tutorial = {
 
     var buttonOffset = 637 / numberOfButtons - (55 * scale) + (55 * scale)/2; // 11 = número de botones, 55 = tamaño x del botón
     
-  //Tutorial Roads
-
     this.roadBttn = this.game.add.button(5 + buttonOffset - (buttonOffset - (55 * scale)/2)/2, this.UIBkg.bottom - 30, "roadBttn", function(){buildMode.call(this, this, this.roadGroup);}, this, 0, 0, 1);
     this.roadBttn.anchor.setTo(.5, .5);
     this.roadBttn.fixedToCamera = true;
@@ -256,9 +253,6 @@ var Tutorial = {
     this.roadBttn.input.enabled = false;
     this.roadBttn.onDownSound = this.buttonSound;
     this.UI.add(this.roadBttn);
-
-  //Tutorial Houses
-
 
     this.houseBttn = this.game.add.button(this.roadBttn.right + buttonOffset, this.roadBttn.centerY, "houseBttn", function(){buildMode.call(this, this, this.houseGroup);}, this, 0, 0, 1);
     this.houseBttn.anchor.setTo(.5, .5);
@@ -280,8 +274,6 @@ var Tutorial = {
     this.waterBttn.onDownSound = this.buttonSound;
     this.UI.add(this.waterBttn);
 
-    //Tutorial Granjas
-
     this.cropBttn = this.game.add.button(this.waterBttn.right + buttonOffset,  this.roadBttn.centerY, "cropBttn", function(){buildMode.call(this, this, this.cropGroup);}, this, 0, 0, 1);
     this.cropBttn.anchor.setTo(.5, .5);
     this.cropBttn.fixedToCamera = true;
@@ -290,9 +282,6 @@ var Tutorial = {
     this.cropBttn.visible = false;
     this.cropBttn.input.enabled = false;
     this.cropBttn.onDownSound = this.buttonSound;
-    this.UI.add(this.cropBttn);
-
-    //Tutorial Madera
 
     this.woodBttn = this.game.add.button(this.cropBttn.right + buttonOffset,  this.roadBttn.centerY, "woodBttn", function(){buildMode.call(this, this, this.woodGroup);}, this, 0, 0, 1);
     this.woodBttn.anchor.setTo(.5, .5);
@@ -304,8 +293,6 @@ var Tutorial = {
     this.roadBttn.onDownSound = this.buttonSound;
     this.UI.add(this.woodBttn);
 
-    //Tutorial piedra
-
     this.stoneBttn = this.game.add.button(this.woodBttn.right + buttonOffset,  this.roadBttn.centerY, "stoneBttn", function(){buildMode.call(this, this, this.stoneGroup);}, this, 0, 0, 1);
     this.stoneBttn.anchor.setTo(.5, .5);
     this.stoneBttn.fixedToCamera = true;
@@ -315,14 +302,6 @@ var Tutorial = {
     this.stoneBttn.input.enabled = false;
     this.woodBttn.onDownSound = this.buttonSound;
     this.UI.add(this.stoneBttn);
-
-    /*var coalBttn = this.game.add.button(stoneBttn.right + buttonOffset,  roadBttn.centerY, "coalBttn", function(){}, this, 0, 0, 1);
-    coalBttn.anchor.setTo(.5, .5);
-    coalBttn.fixedToCamera = true;
-    coalBttn.smoothed = false;
-    coalBttn.scale.setTo(scale, scale);
-
-    this.UI.add(coalBttn);*/
 
     this.uraniumBttn = this.game.add.button(this.stoneBttn.right + buttonOffset,  this.roadBttn.centerY, "uraniumBttn", function(){buildMode.call(this, this, this.uraniumGroup);}, this, 0, 0, 1);
     this.uraniumBttn.anchor.setTo(.5, .5);
@@ -398,7 +377,6 @@ var Tutorial = {
     this.foodIcon.smoothed = false;
     this.foodIcon.visible = false;
     this.foodTxtGroup.add(this.foodIcon);
-
     
     this.foodTxt = this.game.add.text(this.foodIcon.right + 15, this.foodIcon.centerY + 3, this.food, {font: "30px console"});
     this.foodTxt.anchor.setTo(0, .5);
@@ -900,8 +878,7 @@ this.UI.add(this.energyTxtGroup);
       width: 162,
       height: 80,
       positionOffset: 30,   
-      
-      //animation: "fade"
+      animation: "fade"
     });
 
     this.tipTutorialCitizen = new Phasetips(this.game, {
@@ -912,8 +889,7 @@ this.UI.add(this.energyTxtGroup);
       strokeColor: 0xff0000,
       position: "top",
       positionOffset: 0,   
-      
-      //animation: "fade"
+      animation: "fade"
     });
 
     this.tipTutorialRoad = new Phasetips(this.game, {
@@ -924,8 +900,7 @@ this.UI.add(this.energyTxtGroup);
       strokeColor: 0xff0000,
       position: "top",
       positionOffset: 115,   
-      
-      //animation: "fade"
+      animation: "fade"
     });
 
     this.tipTutorialWater = new Phasetips(this.game, {
@@ -936,7 +911,6 @@ this.UI.add(this.energyTxtGroup);
       strokeColor: 0xff0000,
       position: "top",
       positionOffset: 30,   
-      
       animation: "fade"
     });
 
@@ -948,8 +922,7 @@ this.UI.add(this.energyTxtGroup);
       strokeColor: 0xff0000,
       position: "top",
       positionOffset: 100, 
-      
-      //animation: "fade"
+      animation: "fade"
     });
 
     this.tipTutorialCrop = new Phasetips(this.game, {
@@ -960,8 +933,7 @@ this.UI.add(this.energyTxtGroup);
       strokeColor: 0xff0000,
       position: "top",
       positionOffset: 100,  
-      
-      //animation: "fade"
+      animation: "fade"
     });
 
     this.tipTutorialWood = new Phasetips(this.game, {
@@ -972,8 +944,7 @@ this.UI.add(this.energyTxtGroup);
       strokeColor: 0xff0000,
       position: "top",
       positionOffset: 115,   
-      
-      //animation: "fade"
+      animation: "fade"
     });
 
     this.tipTutorialStone = new Phasetips(this.game, {
@@ -984,8 +955,7 @@ this.UI.add(this.energyTxtGroup);
       strokeColor: 0xff0000,
       position: "top",
       positionOffset: 100,  
-      
-      //animation: "fade"
+      animation: "fade"
     });
 
     this.tipTutorialUranium = new Phasetips(this.game, {
@@ -996,8 +966,7 @@ this.UI.add(this.energyTxtGroup);
       strokeColor: 0xff0000,
       position: "top",
       positionOffset: 100,  
-      
-      //animation: "fade"
+      animation: "fade"
     });
 
     this.tipTutorialEnergy = new Phasetips(this.game, {
@@ -1008,8 +977,7 @@ this.UI.add(this.energyTxtGroup);
       strokeColor: 0xff0000,
       position: "top",
       positionOffset: 100,  
-      
-      //animation: "fade"
+      animation: "fade"
     });
 
     this.tipTutorialWind = new Phasetips(this.game, {
@@ -1020,8 +988,7 @@ this.UI.add(this.energyTxtGroup);
       strokeColor: 0xff0000,
       position: "top",
       positionOffset: 100,  
-      
-      //animation: "fade"
+      animation: "fade"
     });
 
     this.tipTutorialHospital = new Phasetips(this.game, {
@@ -1032,8 +999,7 @@ this.UI.add(this.energyTxtGroup);
       strokeColor: 0xff0000,
       position: "top",
       positionOffset: 100,  
-      
-      //animation: "fade"
+      animation: "fade"
     });
   
     this.tipTutorialBulldoze = new Phasetips(this.game, {
@@ -1044,8 +1010,7 @@ this.UI.add(this.energyTxtGroup);
       strokeColor: 0xff0000,
       position: "top",
       positionOffset: 85,  
-      
-      //animation: "fade"
+      animation: "fade"
     });
   
     this.tipTutorialTime = new Phasetips(this.game, {
@@ -1056,8 +1021,7 @@ this.UI.add(this.energyTxtGroup);
       strokeColor: 0xff0000,
       position: "left",
       positionOffset: 100,   
-      
-      //animation: "fade"
+      animation: "fade"
     });
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

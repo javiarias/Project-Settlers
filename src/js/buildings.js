@@ -46,7 +46,6 @@ House.prototype.add = function(citizen) {
         strokeColor: 0xff0000,
         position: "top",
         positionOffset: 30,   
-        
         animation: "fade"
       });
 
@@ -172,7 +171,6 @@ Producer.prototype.add = function(citizen) {
         strokeColor: 0xff0000,
         position: "top",
         positionOffset: 30,   
-        
         animation: "fade"
       });
 
