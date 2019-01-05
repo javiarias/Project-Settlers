@@ -46,6 +46,7 @@ var PlayScene = {
 
           this._buildingModeSprite;
           this._buildingModeType = "";
+          this._buildingModeArea;
 
     /////////GROUPS AND RESOURCES
     this.food = 100;
@@ -895,6 +896,8 @@ var PlayScene = {
           this._buildModeActive = false;
           if(this._buildingModeSprite !== undefined)
             this._buildingModeSprite.destroy();
+          if(this._buildingModeArea !== undefined)
+            this._buildingModeArea.destroy();
         }
 
 
@@ -934,11 +937,30 @@ var PlayScene = {
           this.game.world.moveUp(this._buildingModeSprite);
           this.game.world.moveUp(this._buildingModeSprite);
           this.game.world.moveUp(this._buildingModeSprite);
+
+          if(group == this.hospitalGroup){
+            this._buildingModeArea = this.game.add.sprite(this.game.input.mousePointer.x, this.game.input.mousePointer.y, "area");
+            this._buildingModeArea.anchor.setTo(0.5, 0.5);
+            this._buildingModeArea.alpha = 0.35;
+
+            this._buildingModeArea.width = 16*this._tileSize;
+            this._buildingModeArea.height = 16*this._tileSize;
+
+            this.game.world.sendToBack(this._buildingModeArea);
+            this.game.world.moveUp(this._buildingModeArea);
+            this.game.world.moveUp(this._buildingModeArea);
+            this.game.world.moveUp(this._buildingModeArea);
+            this.game.world.moveUp(this._buildingModeArea);
+            this.game.world.moveUp(this._buildingModeArea);
+          }
         }
 
         else {
           if(this._buildingModeSprite !== undefined)
             this._buildingModeSprite.destroy();
+            
+          if(this._buildingModeArea !== undefined)
+            this._buildingModeArea.destroy();
 
           this._buildModeActive = false;
         }
@@ -1032,7 +1054,9 @@ var PlayScene = {
 
         this._buildModeActive = false;
         if(this._buildingModeSprite !== undefined)
-            this._buildingModeSprite.destroy();
+          this._buildingModeSprite.destroy();
+        if(this._buildingModeArea !== undefined)
+          this._buildingModeArea.destroy();
         buildMode.call(this, this, this._buildingModeType);
 
 
@@ -1396,6 +1420,8 @@ var PlayScene = {
 
         this._buildingModeSprite.x = Math.round(this.game.input.worldX / this._tileSize) * this._tileSize;
         this._buildingModeSprite.y = offset + Math.round(this.game.input.worldY / this._tileSize) * this._tileSize;
+        this._buildingModeArea.x = Math.round(this.game.input.worldX / this._tileSize) * this._tileSize;
+        this._buildingModeArea.y = offset + Math.round(this.game.input.worldY / this._tileSize) * this._tileSize;
 
         var overlap = false;
 

@@ -33,6 +33,7 @@ var PreloaderScene = {
 
     
     this.game.load.image("fade", "images/fade.png");
+    this.game.load.image("area", "images/area.png");
 
 
     //building sprites
