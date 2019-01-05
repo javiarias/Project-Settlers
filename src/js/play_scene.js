@@ -3,9 +3,19 @@ var Classes = require("./buildings.js");
 var Phasetips = require("./Phasetips.js");
 
 var PlayScene = {
-  
+
+  init: function(data)
+  {
+    this.mode = data;
+  },
+
   create: function () {
 
+    if (this.mode === 0)
+      console.log('Game');
+
+    if (this.mode === 1)
+      console.log('Tutorial');
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
         this.map = this.game.add.tilemap('tilemap'); 
@@ -48,24 +58,33 @@ var PlayScene = {
           this._buildingModeType = "";
 
     /////////GROUPS AND RESOURCES
-    this.food = 100;
-    this.foodGain = 0;
+    if (this.mode === 0)
+      {
+        this.food = 100;
+        this.wood = 50;
+        this.uranium = 0;
+        this.energy = 0;
+        this.water = 50;
+        this.stone = 50;
+      }
 
-    this.wood = 50;
-    this.woodGain = 0;
+    else if (this.mode === 1)
+      {
+        this.food = 100;
+        this.wood = 200;
+        this.uranium = 0;
+        this.energy = 0;
+        this.water = 0;
+        this.stone = 200;
+      }
 
-    this.uranium = 0;
-    this.uraniumGain = 0;
+        this.foodGain = 0;
+        this.woodGain = 0;
+        this.uraniumGain = 0;
+        this.energyGain = 0;
+        this.waterGain = 0;
+        this.stoneGain = 0;
 
-    this.energy = 0;
-    this.energyGain = 0;
-
-    this.water = 50;
-    this.waterGain = 0;
-
-    this.stone = 50;
-    this.stoneGain = 0;
-    
     //etc...
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -258,94 +277,148 @@ var PlayScene = {
     var buttonOffset = 637 / numberOfButtons - (55 * scale) + (55 * scale)/2; // 11 = número de botones, 55 = tamaño x del botón
     
 
-    var roadBttn = this.game.add.button(5 + buttonOffset - (buttonOffset - (55 * scale)/2)/2, this.UIBkg.bottom - 30, "roadBttn", function(){buildMode.call(this, this, this.roadGroup);}, this, 0, 0, 1);
-    roadBttn.anchor.setTo(.5, .5);
-    roadBttn.fixedToCamera = true;
-    roadBttn.smoothed = false;
-    roadBttn.scale.setTo(scale, scale);
-    roadBttn.onDownSound = this.buttonSound;
-    this.UI.add(roadBttn);
+    this.roadBttn = this.game.add.button(5 + buttonOffset - (buttonOffset - (55 * scale)/2)/2, this.UIBkg.bottom - 30, "roadBttn", function(){buildMode.call(this, this, this.roadGroup);}, this, 0, 0, 1);
+    this.roadBttn.anchor.setTo(.5, .5);
+    this.roadBttn.fixedToCamera = true;
+    this.roadBttn.smoothed = false;
+    this.roadBttn.scale.setTo(scale, scale);
+    this.roadBttn.onDownSound = this.buttonSound;
+    if (this.mode === 1)
+    {
+      this.roadBttn.visible = false;
+      this.roadBttn.input.enabled = false;
+    }
+    this.UI.add(this.roadBttn);
 
-    var houseBttn = this.game.add.button(roadBttn.right + buttonOffset, roadBttn.centerY, "houseBttn", function(){buildMode.call(this, this, this.houseGroup);}, this, 0, 0, 1);
-    houseBttn.anchor.setTo(.5, .5);
-    houseBttn.fixedToCamera = true;
-    houseBttn.smoothed = false;
-    houseBttn.scale.setTo(scale, scale);
-    houseBttn.onDownSound = this.buttonSound;
-    this.UI.add(houseBttn);
+    this.houseBttn = this.game.add.button(this.roadBttn.right + buttonOffset, this.roadBttn.centerY, "houseBttn", function(){buildMode.call(this, this, this.houseGroup);}, this, 0, 0, 1);
+    this.houseBttn.anchor.setTo(.5, .5);
+    this.houseBttn.fixedToCamera = true;
+    this.houseBttn.smoothed = false;
+    this.houseBttn.scale.setTo(scale, scale);
+    this.houseBttn.onDownSound = this.buttonSound;
+    if (this.mode === 1)
+    {
+      this.houseBttn.visible = false;
+      this.houseBttn.input.enabled = false;
+    }
+    this.UI.add(this.houseBttn);
 
-    var waterBttn = this.game.add.button(houseBttn.right + buttonOffset,  roadBttn.centerY, "waterBttn", function(){buildMode.call(this, this, this.waterGroup);}, this, 0, 0, 1);
-    waterBttn.anchor.setTo(.5, .5);
-    waterBttn.fixedToCamera = true;
-    waterBttn.smoothed = false;
-    waterBttn.scale.setTo(scale, scale);
-    waterBttn.onDownSound = this.buttonSound;
-    this.UI.add(waterBttn);
+    this.waterBttn = this.game.add.button(this.houseBttn.right + buttonOffset, this.roadBttn.centerY, "waterBttn", function(){buildMode.call(this, this, this.waterGroup);}, this, 0, 0, 1);
+    this.waterBttn.anchor.setTo(.5, .5);
+    this.waterBttn.fixedToCamera = true;
+    this.waterBttn.smoothed = false;
+    this.waterBttn.scale.setTo(scale, scale);
+    this.waterBttn.onDownSound = this.buttonSound;
+    if (this.mode === 1)
+    {
+      this.waterBttn.visible = false;
+      this.waterBttn.input.enabled = false;
+    }
+    this.UI.add(this.waterBttn);
 
-    var cropBttn = this.game.add.button(waterBttn.right + buttonOffset,  roadBttn.centerY, "cropBttn", function(){buildMode.call(this, this, this.cropGroup);}, this, 0, 0, 1);
-    cropBttn.anchor.setTo(.5, .5);
-    cropBttn.fixedToCamera = true;
-    cropBttn.smoothed = false;
-    cropBttn.scale.setTo(scale, scale);
-    cropBttn.onDownSound = this.buttonSound;
-    this.UI.add(cropBttn);
+    this.cropBttn = this.game.add.button(this.waterBttn.right + buttonOffset,  this.roadBttn.centerY, "cropBttn", function(){buildMode.call(this, this, this.cropGroup);}, this, 0, 0, 1);
+    this.cropBttn.anchor.setTo(.5, .5);
+    this.cropBttn.fixedToCamera = true;
+    this.cropBttn.smoothed = false;
+    this.cropBttn.scale.setTo(scale, scale);
+    this.cropBttn.onDownSound = this.buttonSound;
+    if (this.mode === 1)
+    {
+      this.cropBttn.visible = false;
+      this.cropBttn.input.enabled = false;
+    }
+    this.UI.add(this.cropBttn);
 
-    var woodBttn = this.game.add.button(cropBttn.right + buttonOffset,  roadBttn.centerY, "woodBttn", function(){buildMode.call(this, this, this.woodGroup);}, this, 0, 0, 1);
-    woodBttn.anchor.setTo(.5, .5);
-    woodBttn.fixedToCamera = true;
-    woodBttn.smoothed = false;
-    woodBttn.scale.setTo(scale, scale);
-    woodBttn.onDownSound = this.buttonSound;
-    this.UI.add(woodBttn);
+    this.woodBttn = this.game.add.button(this.cropBttn.right + buttonOffset,  this.roadBttn.centerY, "woodBttn", function(){buildMode.call(this, this, this.woodGroup);}, this, 0, 0, 1);
+    this.woodBttn.anchor.setTo(.5, .5);
+    this.woodBttn.fixedToCamera = true;
+    this.woodBttn.smoothed = false;
+    this.woodBttn.scale.setTo(scale, scale);
+    this.woodBttn.onDownSound = this.buttonSound;
+    if (this.mode === 1)
+    {
+      this.woodBttn.visible = false;
+      this.woodBttn.input.enabled = false;
+    }
+    this.UI.add(this.woodBttn);
 
-    var stoneBttn = this.game.add.button(woodBttn.right + buttonOffset,  roadBttn.centerY, "stoneBttn", function(){buildMode.call(this, this, this.stoneGroup);}, this, 0, 0, 1);
-    stoneBttn.anchor.setTo(.5, .5);
-    stoneBttn.fixedToCamera = true;
-    stoneBttn.smoothed = false;
-    stoneBttn.scale.setTo(scale, scale);
-    stoneBttn.onDownSound = this.buttonSound;
-    this.UI.add(stoneBttn);
+    this.stoneBttn = this.game.add.button(this.woodBttn.right + buttonOffset,  this.roadBttn.centerY, "stoneBttn", function(){buildMode.call(this, this, this.stoneGroup);}, this, 0, 0, 1);
+    this.stoneBttn.anchor.setTo(.5, .5);
+    this.stoneBttn.fixedToCamera = true;
+    this.stoneBttn.smoothed = false;
+    this.stoneBttn.scale.setTo(scale, scale);
+    this.stoneBttn.onDownSound = this.buttonSound;
+    if (this.mode === 1)
+    {
+      this.stoneBttn.visible = false;
+      this.stoneBttn.input.enabled = false;
+    }
+    this.UI.add(this.stoneBttn);
 
-    var uraniumBttn = this.game.add.button(stoneBttn.right + buttonOffset,  roadBttn.centerY, "uraniumBttn", function(){buildMode.call(this, this, this.uraniumGroup);}, this, 0, 0, 1);
-    uraniumBttn.anchor.setTo(.5, .5);
-    uraniumBttn.fixedToCamera = true;
-    uraniumBttn.smoothed = false;
-    uraniumBttn.scale.setTo(scale, scale);
-    uraniumBttn.onDownSound = this.buttonSound;
-    this.UI.add(uraniumBttn);
+    this.uraniumBttn = this.game.add.button(this.stoneBttn.right + buttonOffset,  this.roadBttn.centerY, "uraniumBttn", function(){buildMode.call(this, this, this.uraniumGroup);}, this, 0, 0, 1);
+    this.uraniumBttn.anchor.setTo(.5, .5);
+    this.uraniumBttn.fixedToCamera = true;
+    this.uraniumBttn.smoothed = false;
+    this.uraniumBttn.scale.setTo(scale, scale);
+    this.uraniumBttn.onDownSound = this.buttonSound;
+    if (this.mode === 1)
+    {
+      this.uraniumBttn.visible = false;
+      this.uraniumBttn.input.enabled = false;
+    }
+    this.UI.add(this.uraniumBttn);
 
-    var energyBttn = this.game.add.button(uraniumBttn.right + buttonOffset,  roadBttn.centerY, "energyBttn", function(){buildMode.call(this, this, this.energyGroup);}, this, 0, 0, 1);
-    energyBttn.anchor.setTo(.5, .5);
-    energyBttn.fixedToCamera = true;
-    energyBttn.smoothed = false;
-    energyBttn.scale.setTo(scale, scale);
-    energyBttn.onDownSound = this.buttonSound;
-    this.UI.add(energyBttn);
+    this.energyBttn = this.game.add.button(this.uraniumBttn.right + buttonOffset,  this.roadBttn.centerY, "energyBttn", function(){buildMode.call(this, this, this.energyGroup);}, this, 0, 0, 1);
+    this.energyBttn.anchor.setTo(.5, .5);
+    this.energyBttn.fixedToCamera = true;
+    this.energyBttn.smoothed = false;
+    this.energyBttn.scale.setTo(scale, scale);
+    this.energyBttn.onDownSound = this.buttonSound;
+    if (this.mode === 1)
+    {
+      this.energyBttn.visible = false;
+      this.energyBttn.input.enabled = false;
+    }
+    this.UI.add(this.energyBttn);
 
-    var windBttn = this.game.add.button(energyBttn.right + buttonOffset,  roadBttn.centerY, "windBttn", function(){buildMode.call(this, this, this.windGroup);}, this, 0, 0, 1);
-    windBttn.anchor.setTo(.5, .5);
-    windBttn.fixedToCamera = true;
-    windBttn.smoothed = false;
-    windBttn.scale.setTo(scale, scale);
-    windBttn.onDownSound = this.buttonSound;
-    this.UI.add(windBttn);
+    this.windBttn = this.game.add.button(this.energyBttn.right + buttonOffset,  this.roadBttn.centerY, "windBttn", function(){buildMode.call(this, this, this.windGroup);}, this, 0, 0, 1);
+    this.windBttn.anchor.setTo(.5, .5);
+    this.windBttn.fixedToCamera = true;
+    this.windBttn.smoothed = false;
+    this.windBttn.scale.setTo(scale, scale);
+    this.windBttn.onDownSound = this.buttonSound;
+    if (this.mode === 1)
+    {
+      this.windBttn.visible = false;
+      this.windBttn.input.enabled = false;
+    }
+    this.UI.add(this.windBttn);
 
-    var hospitalBttn = this.game.add.button(windBttn.right + buttonOffset,  roadBttn.centerY, "hospitalBttn", function(){buildMode.call(this, this, this.hospitalGroup);}, this, 0, 0, 1);
-    hospitalBttn.anchor.setTo(.5, .5);
-    hospitalBttn.fixedToCamera = true;
-    hospitalBttn.smoothed = false;
-    hospitalBttn.scale.setTo(scale, scale);
-    hospitalBttn.onDownSound = this.buttonSound;
-    this.UI.add(hospitalBttn);
+    this.hospitalBttn = this.game.add.button(this.windBttn.right + buttonOffset,  this.roadBttn.centerY, "hospitalBttn", function(){buildMode.call(this, this, this.hospitalGroup);}, this, 0, 0, 1);
+    this.hospitalBttn.anchor.setTo(.5, .5);
+    this.hospitalBttn.fixedToCamera = true;
+    this.hospitalBttn.smoothed = false;
+    this.hospitalBttn.scale.setTo(scale, scale);
+    this.hospitalBttn.onDownSound = this.buttonSound;
+    if (this.mode === 1)
+    {
+      this.hospitalBttn.visible = false;
+      this.hospitalBttn.input.enabled = false;
+    }
+    this.UI.add(this.hospitalBttn);
 
-    var bulldozeBttn = this.game.add.button(hospitalBttn.right + buttonOffset,  roadBttn.centerY, "bulldozeBttn", function(){destroyMode.call(this);}, this, 0, 0, 1);
-    bulldozeBttn.anchor.setTo(.5, .5);
-    bulldozeBttn.fixedToCamera = true;
-    bulldozeBttn.smoothed = false;
-    bulldozeBttn.scale.setTo(scale, scale);
-    bulldozeBttn.onDownSound = this.buttonSound;
-
-    this.UI.add(bulldozeBttn);
+    this.bulldozeBttn = this.game.add.button(this.hospitalBttn.right + buttonOffset,  this.roadBttn.centerY, "bulldozeBttn", function(){destroyMode.call(this);}, this, 0, 0, 1);
+    this.bulldozeBttn.anchor.setTo(.5, .5);
+    this.bulldozeBttn.fixedToCamera = true;
+    this.bulldozeBttn.smoothed = false;
+    this.bulldozeBttn.scale.setTo(scale, scale);
+    this.bulldozeBttn.onDownSound = this.buttonSound;
+    if (this.mode === 1)
+    {
+      this.bulldozeBttn.visible = false;
+      this.bulldozeBttn.input.enabled = false;
+    }
+    this.UI.add(this.bulldozeBttn);
 
       this.timeTxt = this.game.add.text(719, 50, this.currentTime.hour + ":00", {font: "50px console", fill: "red"});
       this.timeTxt.anchor.setTo(.5, 0);
@@ -703,7 +776,7 @@ var PlayScene = {
   this.UI.add(this.unemployedTxtGroup);
 
   this.tipRoad = new Phasetips(this.game, {
-    targetObject: roadBttn,
+    targetObject: this.roadBttn,
     context: "Road:\n  You can build right above them.\nCost:\n  Free",
     width: 100,
     height: 80,
@@ -715,7 +788,7 @@ var PlayScene = {
   });
 
   this.tipHouse = new Phasetips(this.game, {
-    targetObject: houseBttn,
+    targetObject: this.houseBttn,
     width: 200,
     height: 80,
     context: "House:\n  Provides shelter for 2 citizens.\nCost:\n  10 Wood, 10 Stone",
@@ -727,7 +800,7 @@ var PlayScene = {
   });
 
   this.tipWater = new Phasetips(this.game, {
-    targetObject: waterBttn,
+    targetObject: this.waterBttn,
     width: 200,
     height: 80,
     context: "Water:\n  Gives drinkable water.\nCost:\n  10 Wood, 10 Stone",
@@ -739,7 +812,7 @@ var PlayScene = {
   });
 
   this.tipCrop = new Phasetips(this.game, {
-    targetObject: cropBttn,
+    targetObject: this.cropBttn,
     width: 250,
     height: 80,
     context: "Farm:\n  Provides food for your citizens.\nCost:\n  10 Wood, 10 Stone",
@@ -751,7 +824,7 @@ var PlayScene = {
   });
 
   this.tipStone = new Phasetips(this.game, {
-    targetObject: stoneBttn,
+    targetObject: this.stoneBttn,
     width: 250,
     height: 80,
     context: "Quarry:\n  Used to mine stone for building.\nCost:\n  10 Wood, 10 Stone",
@@ -763,7 +836,7 @@ var PlayScene = {
   });
 
   this.tipWood = new Phasetips(this.game, {
-    targetObject: woodBttn,
+    targetObject: this.woodBttn,
     width: 250,
     height: 80,
     context: "Sawmill:\n  Used to cut wood for building.\nCost:\n  10 Wood, 10 Stone",
@@ -775,7 +848,7 @@ var PlayScene = {
   });
   
   this.tipUranium = new Phasetips(this.game, {
-    targetObject: uraniumBttn,
+    targetObject: this.uraniumBttn,
     width: 200,
     height: 80,
     context: "Uranium Mine:\n  Used to mine uranium.\nCost:\n  10 Wood, 10 Stone",
@@ -787,7 +860,7 @@ var PlayScene = {
   });
 
   this.tipWind = new Phasetips(this.game, {
-    targetObject: windBttn,
+    targetObject: this.windBttn,
     width: 250,
     height: 80,
     context: "Wind Turbine:\n  Used to produce wind energy.\nCost:\n  10 Wood, 10 Stone",
@@ -799,7 +872,7 @@ var PlayScene = {
   });
 
   this.tipEnergy = new Phasetips(this.game, {
-    targetObject: energyBttn,
+    targetObject: this.energyBttn,
     width: 250,
     height: 100,
     context: "Nuclear Plant:\n  Used to produce energy by consuming Uranium.\nCost:\n  10 Wood, 10 Stone",
@@ -811,7 +884,7 @@ var PlayScene = {
   });
 
   this.tipHospital = new Phasetips(this.game, {
-    targetObject: hospitalBttn,
+    targetObject: this.hospitalBttn,
     width: 250,
     height: 80,
     context: "Hospital:\n  Used to heal your citizens.\nCost:\n  10 Wood, 10 Stone",
@@ -823,7 +896,7 @@ var PlayScene = {
   });
 
   this.tipBulldoze = new Phasetips(this.game, {
-    targetObject: bulldozeBttn,
+    targetObject: this.bulldozeBttn,
     width: 400,
     height: 60,
     context: "Bulldozer:\n  Used to destroy buildings and\n  roads.",
@@ -833,6 +906,165 @@ var PlayScene = {
     
     animation: "fade"
   });
+
+  if (this.mode === 1)
+  {
+    this.tipTutorial1 = new Phasetips(this.game, {
+      targetObject: this.UIBkg, 
+      context: "Welcome to Project Settlers! \n First, to move the camera around you'll need to use the WASD keys",
+      x: this.game.camera.x + this.game.camera.width / 2 - 81,
+      y: this.game.camera.y + this.game.camera.height / 2 - 40,
+      strokeColor: 0xff0000,
+      position: "center",
+      width: 162,
+      height: 80,
+      positionOffset: 30,   
+      animation: "fade"
+    });
+
+    this.tipTutorialCitizen = new Phasetips(this.game, {
+      targetObject: this.citizensIcon,
+      context: "This is where you'll find information about your citizens. \n The icons represent total citizens, homeless citizens and unemployed citizens, respectively.",
+      width: 260,
+      height: 150,
+      strokeColor: 0xff0000,
+      position: "top",
+      positionOffset: 0,   
+      animation: "fade"
+    });
+
+    this.tipTutorialRoad = new Phasetips(this.game, {
+      targetObject: this.roadBttn,  
+      context: "Roads are the core of Project Settlers, as they allow you to build above them",
+      width: 100,
+      height: 100,
+      strokeColor: 0xff0000,
+      position: "top",
+      positionOffset: 115,   
+      animation: "fade"
+    });
+
+    this.tipTutorialWater = new Phasetips(this.game, {
+      targetObject: this.waterBttn,
+      width: 200,
+      height: 165,
+      context: "Citizens need drinkable water to survive. Build these to provide it",
+      strokeColor: 0xff0000,
+      position: "top",
+      positionOffset: 30,   
+      animation: "fade"
+    });
+
+    this.tipTutorialHouse = new Phasetips(this.game, {
+      targetObject: this.houseBttn,
+      context: "Your citizens need a place to live in, so let's build it for them",
+      width: 200,
+      height: 95,
+      strokeColor: 0xff0000,
+      position: "top",
+      positionOffset: 100, 
+      animation: "fade"
+    });
+
+    this.tipTutorialCrop = new Phasetips(this.game, {
+      targetObject: this.cropBttn,
+      context: "You will need food as well as water. Farms should take care of that",
+      width: 250,
+      height: 115,
+      strokeColor: 0xff0000,
+      position: "top",
+      positionOffset: 100,  
+      animation: "fade"
+    });
+
+    this.tipTutorialWood = new Phasetips(this.game, {
+      targetObject: this.woodBttn,
+      context: "Nothing is free, and you will need resources to create more buildings. Let's build a Sawmill",
+      width: 250,
+      height: 100,
+      strokeColor: 0xff0000,
+      position: "top",
+      positionOffset: 115,   
+      animation: "fade"
+    });
+
+    this.tipTutorialStone = new Phasetips(this.game, {
+      targetObject: this.stoneBttn,
+      context: "You will need Stone as well, so let's will build a Quarry",
+      width: 250,
+      height: 95,
+      strokeColor: 0xff0000,
+      position: "top",
+      positionOffset: 100,  
+      animation: "fade"
+    });
+
+    this.tipTutorialUranium = new Phasetips(this.game, {
+      targetObject: this.uraniumBttn,
+      context: "Uranium is a source of energy. Build Mines to extract it",
+      width: 200,
+      height: 95,
+      strokeColor: 0xff0000,
+      position: "top",
+      positionOffset: 100,  
+      animation: "fade"
+    });
+
+    this.tipTutorialEnergy = new Phasetips(this.game, {
+      targetObject: this.energyBttn,
+      context: "Energy is a need. With this you can produce it from uranium",
+      width: 250,
+      height: 115,
+      strokeColor: 0xff0000,
+      position: "top",
+      positionOffset: 100,  
+      animation: "fade"
+    });
+
+    this.tipTutorialWind = new Phasetips(this.game, {
+      targetObject: this.windBttn,
+      context: "This building allows you to obtain energy without uranium, thanks to wind",
+      width: 250,
+      height: 115,
+      strokeColor: 0xff0000,
+      position: "top",
+      positionOffset: 100,  
+      animation: "fade"
+    });
+
+    this.tipTutorialHospital = new Phasetips(this.game, {
+      targetObject: this.hospitalBttn,
+      context: "Hospitals allow you to improve the health of citizens",
+      width: 315,
+      height: 95,
+      strokeColor: 0xff0000,
+      position: "top",
+      positionOffset: 100,  
+      animation: "fade"
+    });
+  
+    this.tipTutorialBulldoze = new Phasetips(this.game, {
+      targetObject: this.bulldozeBttn,
+      context: "If you want to replace a building, you should bulldoze it first",
+      width: 420,
+      height: 90,
+      strokeColor: 0xff0000,
+      position: "top",
+      positionOffset: 85,  
+      animation: "fade"
+    });
+  
+    this.tipTutorialTime = new Phasetips(this.game, {
+      targetObject: this.timeTxt,
+      context: "Now you know the basic mechanics to survive. Press SPACE to get the clock running, and 1, 2 or 3 to change the speed",
+      width: 0,
+      height: 0,
+      strokeColor: 0xff0000,
+      position: "left",
+      positionOffset: 100,   
+      animation: "fade"
+    });
+  }
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     //keyboard phaser
@@ -868,7 +1100,29 @@ var PlayScene = {
     this.cursors = this.game.input.keyboard.createCursorKeys();
 
     this.cursorsAlt = this.game.input.keyboard.addKeys( { 'up': Phaser.KeyCode.W, 'down': Phaser.KeyCode.S, 'left': Phaser.KeyCode.A, 'right': Phaser.KeyCode.D } );
-    
+
+    if (this.mode === 1)
+    {
+    this.roadCheck = false;
+    this.houseCheck = false;
+    this.cropCheck = false;
+    this.stoneCheck = false;
+    this.woodCheck = false;
+    this.uraniumCheck = false;
+    this.energyCheck = false;
+    this.windCheck = false;
+    this.waterCheck = false;
+    this.hospitalCheck = false;
+    this.bulldozeCheck = false;
+    this.citizenCheck = false;
+    this.cameraCheck = false;
+    this.cameraCheckUp = false;
+    this.cameraCheckDown = false;
+    this.cameraCheckLeft = false;
+    this.cameraCheckRight = false;
+    this.timeCheck = false;
+    }
+
     function setTimescale(key){
       this.timeScale = parseInt(key.event.key);
       this.currentTime.buffer = 0;
@@ -968,6 +1222,9 @@ var PlayScene = {
             sprite.bulldoze(this.homelessArray);
         }
         sprite.destroy();
+
+        if (this.mode === 1 && !this.timeCheck)
+          this.timeCheck = true;
       }
     }
 
@@ -1000,18 +1257,54 @@ var PlayScene = {
           offset = 8;
 
         if(this._buildingModeType == this.houseGroup)
+        {
           auxBuilding = new Classes.House(this.game, Math.round(this.game.input.worldX / this._tileSize) * this._tileSize, offset + Math.round(this.game.input.worldY / this._tileSize) * this._tileSize, this._buildingModeType.sprite);
-        
+          if (this.mode === 1 && !this.waterCheck)
+            this.waterCheck = true;
+        }        
         else if(this._buildingModeType == this.roadGroup)
-          auxBuilding = new Classes.Road(this.game, Math.round(this.game.input.worldX / this._tileSize) * this._tileSize, offset + Math.round(this.game.input.worldY / this._tileSize) * this._tileSize, this._buildingModeType.sprite);
-        
+        {
+            auxBuilding = new Classes.Road(this.game, Math.round(this.game.input.worldX / this._tileSize) * this._tileSize, offset + Math.round(this.game.input.worldY / this._tileSize) * this._tileSize, this._buildingModeType.sprite);
+          if (this.mode === 1 && this._buildingModeType === this.roadGroup && !this.houseCheck)
+          {
+            this.houseCheck = true;
+          }
+        }
+
         else if(this._buildingModeType == this.hospitalGroup){
           auxBuilding = new Classes.Hospital(this.game, Math.round(this.game.input.worldX / this._tileSize) * this._tileSize, offset + Math.round(this.game.input.worldY / this._tileSize) * this._tileSize, this._buildingModeType.sprite, 2);
           this.houseGroup.forEach(function (house) { house.updateHospitals(this.hospitalGroup); }, this);
+
+          if (this.mode === 1 && !this.bulldozeCheck)
+            this.bulldozeCheck = true;
         }
         else
-          auxBuilding = new Classes.Producer(this.game, Math.round(this.game.input.worldX / this._tileSize) * this._tileSize, offset + Math.round(this.game.input.worldY / this._tileSize) * this._tileSize, this._buildingModeType.sprite, 1);
-        auxBuilding.anchor.setTo(0.5, 0.5);
+        {
+            auxBuilding = new Classes.Producer(this.game, Math.round(this.game.input.worldX / this._tileSize) * this._tileSize, offset + Math.round(this.game.input.worldY / this._tileSize) * this._tileSize, this._buildingModeType.sprite, 1);
+
+          if (this.mode === 1 && !this.cropCheck && this._buildingModeType.sprite === 'Water')
+            this.cropCheck = true;
+
+          if (this.mode === 1 && !this.woodCheck && this._buildingModeType.sprite === 'Crops')
+            this.woodCheck = true;
+
+          if (this.mode === 1 && !this.stoneCheck && this._buildingModeType.sprite === 'Wood')
+            this.stoneCheck = true;
+
+          if (this.mode === 1 && !this.uraniumCheck && this._buildingModeType.sprite === 'Stone')
+            this.uraniumCheck = true;
+
+          if (this.mode === 1 && !this.energyCheck && this._buildingModeType.sprite === 'Uranium')
+            this.energyCheck = true;
+
+          if (this.mode === 1 && !this.windCheck && this._buildingModeType.sprite === 'Energy')
+            this.windCheck = true;
+
+          if (this.mode === 1 && !this.hospitalCheck && this._buildingModeType.sprite === 'Wind')
+            this.hospitalCheck = true;  
+        }
+
+          auxBuilding.anchor.setTo(0.5, 0.5);
 
         auxBuilding.inputEnabled = true;
         auxBuilding.input.priorityID = 1;
@@ -1135,6 +1428,115 @@ var PlayScene = {
 
 
   update: function () {
+    if (this.mode === 1)
+    { 
+        if (this.cameraCheckUp && this.cameraCheckDown && this.cameraCheckLeft && this.cameraCheckRight)
+      {
+          this.cameraCheck = true;
+      }
+
+      if (this.cameraCheck)
+      {
+        this.citizensIcon.visible = true;
+        this.citizensTxt.visible = true;
+        this.homelessIcon.visible = true;
+        this.homelessTxt.visible = true;
+        this.unemployedIcon.visible = true;
+        this.unemployedTxt.visible = true;
+        this.roadCheck = true;
+      }  
+      
+      if (this.roadCheck)
+      {    
+        this.roadBttn.visible = true;
+        this.roadBttn.input.enabled = true;
+      }
+
+      if (this.houseCheck) //condicion pasa a true al construir una carretera
+      {
+        this.houseBttn.visible = true;
+        this.houseBttn.input.enabled = true;
+      }
+
+      if (this.waterCheck) //condicion pasa a true al construir una casa
+      {
+        this.waterBttn.visible = true;
+        this.waterBttn.input.enabled = true;
+        this.waterIcon.visible = true;
+        this.waterTxt.visible = true;
+        this.waterTxtGain.visible = true;
+      }
+
+      if (this.cropCheck) //condicion pasa a true al construir una casa
+      {
+        this.cropBttn.visible = true;
+        this.cropBttn.input.enabled = true;
+        this.foodIcon.visible = true;
+        this.foodTxt.visible = true;
+        this.foodTxtGain.visible = true;
+      }
+
+      if (this.woodCheck) //condicion pasa a true al construir una granja
+      {
+        this.woodBttn.visible = true;
+        this.woodBttn.input.enabled = true;
+        this.woodIcon.visible = true;
+        this.woodTxt.visible = true;
+        this.woodTxtGain.visible = true;
+      }
+
+      if (this.stoneCheck) //condicion pasa a true al construir una cantera
+      {
+        this.stoneBttn.visible = true;
+        this.stoneBttn.input.enabled = true;
+        this.stoneIcon.visible = true;
+        this.stoneTxt.visible = true;
+        this.stoneTxtGain.visible = true;
+      }
+
+      if (this.uraniumCheck) //condicion pasa a true al construir una cantera
+      {
+        this.uraniumBttn.visible = true;
+        this.uraniumBttn.input.enabled = true;
+        this.uraniumIcon.visible = true;
+        this.uraniumTxt.visible = true;
+        this.uraniumTxtGain.visible = true;
+      }
+
+      if (this.energyCheck) //condicion pasa a true al construir una cantera
+      {
+        this.energyBttn.visible = true;
+        this.energyBttn.input.enabled = true;
+        this.energyIcon.visible = true;
+        this.energyTxt.visible = true;
+        this.energyTxtGain.visible = true;
+      }
+
+      if (this.windCheck) //condicion pasa a true al construir una cantera
+      {
+        this.windBttn.visible = true;
+        this.windBttn.input.enabled = true;
+      }
+
+      if (this.hospitalCheck)
+      {
+        this.hospitalBttn.visible = true;
+        this.hospitalBttn.input.enabled = true;
+      }
+
+      if (this.bulldozeCheck) //condicion pasa a true al construir una de madera
+      {
+        this.bulldozeBttn.visible = true;
+        this.bulldozeBttn.input.enabled = true;
+      }
+
+      if (this.timeCheck) //condicion pasa a true al destruir un edificio
+      {
+        this.timeTxt.visible = true;
+        this.timescaleTxt.visible = true;
+      }
+    }  
+
     if(!this._escapeMenu) {
       if(!this.paused){
         this.currentTime.buffer += this.timeScale; //buffer increment
@@ -1425,19 +1827,35 @@ var PlayScene = {
       }
 
       if (this.cursors.up.isDown || this.cursorsAlt.up.isDown){
-        this.game.camera.y -= 16;}
+        this.game.camera.y -= 16;
+      
+        if (this.mode === 1 && !this.cameraCheckUp)
+          this.cameraCheckUp = true;
+      }
 
       else if (this.cursors.down.isDown || this.cursorsAlt.down.isDown){
-        this.game.camera.y += 16;}
+        this.game.camera.y += 16;
+      
+        if (this.mode === 1 && !this.cameraCheckDown)
+        this.cameraCheckDown = true;
+      }
 
       if (this.cursors.left.isDown || this.cursorsAlt.left.isDown){
-        this.game.camera.x -= 16;}
+        this.game.camera.x -= 16;
+      
+        if (this.mode === 1 && !this.cameraCheckLeft)
+        this.cameraCheckLeft = true; 
+      }
 
       else if (this.cursors.right.isDown || this.cursorsAlt.right.isDown){
-        this.game.camera.x += 16;}
+        this.game.camera.x += 16;
+      
+        if (this.mode === 1 && !this.cameraCheckRight)
+        this.cameraCheckRight = true;
+      }
     }
 
-    this.UIBkg.inputEnabled = false;
+    this.UIBkg.inputEnabled = !this.cameraCheck;
   },
 
   saveGame:function()
