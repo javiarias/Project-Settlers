@@ -1,7 +1,6 @@
 'use strict';
 
 var PlayScene = require('./play_scene.js');
-//var Tutorial = require('./tutorial.js');
 
 var BootScene = {
   init: function() {
@@ -118,7 +117,9 @@ var wfconfig = {
   }
 };
 
+
 var MainMenu = {
+
   create: function(){
     this.buttonSound = this.game.add.audio('buttonSound');
 
@@ -515,8 +516,8 @@ var WinState = {
       this.game.state.start('main');
     }
   }
-};
 
+};
 
 window.onload = function () {
 

@@ -7,6 +7,8 @@ function House(game, x, y, img) {
     this.residentB = undefined;
     this.dataA = "";
     this.dataB = "";
+    this.healthA = "";
+    this.healthB = "";
     this.hospitalNear = false;
     this.full = false;
     this.numberOfBirths = 0;
@@ -29,12 +31,14 @@ House.prototype.add = function(citizen) {
     if(this.residentA === undefined){
         this.residentA = citizen;
         this.dataA = this.residentA.name;
+        this.healthA = this.residentA.health;
         added = true;
     }
 
     else if(this.residentB === undefined){
         this.residentB = citizen;
         this.dataB = this.residentB.name;
+        this.healthB = this.residentB.health;
         added = true;
     }
 
@@ -42,7 +46,7 @@ House.prototype.add = function(citizen) {
 
     this.tooltip = new Phasetips(this.game, {
         targetObject: this,
-        context: "ResidentA: " + (this.dataA) + "\nResidentB: " + (this.dataB),
+        context: "ResidentA: " + (this.dataA) + "\nHealth: " + (this.dataB) + "\nResidentB: " + (this.dataB) + "\nHealth " + (this.dataB),
         strokeColor: 0xff0000,
         position: "top",
         positionOffset: 30,   
