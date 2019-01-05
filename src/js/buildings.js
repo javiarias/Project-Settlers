@@ -109,7 +109,7 @@ House.prototype.tick = function(foodAmount, waterAmount, homelessArray){
     }
 
     if(this.residentB !== undefined){
-        this.residentB.tick(foodAmount, this.hospitalNear, this, homelessArray);
+        this.residentB.tick(foodAmount, waterAmount, this.hospitalNear, this, homelessArray);
         if(this.residentB.givingBirth){
             this.residentB.givingBirth = false;
             this.residentB.birthCooldown = 10;
