@@ -164,7 +164,7 @@ var PlayScene = {
 
     if (this.mode === 0)
     {
-    var saveBttn = this.game.add.button(pauseBkg.x + 72, pauseBkg.y + 3, "saveBttn", function(){this.saveGame();;}, this, 0, 0, 1);
+    var saveBttn = this.game.add.button(pauseBkg.x + 72, pauseBkg.y + 3, "saveBttn", function(){this.saveGame();this.gameMusic.stop();this.game.state.start('main');}, this, 0, 0, 1);
     saveBttn.anchor.setTo(0.5, 0.5);
     saveBttn.fixedToCamera = true;
     saveBttn.smoothed = false;
@@ -789,7 +789,7 @@ var PlayScene = {
 
   this.tipRoad = new Phasetips(this.game, {
     targetObject: this.roadBttn,
-    context: "Road:\n  You can build right above them.\nCost:\n  Free",
+    context: "Road:\n  You can build right above them.\nCost:\n  1 Stone",
     width: 100,
     height: 80,
     strokeColor: 0xff0000,
@@ -803,7 +803,7 @@ var PlayScene = {
     targetObject: this.houseBttn,
     width: 200,
     height: 80,
-    context: "House:\n  Provides shelter for 2 citizens.\nCost:\n  10 Wood, 10 Stone",
+    context: "House:\n  Provides shelter for 2 citizens.\nCost:\n  5 Wood, 5 Stone",
     strokeColor: 0xff0000,
     position: "top",
     positionOffset: 50,   
@@ -839,7 +839,7 @@ var PlayScene = {
     targetObject: this.stoneBttn,
     width: 250,
     height: 80,
-    context: "Quarry:\n  Used to mine stone for building.\nCost:\n  10 Wood, 10 Stone",
+    context: "Quarry:\n  Used to mine stone for building.\nCost:\n  15 Wood, 15 Stone",
     strokeColor: 0xff0000,
     position: "top",
     positionOffset: 50,   
@@ -851,7 +851,7 @@ var PlayScene = {
     targetObject: this.woodBttn,
     width: 250,
     height: 80,
-    context: "Sawmill:\n  Used to cut wood for building.\nCost:\n  10 Wood, 10 Stone",
+    context: "Sawmill:\n  Used to cut wood for building.\nCost:\n  15 Wood, 10 Stone",
     strokeColor: 0xff0000,
     position: "top",
     positionOffset: 50,   
@@ -863,7 +863,7 @@ var PlayScene = {
     targetObject: this.uraniumBttn,
     width: 200,
     height: 80,
-    context: "Uranium Mine:\n  Used to mine uranium.\nCost:\n  10 Wood, 10 Stone",
+    context: "Uranium Mine:\n  Used to mine uranium.\nCost:\n  30 Wood, 30 Stone",
     strokeColor: 0xff0000,
     position: "top",
     positionOffset: 50,   
@@ -875,7 +875,7 @@ var PlayScene = {
     targetObject: this.windBttn,
     width: 250,
     height: 80,
-    context: "Wind Turbine:\n  Used to produce wind energy.\nCost:\n  10 Wood, 10 Stone",
+    context: "Wind Turbine:\n  Used to produce wind energy.\nCost:\n  30 Wood, 45 Stone",
     strokeColor: 0xff0000,
     position: "top",
     positionOffset: 50,   
@@ -887,7 +887,7 @@ var PlayScene = {
     targetObject: this.energyBttn,
     width: 250,
     height: 100,
-    context: "Nuclear Plant:\n  Used to produce energy by consuming Uranium.\nCost:\n  10 Wood, 10 Stone",
+    context: "Nuclear Plant:\n  Used to produce energy by consuming Uranium.\nCost:\n  30 Wood, 35 Stone",
     strokeColor: 0xff0000,
     position: "top",
     positionOffset: 50,   
@@ -899,7 +899,7 @@ var PlayScene = {
     targetObject: this.hospitalBttn,
     width: 250,
     height: 80,
-    context: "Hospital:\n  Used to heal your citizens.\nCost:\n  10 Wood, 10 Stone",
+    context: "Hospital:\n  Used to heal your citizens.\nCost:\n  25 Wood, 25 Stone",
     strokeColor: 0xff0000,
     position: "top",
     positionOffset: 50,   
@@ -1292,14 +1292,22 @@ var PlayScene = {
         if(this._buildingModeType == this.houseGroup)
         {
           auxBuilding = new Classes.House(this.game, Math.round(this.game.input.worldX / this._tileSize) * this._tileSize, offset + Math.round(this.game.input.worldY / this._tileSize) * this._tileSize, this._buildingModeType.sprite);
+          
+          this.wood -= 5;
+          this.stone -= 5;
+
           if (this.mode === 1 && !this.waterCheck)
             this.waterCheck = true;
         }        
         else if(this._buildingModeType == this.roadGroup)
         {
             auxBuilding = new Classes.Road(this.game, Math.round(this.game.input.worldX / this._tileSize) * this._tileSize, offset + Math.round(this.game.input.worldY / this._tileSize) * this._tileSize, this._buildingModeType.sprite);
-          if (this.mode === 1 && this._buildingModeType === this.roadGroup && !this.houseCheck)
+          
+            this.stone -= 1;
+
+            if (this.mode === 1 && this._buildingModeType === this.roadGroup && !this.houseCheck)
           {
+
             this.houseCheck = true;
           }
         }
@@ -1308,6 +1316,7 @@ var PlayScene = {
           auxBuilding = new Classes.Hospital(this.game, Math.round(this.game.input.worldX / this._tileSize) * this._tileSize, offset + Math.round(this.game.input.worldY / this._tileSize) * this._tileSize, this._buildingModeType.sprite, 2);
           this.houseGroup.forEach(function (house) { house.updateHospitals(this.hospitalGroup); }, this);
 
+
           if (this.mode === 1 && !this.bulldozeCheck)
             this.bulldozeCheck = true;
         }
@@ -1315,26 +1324,68 @@ var PlayScene = {
         {
             auxBuilding = new Classes.Producer(this.game, Math.round(this.game.input.worldX / this._tileSize) * this._tileSize, offset + Math.round(this.game.input.worldY / this._tileSize) * this._tileSize, this._buildingModeType.sprite, 1);
 
-          if (this.mode === 1 && !this.cropCheck && this._buildingModeType.sprite === 'Water')
-            this.cropCheck = true;
+            if (this._buildingModeType.sprite === 'Water')
+            {
+              this.wood -= 10;
+              this.stone -= 10;
 
-          if (this.mode === 1 && !this.woodCheck && this._buildingModeType.sprite === 'Crops')
-            this.woodCheck = true;
+              if (this.mode === 1 && !this.cropCheck)
+                this.cropCheck = true;
+            }
 
-          if (this.mode === 1 && !this.stoneCheck && this._buildingModeType.sprite === 'Wood')
-            this.stoneCheck = true;
+          if (this._buildingModeType.sprite === 'Crops')
+            {
+              this.wood -= 10;
+              this.stone -= 10;
 
-          if (this.mode === 1 && !this.uraniumCheck && this._buildingModeType.sprite === 'Stone')
-            this.uraniumCheck = true;
+              if (this.mode === 1 && !this.woodCheck)
+                this.woodCheck = true;
+            }
+            
+          if (this._buildingModeType.sprite === 'Wood')
+            {
+              this.wood -= 15;
+              this.stone -= 10;
 
-          if (this.mode === 1 && !this.energyCheck && this._buildingModeType.sprite === 'Uranium')
-            this.energyCheck = true;
+              if (this.mode === 1 && !this.stoneCheck)
+                this.stoneCheck = true;
+            }
 
-          if (this.mode === 1 && !this.windCheck && this._buildingModeType.sprite === 'Energy')
-            this.windCheck = true;
+          if (this._buildingModeType.sprite === 'Stone')
+            {
+              this.wood -= 15;
+              this.stone -= 15;
 
-          if (this.mode === 1 && !this.hospitalCheck && this._buildingModeType.sprite === 'Wind')
-            this.hospitalCheck = true;  
+              if (this.mode === 1 && !this.uraniumCheck)
+                this.uraniumCheck = true;
+            }
+
+          if (this._buildingModeType.sprite === 'Uranium')
+            {
+              this.wood -= 30;
+              this.stone -= 30;
+
+              if (this.mode === 1 && !this.energyCheck)
+                this.energyCheck = true;
+            }
+
+          if (this._buildingModeType.sprite === 'Energy')
+            {
+              this.wood -= 45;
+              this.stone -= 30;
+
+              if (this.mode === 1 && !this.windCheck)
+                this.windCheck = true;
+            }
+
+          if (this._buildingModeType.sprite === 'Wind')
+            {
+              this.wood -= 35;
+              this.stone -= 30;
+
+              if (this.mode === 1 && !this.hospitalCheck)
+                this.hospitalCheck = true;
+            }
         }
 
           auxBuilding.anchor.setTo(0.5, 0.5);
@@ -1347,12 +1398,12 @@ var PlayScene = {
         auxBuilding.over = false;
 
         //WIP
-        if(this._buildingModeType != this.roadGroup){
+        /*if(this._buildingModeType != this.roadGroup){
           this.wood -= 10;
-          this.stone -= 10;
+          this.stone -= 10;*/
           this.woodTxt.text = this.wood;
           this.stoneTxt.text = this.stone;
-        }
+        //}*/
 
         this._buildingModeType.add(auxBuilding);
 
