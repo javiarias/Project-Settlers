@@ -56,19 +56,20 @@ House.prototype.add = function(citizen) {
 };
 
 House.prototype.updateHospitals = function(hospitalGroup) {
+
     this.hospitalNear = false;
 
     hospitalGroup.forEach(function(hospital){
         if(!this.hospitalNear)
-            this.hospitalNear = hospital.checkArea(this);
+            this.hospitalNear = hospital.checkArea(hospital, this);
     }, this);
 
     this.updateTooltip();
 };
 
-House.prototype.updateSingleHospital = function(hospital, turnOn) {
+House.prototype.updateSingleHospital = function(hospital, turnOn = true) {
 
-    if(hospital.checkArea(this))
+    if(hospital.checkArea(hospital, this))
         this.hospitalNear = turnOn;
 
     this.updateTooltip();
@@ -98,6 +99,8 @@ House.prototype.bulldoze = function(homelessArray) {
         this.residentB.homeless = true;
         homelessArray.unshift(this.residentB);
     }
+
+    this.tooltip.destroy();
 };
 
 House.prototype.tick = function(foodAmount, waterAmount, homelessArray){
@@ -353,9 +356,7 @@ function Hospital(game, x, y, img, amount) {
     this.workerA = undefined;
     this.workerB = undefined;
     this.full = false;
-
-    this.totalAmount = amount;
-    this.amount = amount;
+    this.consumed = amount;
 
     this.off = false;
 }
@@ -431,16 +432,20 @@ Hospital.prototype.bulldoze = function(unemployedArray) {
     }, this);
 };*/
 
-Hospital.prototype.checkArea = function(b){
+Hospital.prototype.checkArea = function(a, b){
 
-    var x = this.getBounds();
-    x.width =+ this.area * 16 - 1;
-    x.height =+ this.area * 16 - 1;
-    var y = b.getBounds();
+    var x = Phaser.Rectangle.clone(a);
+    x.x -= (this.area * 16)/2;
+    x.y -= (this.area * 16)/2;
+    x.width += this.area * 16 - 1;
+    x.height += this.area * 16 - 1;
+    var y = Phaser.Rectangle.clone(b);
     y.width--;
     y.height--;
 
-    return Phaser.Rectangle.intersects(x, y);
+    var ret = Phaser.Rectangle.intersects(x, y)
+
+    return ret;
   }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -500,7 +505,7 @@ Citizen.prototype.addToProducer = function (producerGroup){
 
     producerGroup.forEach(function (group) {
         group.forEach(function (producer) {
-            if(!producer.full && !found && producer.consumes !== undefined){
+            if(!producer.full && !found && producer.consumed !== undefined){
                 if(producer.add(this)){
                     found = true;
                     this.unemployed = false;

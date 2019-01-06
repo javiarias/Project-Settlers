@@ -94,44 +94,63 @@ var PlayScene = {
     this.houseGroup = this.game.add.group();
     this.buildingGroup.add(this.houseGroup);
     this.houseGroup.sprite = 'House';
+    this.houseGroup.stone = 5;
+    this.houseGroup.wood = 5;
 
     this.woodGroup = this.game.add.group();
     this.buildingGroup.add(this.woodGroup);
     this.woodGroup.sprite = 'Wood';
+    this.woodGroup.stone = 10;
+    this.woodGroup.wood = 5;
 
     this.uraniumGroup = this.game.add.group();
     this.buildingGroup.add(this.uraniumGroup);
     this.uraniumGroup.sprite = 'Uranium';
+    this.uraniumGroup.stone = 30;
+    this.uraniumGroup.wood = 30;
 
     this.energyGroup = this.game.add.group();
     this.buildingGroup.add(this.energyGroup);
     this.energyGroup.sprite = 'Energy';
+    this.energyGroup.stone = 45;
+    this.energyGroup.wood = 30;
 
     this.windGroup = this.game.add.group();
     this.buildingGroup.add(this.windGroup);
     this.windGroup.sprite = 'Wind';
+    this.windGroup.stone = 35;
+    this.windGroup.wood = 30;
 
     this.roadGroup = this.game.add.group();
     this.buildingGroup.add(this.roadGroup);
     this.roadGroup.sprite = 'Road';
+    this.roadGroup.stone = 1;
+    this.roadGroup.wood = 0;
 
     this.waterGroup = this.game.add.group();
     this.buildingGroup.add(this.waterGroup);
     this.waterGroup.sprite = 'Water';
+    this.waterGroup.stone = 10;
+    this.waterGroup.wood = 10;
 
     this.hospitalGroup = this.game.add.group();
     this.buildingGroup.add(this.hospitalGroup);
     this.hospitalGroup.sprite = 'Hospital';
+    this.hospitalGroup.stone = 25;
+    this.hospitalGroup.wood = 25;
 
     this.stoneGroup = this.game.add.group();
     this.buildingGroup.add(this.stoneGroup);
     this.stoneGroup.sprite = 'Stone';
+    this.stoneGroup.stone = 15;
+    this.stoneGroup.wood = 15;
 
     this.cropGroup = this.game.add.group();
     this.buildingGroup.add(this.cropGroup);
     this.cropGroup.sprite = 'Crops';
+    this.cropGroup.stone = 10;
+    this.cropGroup.wood = 10;
 
-    //etc.
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //pause menu
@@ -1247,8 +1266,11 @@ var PlayScene = {
     function destroy(sprite){
       if(this._destroyModeActive){
         if(sprite.full !== undefined){
-          if(this.area !== undefined)
-            this.houseGroup.forEach(function (house) { house.updateHospitals(this.hospitalGroup); }, this);
+          if(sprite.area !== undefined){
+            this.houseGroup.forEach(function (house) { house.updateSingleHospital(sprite, false); }, this);
+            sprite.bulldoze(this.unemployedArray);
+          }
+          
           else if(sprite.consumes !== undefined)
             sprite.bulldoze(this.unemployedArray);
           else
@@ -1281,7 +1303,7 @@ var PlayScene = {
       var mountainObstacle = this.checkObstacles.call(this, this._buildingModeSprite, "mountain");
 
 
-      if(!overlap && !mountainObstacle && (this._buildingModeType == this.roadGroup || (roadAdjacency && this.wood >= 10 && this.stone >= 10 && !waterObstacle))){
+      if(!overlap && !mountainObstacle && (this._buildingModeType == this.roadGroup || (roadAdjacency && this.wood >= this._buildingModeType.wood && this.stone >= this._buildingModeType.stone && !waterObstacle))){
         var auxBuilding;
 
         var offset = 0;
@@ -1293,17 +1315,12 @@ var PlayScene = {
         {
           auxBuilding = new Classes.House(this.game, Math.round(this.game.input.worldX / this._tileSize) * this._tileSize, offset + Math.round(this.game.input.worldY / this._tileSize) * this._tileSize, this._buildingModeType.sprite);
           
-          this.wood -= 5;
-          this.stone -= 5;
-
           if (this.mode === 1 && !this.waterCheck)
             this.waterCheck = true;
         }        
         else if(this._buildingModeType == this.roadGroup)
         {
             auxBuilding = new Classes.Road(this.game, Math.round(this.game.input.worldX / this._tileSize) * this._tileSize, offset + Math.round(this.game.input.worldY / this._tileSize) * this._tileSize, this._buildingModeType.sprite);
-          
-            this.stone -= 1;
 
             if (this.mode === 1 && this._buildingModeType === this.roadGroup && !this.houseCheck)
           {
@@ -1314,8 +1331,6 @@ var PlayScene = {
 
         else if(this._buildingModeType == this.hospitalGroup){
           auxBuilding = new Classes.Hospital(this.game, Math.round(this.game.input.worldX / this._tileSize) * this._tileSize, offset + Math.round(this.game.input.worldY / this._tileSize) * this._tileSize, this._buildingModeType.sprite, 2);
-          this.houseGroup.forEach(function (house) { house.updateHospitals(this.hospitalGroup); }, this);
-
 
           if (this.mode === 1 && !this.bulldozeCheck)
             this.bulldozeCheck = true;
@@ -1326,8 +1341,6 @@ var PlayScene = {
 
             if (this._buildingModeType.sprite === 'Water')
             {
-              this.wood -= 10;
-              this.stone -= 10;
 
               if (this.mode === 1 && !this.cropCheck)
                 this.cropCheck = true;
@@ -1335,8 +1348,6 @@ var PlayScene = {
 
           if (this._buildingModeType.sprite === 'Crops')
             {
-              this.wood -= 10;
-              this.stone -= 10;
 
               if (this.mode === 1 && !this.woodCheck)
                 this.woodCheck = true;
@@ -1344,8 +1355,6 @@ var PlayScene = {
             
           if (this._buildingModeType.sprite === 'Wood')
             {
-              this.wood -= 15;
-              this.stone -= 10;
 
               if (this.mode === 1 && !this.stoneCheck)
                 this.stoneCheck = true;
@@ -1353,8 +1362,6 @@ var PlayScene = {
 
           if (this._buildingModeType.sprite === 'Stone')
             {
-              this.wood -= 15;
-              this.stone -= 15;
 
               if (this.mode === 1 && !this.uraniumCheck)
                 this.uraniumCheck = true;
@@ -1362,8 +1369,6 @@ var PlayScene = {
 
           if (this._buildingModeType.sprite === 'Uranium')
             {
-              this.wood -= 30;
-              this.stone -= 30;
 
               if (this.mode === 1 && !this.energyCheck)
                 this.energyCheck = true;
@@ -1371,8 +1376,6 @@ var PlayScene = {
 
           if (this._buildingModeType.sprite === 'Energy')
             {
-              this.wood -= 45;
-              this.stone -= 30;
 
               if (this.mode === 1 && !this.windCheck)
                 this.windCheck = true;
@@ -1380,15 +1383,16 @@ var PlayScene = {
 
           if (this._buildingModeType.sprite === 'Wind')
             {
-              this.wood -= 35;
-              this.stone -= 30;
 
               if (this.mode === 1 && !this.hospitalCheck)
                 this.hospitalCheck = true;
             }
         }
 
-          auxBuilding.anchor.setTo(0.5, 0.5);
+        this.wood -= this._buildingModeType.wood;
+        this.stone -= this._buildingModeType.stone;
+
+        auxBuilding.anchor.setTo(0.5, 0.5);
 
         auxBuilding.inputEnabled = true;
         auxBuilding.input.priorityID = 1;
@@ -1397,15 +1401,19 @@ var PlayScene = {
         auxBuilding.events.onInputDown.add(destroy, this);
         auxBuilding.over = false;
 
-        //WIP
-        /*if(this._buildingModeType != this.roadGroup){
-          this.wood -= 10;
-          this.stone -= 10;*/
-          this.woodTxt.text = this.wood;
-          this.stoneTxt.text = this.stone;
-        //}*/
+        
+        this.woodTxt.text = this.wood;
+        this.stoneTxt.text = this.stone;
 
         this._buildingModeType.add(auxBuilding);
+
+        if(this._buildingModeType == this.hospitalGroup){
+          this.houseGroup.forEach(function (house) { house.updateSingleHospital(auxBuilding); }, this);
+        }
+        else if(this._buildingModeType == this.houseGroup)
+        {
+          auxBuilding.updateHospitals(this.hospitalGroup);
+        }      
 
         this._buildModeActive = false;
         if(this._buildingModeSprite !== undefined)
@@ -1415,10 +1423,10 @@ var PlayScene = {
         buildMode.call(this, this, this._buildingModeType);
 
 
-        if(this.wood < 10)
+        if(this.wood < 1)
           this.woodTxt.addColor("#FF0000", 0);
 
-        if(this.stone < 10)
+        if(this.stone < 1)
           this.stoneTxt.addColor("#FF0000", 0);
       }
     }
