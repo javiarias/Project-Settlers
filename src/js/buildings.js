@@ -46,7 +46,7 @@ House.prototype.add = function(citizen) {
 
     this.tooltip = new Phasetips(this.game, {
         targetObject: this,
-        context: "ResidentA: " + (this.dataA) + "\nHealth: " + (this.dataB) + "\nResidentB: " + (this.dataB) + "\nHealth " + (this.dataB),
+        context: "ResidentA: " + (this.dataA) + "\nHealth: " + (this.healthA) + "\nResidentB: " + (this.dataB) + "\nHealth " + (this.healthA),
         strokeColor: 0xff0000,
         position: "top",
         positionOffset: 30,   
@@ -116,6 +116,9 @@ House.prototype.tick = function(foodAmount, waterAmount, homelessArray){
             this.numberOfBirths++;
         }
     }
+    this.healthA = this.residentA.health;
+    this.healthB = this.residentB.health;
+    this.tooltip.updateContent("ResidentA: " + (this.dataA) + "\nHealth: " + (this.healthA) + "\nResidentB: " + (this.dataB) + "\nHealth " + (this.healthB));
 };
 
 House.prototype.countCitizens = function(){
@@ -410,7 +413,7 @@ Decor.constructor = Decor;
 function Citizen(homelessArray, unemployedArray) {
     this.name = (Math.random() * 100) + 1;
     this.age = 0; //De momento no es necesario
-    this.health = 100; //Valor modificable
+    this.health = 65;
     this.sick = false;
     this.homeless = true;
     this.unemployed = true;
@@ -469,7 +472,13 @@ Citizen.prototype.tick = function(foodAmount, waterAmount, healing, house, homel
     if(this.age > 100)
         this.health = this.health * .9;
     if(healing)
+    {
         this.health += 10;
+
+        /*if (this.health >= 100)
+        this.health = 100;
+        */
+    }
 
     if (this.health <= 0){
         if(!this.homeless)
