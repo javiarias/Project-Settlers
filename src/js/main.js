@@ -63,7 +63,8 @@ var PreloaderScene = {
 
     //menus
     this.game.load.image('UI', 'images/menu/UI/UI.png');
-    this.game.load.image('pauseBkg', 'images/menu/UI/pauseMenu.png');
+    this.game.load.image('pausePlay', 'images/menu/UI/pauseMenuPlay.png');
+    this.game.load.image('pauseTutorial', 'images/menu/UI/pauseMenuTutorial.png');
     this.game.load.image('mainBkg', 'images/menu/UI/mainBkg.png');
     this.game.load.image('optionsBkg', 'images/menu/UI/optionsMenu.png');
 
@@ -87,6 +88,7 @@ var PreloaderScene = {
     this.game.load.spritesheet('muteBttn', 'images/menu/MenuButtons/mute.png', 55, 48);
     this.game.load.spritesheet('playBttn', 'images/menu/MenuButtons/play.png', 55, 48);
     this.game.load.spritesheet('tutorialBttn', 'images/menu/MenuButtons/tuto.png', 55, 48);
+    this.game.load.spritesheet('saveBttn', 'images/menu/MenuButtons/save.png', 55, 48);
 
     this.game.load.spritesheet('houseBttn', 'images/menu/UIButtons/house.png', 55, 48);
     this.game.load.spritesheet('roadBttn', 'images/menu/UIButtons/road.png', 55, 48);

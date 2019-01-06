@@ -137,13 +137,18 @@ var PlayScene = {
     //pause menu
     this.pauseMenu = this.game.add.group();
 
-    var pauseBkg = this.game.add.sprite(this.game.camera.x + this.game.camera.width / 2, this.game.camera.y + this.game.camera.height / 2, "pauseBkg");
+    if (this.mode === 0)
+      var pauseBkg = this.game.add.sprite(this.game.camera.x + this.game.camera.width / 2, this.game.camera.y + this.game.camera.height / 2, "pausePlay");
+
+    else if (this.mode === 1)
+      var pauseBkg = this.game.add.sprite(this.game.camera.x + this.game.camera.width / 2, this.game.camera.y + this.game.camera.height / 2, "pauseTutorial");
+
     pauseBkg.anchor.setTo(.5, .5);
     pauseBkg.fixedToCamera = true;
     pauseBkg.smoothed = false;
     this.pauseMenu.add(pauseBkg);
 
-    var pauseSettings = this.game.add.button(pauseBkg.x + 72, pauseBkg.y + 3, "settBttn", function(){this.optionsMenu.visible = true; this.pauseMenu.visible = false; this.game.world.bringToTop(this.optionsMenu);}, this, 0, 0, 1);
+    var pauseSettings = this.game.add.button(pauseBkg.x - 72, pauseBkg.y + 3, "settBttn", function(){this.optionsMenu.visible = true; this.pauseMenu.visible = false; this.game.world.bringToTop(this.optionsMenu);}, this, 0, 0, 1);
     pauseSettings.anchor.setTo(0.5, 0.5);
     pauseSettings.fixedToCamera = true;
     pauseSettings.smoothed = false;
@@ -157,26 +162,32 @@ var PlayScene = {
     pauseMinimize.onDownSound = this.buttonSound;
     this.pauseMenu.add(pauseMinimize);
 
-    var pauseExit = this.game.add.button(pauseBkg.x + 144, pauseBkg.y + 3, "exitBttn", function(){this.gameMusic.stop();this.game.state.start('main');}, this, 0, 0, 1);
-    pauseExit.anchor.setTo(0.5, 0.5);
-    pauseExit.fixedToCamera = true;
-    pauseExit.smoothed = false;
-    pauseExit.onDownSound = this.buttonSound;
-    this.pauseMenu.add(pauseExit);
-
-    var loadBttn = this.game.add.button(pauseBkg.x - 144, pauseBkg.y + 3, "uraniumIcon", function(){this.loadGame();}, this, 0, 0, 1);
-    loadBttn.anchor.setTo(0.5, 0.5);
-    loadBttn.fixedToCamera = true;
-    loadBttn.smoothed = false;
-    loadBttn.onDownSound = this.buttonSound;
-    this.pauseMenu.add(loadBttn);
-
-    var saveBttn = this.game.add.button(pauseBkg.x - 72, pauseBkg.y + 3, "hospitalIcon", function(){this.saveGame();;}, this, 0, 0, 1);
+    if (this.mode === 0)
+    {
+    var saveBttn = this.game.add.button(pauseBkg.x + 72, pauseBkg.y + 3, "saveBttn", function(){this.saveGame();;}, this, 0, 0, 1);
     saveBttn.anchor.setTo(0.5, 0.5);
     saveBttn.fixedToCamera = true;
     saveBttn.smoothed = false;
     saveBttn.onDownSound = this.buttonSound;
     this.pauseMenu.add(saveBttn);
+    }
+
+    else if (this.mode === 1)
+    {
+    var pauseExit = this.game.add.button(pauseBkg.x + 72, pauseBkg.y + 3, "exitBttn", function(){this.gameMusic.stop();this.game.state.start('main');}, this, 0, 0, 1);
+    pauseExit.anchor.setTo(0.5, 0.5);
+    pauseExit.fixedToCamera = true;
+    pauseExit.smoothed = false;
+    pauseExit.onDownSound = this.buttonSound;
+    this.pauseMenu.add(pauseExit);
+    }
+
+    /*var loadBttn = this.game.add.button(pauseBkg.x - 144, pauseBkg.y + 3, "uraniumIcon", function(){this.loadGame();}, this, 0, 0, 1);
+    loadBttn.anchor.setTo(0.5, 0.5);
+    loadBttn.fixedToCamera = true;
+    loadBttn.smoothed = false;
+    loadBttn.onDownSound = this.buttonSound;
+    this.pauseMenu.add(loadBttn);*/
 
     this.pauseMenu.visible = false;
 
