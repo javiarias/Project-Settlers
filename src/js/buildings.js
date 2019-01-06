@@ -5,14 +5,24 @@ function House(game, x, y, img) {
     this.coziness = this._calculateCoziness();
     this.residentA = undefined;
     this.residentB = undefined;
-    this.dataA = "";
-    this.dataB = "";
-    this.healthA = "";
-    this.healthB = "";
     this.hospitalNear = false;
     this.full = false;
     this.numberOfBirths = 0;
+
+    this.tooltip = new Phasetips(this.game, {
+        targetObject: this,
+        context: "Hospital in range! aaaaaaa: 100 old (Not Great) aaaaaaa: 100 old (Not Great)",
+        strokeColor: 0xff0000,
+        position: "top",
+        positionOffset: 30,   
+        animation: "fade",
+        fixedToCamera: false
+      });
+
+      this.tooltip.updateContent("Empty");
 }
+
+
 House.prototype = Object.create(Phaser.Sprite.prototype);
 House.constructor = House;
 
@@ -30,28 +40,17 @@ House.prototype.add = function(citizen) {
 
     if(this.residentA === undefined){
         this.residentA = citizen;
-        this.dataA = this.residentA.name;
-        this.healthA = this.residentA.health;
         added = true;
     }
 
     else if(this.residentB === undefined){
         this.residentB = citizen;
-        this.dataB = this.residentB.name;
-        this.healthB = this.residentB.health;
         added = true;
     }
 
     this.full = (this.residentA !== undefined && this.residentB !== undefined);
 
-    this.tooltip = new Phasetips(this.game, {
-        targetObject: this,
-        context: "ResidentA: " + (this.dataA) + "\nHealth: " + (this.healthA) + "\nResidentB: " + (this.dataB) + "\nHealth " + (this.healthA),
-        strokeColor: 0xff0000,
-        position: "top",
-        positionOffset: 30,   
-        animation: "fade"
-      });
+    this.updateTooltip();
 
     return added;
 };
@@ -63,6 +62,8 @@ House.prototype.updateHospitals = function(hospitalGroup) {
         if(!this.hospitalNear)
             this.hospitalNear = hospital.checkArea(this);
     }, this);
+
+    this.updateTooltip();
 };
 
 House.prototype.updateSingleHospital = function(hospital, turnOn) {
@@ -70,6 +71,7 @@ House.prototype.updateSingleHospital = function(hospital, turnOn) {
     if(hospital.checkArea(this))
         this.hospitalNear = turnOn;
 
+    this.updateTooltip();
 };
 
 House.prototype.kill = function(citizen) {
@@ -82,6 +84,8 @@ House.prototype.kill = function(citizen) {
         this.residentB = undefined;
         this.full = false;
     }
+
+    this.updateTooltip();
 };
 
 House.prototype.bulldoze = function(homelessArray) {
@@ -116,9 +120,61 @@ House.prototype.tick = function(foodAmount, waterAmount, homelessArray){
             this.numberOfBirths++;
         }
     }
-    this.healthA = this.residentA.health;
-    this.healthB = this.residentB.health;
-    this.tooltip.updateContent("ResidentA: " + (this.dataA) + "\nHealth: " + (this.healthA) + "\nResidentB: " + (this.dataB) + "\nHealth " + (this.healthB));
+    
+    this.updateTooltip();
+};
+
+House.prototype.updateTooltip = function() {
+
+    var nameA = "Empty";
+    var nameB = "";
+    var ageA = "";
+    var ageB = "";
+    var healthA = "";
+    var healthB = "";
+    var hospital = "";
+    
+    if(this.residentA !== undefined){
+
+        var aux = this.residentA.health;
+
+        if(aux >= 75)
+            healthA = "Healthy";
+        else if(aux >= 50)
+            healthA = "Okay";
+        else if(aux >= 25)
+            healthA = "Not great";
+        else
+            healthA = "Dying";
+
+        nameA = this.residentA.name;
+        ageA = this.residentA.age;
+    }
+
+    if(this.residentB !== undefined){
+
+        var aux = this.residentB.health;
+
+        if(aux >= 75)
+            healthB = "Healthy";
+        else if(aux >= 50)
+            healthB = "Okay";
+        else if(aux >= 25)
+            healthB = "Not great";
+        else
+            healthB = "Dying";
+
+        nameB = this.residentB.name;
+        ageB = this.residentB.age;
+    }
+
+    if(this.hospitalNear)
+        hospital = "Hospital in range! \n"
+
+    if (nameA !== "Empty")
+        this.tooltip.updateContent(hospital + nameA + ": " + ageA + " old " + "(" + healthA + ")" + "\n" + nameB + ": " + ageB + " old " + "(" + healthB + ")");
+    else
+        this.tooltip.updateContent(hospital + nameA);
 };
 
 House.prototype.countCitizens = function(){
@@ -491,8 +547,10 @@ Citizen.prototype.tick = function(foodAmount, waterAmount, healing, house, homel
 
     
     else if(this.homeless){
-        this.health -= 0;
+        this.health -= 2;
     }
+
+    this.health -= 25;
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

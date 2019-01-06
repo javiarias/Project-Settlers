@@ -81,7 +81,7 @@ var Phasetips = function(localGame, options) {
         var _customArrow = _options.customArrow || false;
         var _enableCursor = _options.enableCursor || false;
         var _customBackground = _options.customBackground || false;
-        var _fixedToCamera = _options.fixedToCamera || true;
+        _fixedToCamera = _options.fixedToCamera === undefined ? true : _options._fixedToCamera;
         // Option for rounded corners
         var _roundedCornersRadius = _options.roundedCornersRadius || 1;
         // Option for font style
@@ -127,8 +127,10 @@ var Phasetips = function(localGame, options) {
         _options.onHoverCallback = _onHoverCallback;
         _options.onOutCallback = _onOutCallback;
 
+        _this.originalPosition = _object.position;
+
         ////////////////////////////////////////////////////////////////////////////////////
-        var tooltipBG;
+        _this.tooltipBG;
         _this.tooltipContent;
         var tooltipArrow;
 
@@ -250,24 +252,24 @@ var Phasetips = function(localGame, options) {
 
         if (_customBackground === false) {
             /// create bg
-            tooltipBG = game.add.graphics(_this.tooltipContent.width, _this.tooltipContent.height);
-            tooltipBG.beginFill(_bgColor, 1);
-            tooltipBG.x = 0;
-            tooltipBG.y = 0;
-            tooltipBG.lineStyle(_strokeWeight, _strokeColor, 1);
+            _this.tooltipBG = game.add.graphics(_this.tooltipContent.width, _this.tooltipContent.height);
+            _this.tooltipBG.beginFill(_bgColor, 1);
+            _this.tooltipBG.x = 0;
+            _this.tooltipBG.y = 0;
+            _this.tooltipBG.lineStyle(_strokeWeight, _strokeColor, 1);
 
             // if roundedCornersRadius option is set to 1, drawRect will be used.
             if( _roundedCornersRadius == 1 ) {
-                tooltipBG.drawRect(0, 0, _this.tooltipContent.width + _padding, _this.tooltipContent.height + _padding, 1);
+                _this.tooltipBG.drawRect(0, 0, _this.tooltipContent.width + _padding, _this.tooltipContent.height + _padding, 1);
             } else {
-                tooltipBG.drawRoundedRect(0, 0, _this.tooltipContent.width + _padding, _this.tooltipContent.height + _padding, _roundedCornersRadius);
+                _this.tooltipBG.drawRoundedRect(0, 0, _this.tooltipContent.width + _padding, _this.tooltipContent.height + _padding, _roundedCornersRadius);
             }
         } else {
-            tooltipBG = _customBackground;
+            _this.tooltipBG = _customBackground;
         }
 
         // add all to group
-        mainGroup.add(tooltipBG);
+        mainGroup.add(_this.tooltipBG);
         mainGroup.add(_this.tooltipContent);
         //if(debug)
         //mainGroup.add(debug);
@@ -288,9 +290,17 @@ var Phasetips = function(localGame, options) {
         mainGroup.update = function() {
             var worldPos = _options.targetObject ? _options.targetObject.world : game.world;
             game.world.bringToTop(_this.tooltipContent);
-            game.world.bringToTop(tooltipBG);
-            if (worldPos.x !== mainGroup.initialWorldX) {
+            game.world.bringToTop(_this.tooltipBG);
+            if (/*worldPos.x !== mainGroup.initialWorldX &&*/ !_fixedToCamera) {
                 //updatePosition();
+
+                var auxX = (10* Math.round(this.game.input.worldX / 16) * 16)/_this.originalPosition.x;
+                var auxY = (10* Math.round(this.game.input.worldX / 16) * 16)/_this.originalPosition.y;
+
+                _this.tooltipContent.x = auxX;
+                _this.tooltipContent.y = auxY;
+                _this.tooltipBG.x = auxX - 5;
+                _this.tooltipBG.y = auxY - 3;
             }
         }
     };
@@ -302,8 +312,10 @@ var Phasetips = function(localGame, options) {
             _this.printOptions();
         },
         updatePosition: function(x, y) {
-            _this.mainGroup.x = x;
-            _this.mainGroup.y = y;
+            _this.tooltipContent.x += x;
+            _this.tooltipContent.y += y;
+            _this.tooltipBG.x += x - 5;
+            _this.tooltipBG.y += y - 3;
         },
         destroy: function() {
             _this.mainGroup.removeChildren();
