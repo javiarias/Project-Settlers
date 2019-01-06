@@ -129,7 +129,7 @@ var Phasetips = function(localGame, options) {
 
         ////////////////////////////////////////////////////////////////////////////////////
         var tooltipBG;
-        var tooltipContent;
+        _this.tooltipContent;
         var tooltipArrow;
 
         _this.mainGroup = game.add.group();
@@ -139,15 +139,15 @@ var Phasetips = function(localGame, options) {
         var type = typeof _content;
 
         if (type === "string" || type === "number") {
-            tooltipContent = game.add.text(_padding / 2, _padding / 2, String(_content), _textStyle);
-            tooltipContent.lineSpacing = _textStyle.lineSpacing || 0;
-            tooltipContent.updateText();
-            tooltipContent.update();
-            tooltipContent.x = _padding / 2;
-            tooltipContent.y = _padding / 2;
-            //tooltipContent.fontWeight = "bold";
-            tooltipContent.smoothing = false;
-            var bounds = tooltipContent.getBounds();
+            _this.tooltipContent = game.add.text(_padding / 2, _padding / 2, String(_content), _textStyle);
+            _this.tooltipContent.lineSpacing = _textStyle.lineSpacing || 0;
+            _this.tooltipContent.updateText();
+            _this.tooltipContent.update();
+            _this.tooltipContent.x = _padding / 2;
+            _this.tooltipContent.y = _padding / 2;
+            //_this.tooltipContent.fontWeight = "bold";
+            _this.tooltipContent.smoothing = false;
+            var bounds = _this.tooltipContent.getBounds();
             /* window.console.log(bounds);
              var debug = game.add.graphics(bounds.width, bounds.height);
              debug.x = _padding/2;
@@ -156,7 +156,7 @@ var Phasetips = function(localGame, options) {
              debug.drawRect(0, 0, bounds.width, bounds.height, 1);
              window.console.log(debug.x)*/
         } else if (type === "object") {
-            tooltipContent = _content;
+            _this.tooltipContent = _content;
         }
 
         if (_width !== "auto" && _height !== "auto") {
@@ -164,16 +164,16 @@ var Phasetips = function(localGame, options) {
             mainGroup.height = _height;
         } else {
             if (_customBackground === false) {
-                mainGroup.width = tooltipContent.width + _padding;
-                mainGroup.height = tooltipContent.height + _padding;
+                mainGroup.width = _this.tooltipContent.width + _padding;
+                mainGroup.height = _this.tooltipContent.height + _padding;
             } else {
 
-                if (_customBackground.width > tooltipContent.width) {
+                if (_customBackground.width > _this.tooltipContent.width) {
                     mainGroup.width = _customBackground.width;
                     mainGroup.height = _customBackground.height;
                 } else {
-                    mainGroup.width = tooltipContent.width;
-                    mainGroup.height = tooltipContent.height;
+                    mainGroup.width = _this.tooltipContent.width;
+                    mainGroup.height = _this.tooltipContent.height;
                 }
             }
         }
@@ -250,7 +250,7 @@ var Phasetips = function(localGame, options) {
 
         if (_customBackground === false) {
             /// create bg
-            tooltipBG = game.add.graphics(tooltipContent.width, tooltipContent.height);
+            tooltipBG = game.add.graphics(_this.tooltipContent.width, _this.tooltipContent.height);
             tooltipBG.beginFill(_bgColor, 1);
             tooltipBG.x = 0;
             tooltipBG.y = 0;
@@ -258,9 +258,9 @@ var Phasetips = function(localGame, options) {
 
             // if roundedCornersRadius option is set to 1, drawRect will be used.
             if( _roundedCornersRadius == 1 ) {
-                tooltipBG.drawRect(0, 0, tooltipContent.width + _padding, tooltipContent.height + _padding, 1);
+                tooltipBG.drawRect(0, 0, _this.tooltipContent.width + _padding, _this.tooltipContent.height + _padding, 1);
             } else {
-                tooltipBG.drawRoundedRect(0, 0, tooltipContent.width + _padding, tooltipContent.height + _padding, _roundedCornersRadius);
+                tooltipBG.drawRoundedRect(0, 0, _this.tooltipContent.width + _padding, _this.tooltipContent.height + _padding, _roundedCornersRadius);
             }
         } else {
             tooltipBG = _customBackground;
@@ -268,7 +268,7 @@ var Phasetips = function(localGame, options) {
 
         // add all to group
         mainGroup.add(tooltipBG);
-        mainGroup.add(tooltipContent);
+        mainGroup.add(_this.tooltipContent);
         //if(debug)
         //mainGroup.add(debug);
 
@@ -287,7 +287,7 @@ var Phasetips = function(localGame, options) {
 
         mainGroup.update = function() {
             var worldPos = _options.targetObject ? _options.targetObject.world : game.world;
-            game.world.bringToTop(tooltipContent);
+            game.world.bringToTop(_this.tooltipContent);
             game.world.bringToTop(tooltipBG);
             if (worldPos.x !== mainGroup.initialWorldX) {
                 //updatePosition();
@@ -322,6 +322,9 @@ var Phasetips = function(localGame, options) {
         },
         simulateOnHoverOut: function () {
             _this.onHoverOut();
+        },
+        updateContent: function(string) {
+            _this.tooltipContent.text = string;
         }
     };
 };
