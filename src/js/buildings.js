@@ -2,7 +2,6 @@ var Phasetips = require("./Phasetips.js");
 
 function House(game, x, y, img) {
     Phaser.Sprite.call(this, game, x, y, img);
-    this.coziness = this._calculateCoziness();
     this.residentA = undefined;
     this.residentB = undefined;
     this.hospitalNear = false;
@@ -25,14 +24,6 @@ function House(game, x, y, img) {
 
 House.prototype = Object.create(Phaser.Sprite.prototype);
 House.constructor = House;
-
-House.prototype._calculateCoziness = function() {
-    var coziness = 0;
-
-    //cálculo de coziness
-
-    return coziness;
-};
 
 House.prototype.add = function(citizen) {
 
@@ -209,6 +200,18 @@ function Producer(game, x, y, img, amount, consumes = "none", consumed = 0) {
     this.amount = 0;
 
     this.off = false;
+
+    this.tooltip = new Phasetips(this.game, {
+        targetObject: this,
+        context: "aaaaaaa: (Not Great) \n aaaaaaa: (Not Great)",
+        strokeColor: 0xff0000,
+        position: "top",
+        positionOffset: 30,   
+        animation: "fade",
+        fixedToCamera: false
+      });
+
+    this.tooltip.updateContent("Empty");
 }
 Producer.prototype = Object.create(Phaser.Sprite.prototype);
 Producer.constructor = Producer;
@@ -230,15 +233,8 @@ Producer.prototype.add = function(citizen) {
     }
 
     this.full = (this.workerA !== undefined && this.workerB !== undefined);
-
-    this.tooltip = new Phasetips(this.game, {
-        targetObject: this,
-        context: "ResidentA: " + (this.dataA) + "\nResidentB: " + (this.dataB),
-        strokeColor: 0xff0000,
-        position: "top",
-        positionOffset: 30,   
-        animation: "fade"
-      });
+    
+    this.updateTooltip();
 
     return added;
 };
@@ -276,6 +272,53 @@ Producer.prototype.bulldoze = function(unemployedArray) {
         this.workerB.unemployed = true;
         unemployedArray.unshift(this.workerB);
     }
+    
+    this.tooltip.destroy();
+};
+
+Producer.prototype.updateTooltip = function() {
+
+    var nameA = "Empty";
+    var nameB = "";
+    var healthA = "";
+    var healthB = "";
+    
+    if(this.workerA !== undefined){
+
+        var aux = this.residentA.health;
+
+        if(aux >= 75)
+            healthA = "Healthy";
+        else if(aux >= 50)
+            healthA = "Okay";
+        else if(aux >= 25)
+            healthA = "Not great";
+        else
+            healthA = "Dying";
+
+        nameA = this.workerA.name;
+    }
+
+    if(this.workerB !== undefined){
+
+        var aux = this.workerB.health;
+
+        if(aux >= 75)
+            healthB = "Healthy";
+        else if(aux >= 50)
+            healthB = "Okay";
+        else if(aux >= 25)
+            healthB = "Not great";
+        else
+            healthB = "Dying";
+
+        nameB = this.workerB.name;
+    }
+
+    if (nameA !== "Empty")
+        this.tooltip.updateContent(nameA + " (" + healthA + ")" + "\n" + nameB + " (" + healthB + ")");
+    else
+        this.tooltip.updateContent(nameA);
 };
 
 Producer.prototype.serialize = function() {
@@ -505,7 +548,7 @@ Citizen.prototype.addToProducer = function (producerGroup){
 
     producerGroup.forEach(function (group) {
         group.forEach(function (producer) {
-            if(!producer.full && !found && producer.consumed !== undefined){
+            if(!producer.full && !found && producer.hospitalNear === undefined){
                 if(producer.add(this)){
                     found = true;
                     this.unemployed = false;

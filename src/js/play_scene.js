@@ -1271,10 +1271,10 @@ var PlayScene = {
             sprite.bulldoze(this.unemployedArray);
           }
           
-          else if(sprite.consumes !== undefined)
-            sprite.bulldoze(this.unemployedArray);
-          else
+          else if(sprite.hospitalNear !== undefined)
             sprite.bulldoze(this.homelessArray);
+          else
+            sprite.bulldoze(this.unemployedArray);
         }
         sprite.destroy();
 
@@ -1894,9 +1894,9 @@ var PlayScene = {
         this._buildingModeSprite.y = offset + Math.round(this.game.input.worldY / this._tileSize) * this._tileSize;
 
         if(this._buildingModeArea !== undefined){
-        this._buildingModeArea.x = Math.round(this.game.input.worldX / this._tileSize) * this._tileSize;
-        this._buildingModeArea.y = offset + Math.round(this.game.input.worldY / this._tileSize) * this._tileSize;
-      }
+          this._buildingModeArea.x = Math.round(this.game.input.worldX / this._tileSize) * this._tileSize;
+          this._buildingModeArea.y = offset + Math.round(this.game.input.worldY / this._tileSize) * this._tileSize;
+        }
 
         var overlap = false;
 
