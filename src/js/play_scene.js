@@ -62,11 +62,11 @@ var PlayScene = {
     if (this.mode === 0)
       {
         this.food = 100;
-        this.wood = 50;
+        this.wood = 75;
         this.uranium = 0;
         this.energy = 0;
         this.water = 50;
-        this.stone = 50;
+        this.stone = 75;
       }
 
     else if (this.mode === 1)
@@ -92,64 +92,74 @@ var PlayScene = {
     this.buildingGroup = this.game.add.group();
 
     this.houseGroup = this.game.add.group();
-    this.buildingGroup.add(this.houseGroup);
     this.houseGroup.sprite = 'House';
+    this.buildingGroup.add(this.houseGroup);
     this.houseGroup.stone = 5;
     this.houseGroup.wood = 5;
+    this.houseGroup.consume = 5;
 
     this.woodGroup = this.game.add.group();
     this.buildingGroup.add(this.woodGroup);
     this.woodGroup.sprite = 'Wood';
     this.woodGroup.stone = 10;
     this.woodGroup.wood = 5;
+    this.woodGroup.consume = 10;
 
     this.uraniumGroup = this.game.add.group();
     this.buildingGroup.add(this.uraniumGroup);
     this.uraniumGroup.sprite = 'Uranium';
     this.uraniumGroup.stone = 30;
     this.uraniumGroup.wood = 30;
+    this.uraniumGroup.consume = 15;
 
     this.energyGroup = this.game.add.group();
     this.buildingGroup.add(this.energyGroup);
     this.energyGroup.sprite = 'Energy';
     this.energyGroup.stone = 45;
     this.energyGroup.wood = 30;
+    this.energyGroup.consume = 10;
 
     this.windGroup = this.game.add.group();
     this.buildingGroup.add(this.windGroup);
     this.windGroup.sprite = 'Wind';
     this.windGroup.stone = 35;
     this.windGroup.wood = 30;
+    this.windGroup.consume = 10;
 
     this.roadGroup = this.game.add.group();
     this.buildingGroup.add(this.roadGroup);
     this.roadGroup.sprite = 'Road';
     this.roadGroup.stone = 1;
     this.roadGroup.wood = 0;
+    this.roadGroup.consume = 0;
 
     this.waterGroup = this.game.add.group();
     this.buildingGroup.add(this.waterGroup);
     this.waterGroup.sprite = 'Water';
     this.waterGroup.stone = 10;
     this.waterGroup.wood = 10;
+    this.waterGroup.consume = 10;
 
     this.hospitalGroup = this.game.add.group();
     this.buildingGroup.add(this.hospitalGroup);
     this.hospitalGroup.sprite = 'Hospital';
     this.hospitalGroup.stone = 25;
     this.hospitalGroup.wood = 25;
+    this.hospitalGroup.consume = 20;
 
     this.stoneGroup = this.game.add.group();
     this.buildingGroup.add(this.stoneGroup);
     this.stoneGroup.sprite = 'Stone';
     this.stoneGroup.stone = 15;
     this.stoneGroup.wood = 15;
+    this.stoneGroup.consume = 10;
 
     this.cropGroup = this.game.add.group();
     this.buildingGroup.add(this.cropGroup);
     this.cropGroup.sprite = 'Crops';
     this.cropGroup.stone = 10;
     this.cropGroup.wood = 10;
+    this.cropGroup.consume = 10;
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1649,37 +1659,134 @@ var PlayScene = {
             this.timeTxt.addColor("#008500", 0);
 
             this.woodGroup.forEach(function(prod){
+
+              if (this.energy > 0)
+              {
+                this.energy =- this.woodGroup.consume;
+
+                if (prod.off)
+                  {
+                    prod.off = false;
+                    prod.updateAmount();
+                  }
+              }
+
+              else
+                {
+                  prod.off = true;
+                  prod.updateAmount();
+                }
+
+
               this.wood += prod.amount;
             }, this);
 
             this.windGroup.forEach(function(prod){
+
+              if (this.energy > 0)
+              {
+                this.energy =- this.woodGroup.consume;
+
+                if (prod.off)
+                  {
+                    prod.off = false;
+                    prod.updateAmount();
+                  }
+              }
+
+              else
+                {
+                  prod.off = true;
+                  prod.updateAmount();
+                }
+
               this.energy += prod.amount;
             }, this);
 
             this.uraniumGroup.forEach(function(prod){
+              if (this.energy > 0)
+              {
+                this.energy =- this.woodGroup.consume;
+
+                if (prod.off)
+                {
+                  prod.off = false;
+                  prod.updateAmount();
+                }
+              }
+
+              else
+                {
+                  prod.off = true;
+                  prod.updateAmount();
+                }
+
               this.uranium += prod.amount;
             }, this);
 
             this.cropGroup.forEach(function(prod){
+              if (this.energy > 0)
+              {
+                this.energy =- this.woodGroup.consume;
+
+                if (prod.off)
+                  {
+                    prod.off = false;
+                    prod.updateAmount();
+                  }
+              }
+
+              else
+                {
+                  prod.off = true;
+                  prod.updateAmount();
+                }
+
               this.food += prod.amount;
             }, this);
 
             this.stoneGroup.forEach(function(prod){
+
+              if (this.energy > 0)
+              {
+                this.energy =- this.woodGroup.consume;
+
+                if (prod.off)
+                  {
+                    prod.off = false;
+                    prod.updateAmount();
+                  }
+              }
+
+              else
+                {
+                  prod.off = true;
+                  prod.updateAmount();
+                }
+
               this.stone += prod.amount;
             }, this);
 
             //update consumers
             this.energyGroup.forEach(function(prod){
-              if(this.uranium >= prod.consumed){
+              if(this.energy >= this.energyGroup.consume && this.uranium >= prod.consumed){
+                
+                if (prod.off)
+                {
+                  prod.off = false;
+                  prod.updateAmount();
+                }
+
                 this.energy += prod.amount;
-              
                 this.uranium -= prod.consumed;
 
-                prod.off = false;
               }
 
               else
-                prod.off = true;
+                {
+                  prod.off = true;
+                  prod.updateAmount();
+                }
 
             }, this);
 

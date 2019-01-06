@@ -165,7 +165,7 @@ House.prototype.updateTooltip = function() {
     if(this.hospitalNear)
         hospital = "Hospital in range! \n"
 
-    if (nameA !== "Empty")
+    if (nameA != "Empty")
         this.tooltip.updateContent(hospital + nameA + ": " + ageA + " old " + "(" + healthA + ")" + "\n" + nameB + ": " + ageB + " old " + "(" + healthB + ")");
     else
         this.tooltip.updateContent(hospital + nameA);
@@ -186,10 +186,10 @@ House.prototype.countCitizens = function(){
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function Producer(game, x, y, img, amount, consumes = "none", consumed = 0) { 
+function Producer(game, x, y, img, amount, consumed = 0) { 
     Phaser.Sprite.call(this, game, x, y, img);
-    this.consumes = consumes;
     this.consumed = consumed;
+    this.workers = true;
     this.workerA = undefined;
     this.workerB = undefined;
     this.dataA = "";
@@ -248,6 +248,9 @@ Producer.prototype.updateAmount = function() {
 
     else
         this.amount = this.totalAmount;
+
+    if (this.off)
+        this.amount = (this.amount * 0.5);
 }
 
 Producer.prototype.kill = function(citizen) {
@@ -285,7 +288,7 @@ Producer.prototype.updateTooltip = function() {
     
     if(this.workerA !== undefined){
 
-        var aux = this.residentA.health;
+        var aux = this.workerA.health;
 
         if(aux >= 75)
             healthA = "Healthy";
@@ -396,8 +399,7 @@ Producer.Unserialize = function(state) {
 function Hospital(game, x, y, img, amount) {
     Phaser.Sprite.call(this, game, x, y, img);
     this.area = 16; //en tiles
-    this.workerA = undefined;
-    this.workerB = undefined;
+    this.workers = false;
     this.full = false;
     this.consumed = amount;
 
@@ -406,7 +408,7 @@ function Hospital(game, x, y, img, amount) {
 Hospital.prototype = Object.create(Phaser.Sprite.prototype);
 Hospital.constructor = Hospital;
 
-Hospital.prototype.add = function(citizen) {
+/*Hospital.prototype.add = function(citizen) {
 
     var added = false;
 
@@ -426,14 +428,14 @@ Hospital.prototype.add = function(citizen) {
 };
 
 Hospital.prototype.updateAmount = function() {
-    /*if (this.workerA === undefined && this.workerB === undefined)
+    if (this.workerA === undefined && this.workerB === undefined)
         this.amount = 0;
 
     else if (!this.full)
         this.amount = 0.5 * this.totalAmount;
 
     else
-        this.amount = this.totalAmount;*/
+        this.amount = this.totalAmount;
 }
 
 Hospital.prototype.kill = function(citizen) {
@@ -446,18 +448,18 @@ Hospital.prototype.kill = function(citizen) {
         this.workerB = undefined;
         this.full = false;
     }
-};
+};*/
 
 Hospital.prototype.bulldoze = function(unemployedArray) {
     
-    if(this.workerA !== undefined){
+    /*if(this.workerA !== undefined){
         this.workerA.unemployed = true;
         unemployedArray.unshift(this.workerA);
     }
     if(this.workerB !== undefined){
         this.workerB.unemployed = true;
         unemployedArray.unshift(this.workerB);
-    }
+    }*/
 };
 
 /*Hospital.prototype.healing = function(houseGroup) {
@@ -548,7 +550,7 @@ Citizen.prototype.addToProducer = function (producerGroup){
 
     producerGroup.forEach(function (group) {
         group.forEach(function (producer) {
-            if(!producer.full && !found && producer.hospitalNear === undefined){
+            if(!producer.full && !found && producer.hospitalNear === undefined && producer.workers){
                 if(producer.add(this)){
                     found = true;
                     this.unemployed = false;
