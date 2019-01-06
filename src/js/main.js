@@ -1,7 +1,6 @@
 'use strict';
 
 var PlayScene = require('./play_scene.js');
-var Tutorial = require('./tutorial.js');
 
 var BootScene = {
   init: function() {
@@ -119,7 +118,9 @@ var wfconfig = {
   }
 };
 
+
 var MainMenu = {
+
   create: function(){
     this.buttonSound = this.game.add.audio('buttonSound');
 
@@ -243,13 +244,13 @@ var MainMenu = {
     function gameStart() {
       this.menuMusic.stop();
       this.optionsMain.destroy();
-      this.game.state.start('play');
+      this.game.state.start('play', true, false, 0);
     }
 
     function tutorialStart() {
       this.menuMusic.stop();
       this.optionsMain.destroy();
-      this.game.state.start('tutorial');
+      this.game.state.start('tutorial', true, false, 1);
     }
   }
 };
@@ -375,7 +376,7 @@ var DefeatState = {
     function gameStart() {
       this.menuMusic.stop();
       this.optionsMain.destroy();
-      this.game.state.start('play');
+      this.game.state.start('play', true, false, 0);
     }
 
     function goMenu() {
@@ -507,7 +508,7 @@ var WinState = {
     function gameStart() {
       this.menuMusic.stop();
       this.optionsMain.destroy();
-      this.game.state.start('play');
+      this.game.state.start('play', true, false, 0);
     }
 
     function goMenu() {
@@ -516,8 +517,8 @@ var WinState = {
       this.game.state.start('main');
     }
   }
-};
 
+};
 
 window.onload = function () {
 
@@ -528,7 +529,7 @@ window.onload = function () {
   game.state.add('boot', BootScene);
   game.state.add('preloader', PreloaderScene);
   game.state.add('main', MainMenu);
-  game.state.add('tutorial', Tutorial)
+  game.state.add('tutorial', PlayScene);
   game.state.add('play', PlayScene);
   game.state.add('defeat', DefeatState);
   game.state.add('win', WinState);
