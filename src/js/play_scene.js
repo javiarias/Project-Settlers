@@ -1833,8 +1833,11 @@ var PlayScene = {
 
         this._buildingModeSprite.x = Math.round(this.game.input.worldX / this._tileSize) * this._tileSize;
         this._buildingModeSprite.y = offset + Math.round(this.game.input.worldY / this._tileSize) * this._tileSize;
+
+        if(this._buildingModeArea !== undefined){
         this._buildingModeArea.x = Math.round(this.game.input.worldX / this._tileSize) * this._tileSize;
         this._buildingModeArea.y = offset + Math.round(this.game.input.worldY / this._tileSize) * this._tileSize;
+      }
 
         var overlap = false;
 
