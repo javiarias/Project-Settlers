@@ -170,7 +170,7 @@ House.prototype.updateTooltip = function() {
         hospital = "Hospital in range! \n"
 
     if (nameA != "Empty"){
-        if(nameB == "")
+        if(nameB == "Empty")
             this.tooltip.updateContent(hospital + nameA + ": " + ageA + " old " + "(" + healthA + ")" + "\n" + nameB);
         else
             this.tooltip.updateContent(hospital + nameA + ": " + ageA + " old " + "(" + healthA + ")" + "\n" + nameB + ": " + ageB + " old " + "(" + healthB + ")");
