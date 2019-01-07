@@ -175,10 +175,10 @@ House.prototype.updateTooltip = function() {
         else
             this.tooltip.updateContent(hospital + nameA + ": " + ageA + " old " + "(" + healthA + ")" + "\n" + nameB + ": " + ageB + " old " + "(" + healthB + ")");
     }
-    else if(nameB != "")
+    else if(nameB != "Empty")
         this.tooltip.updateContent(hospital + nameA + "\n" + nameB + ": " + ageB + " old " + "(" + healthB + ")");
     else
-        this.tooltip.updateContent(hospital + nameA);
+        this.tooltip.updateContent(hospital + nameA+ "\n" + nameB);
 };
 
 House.prototype.countCitizens = function(){
