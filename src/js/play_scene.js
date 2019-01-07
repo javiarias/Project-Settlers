@@ -1526,7 +1526,7 @@ var PlayScene = {
         auxBuilding.anchor.setTo(0.5, 0.5);
 
         auxBuilding.inputEnabled = true;
-        auxBuilding.input.priorityID = 0;
+        auxBuilding.input.priorityID = 1;
         auxBuilding.events.onInputOver.add(mouseOver, this, 0, auxBuilding);
         auxBuilding.events.onInputOut.add(mouseOut, this, 0, auxBuilding);
         auxBuilding.events.onInputDown.add(destroy, this);
@@ -1750,7 +1750,7 @@ var PlayScene = {
           auxBuilding.anchor.setTo(0.5, 0.5);
   
           auxBuilding.inputEnabled = true;
-          auxBuilding.input.priorityID = 0;
+          auxBuilding.input.priorityID = 1;
           auxBuilding.events.onInputOver.add(mouseOver, this, 0, auxBuilding);
           auxBuilding.events.onInputOut.add(mouseOut, this, 0, auxBuilding);
           auxBuilding.events.onInputDown.add(destroy, this);
