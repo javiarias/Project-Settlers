@@ -32,11 +32,13 @@ House.prototype.add = function(citizen) {
     if(this.residentA === undefined){
         this.residentA = citizen;
         added = true;
+        this.residentA.consume = 3;
     }
 
     else if(this.residentB === undefined){
         this.residentB = citizen;
         added = true;
+        this.residentB.consume = 3;
     }
 
     this.full = (this.residentA !== undefined && this.residentB !== undefined);
@@ -85,10 +87,12 @@ House.prototype.bulldoze = function(homelessArray) {
     if(this.residentA !== undefined){
         this.residentA.homeless = true;
         homelessArray.unshift(this.residentA);
+        this.residentA.consume = 5;
     }
     if(this.residentB !== undefined){
         this.residentB.homeless = true;
         homelessArray.unshift(this.residentB);
+        this.residentB.consume = 5;
     }
 
     this.tooltip.destroy();
@@ -172,16 +176,7 @@ House.prototype.updateTooltip = function() {
 };
 
 House.prototype.countCitizens = function(){
-    var ret = 0;
-
-    if(this.residentA !== undefined){
-        ret++;
-    }
-    if(this.residentB !== undefined){
-        ret++;
-    }
-
-    return ret;
+    return ((this.residentA !== undefined) + (this.residentB !== undefined));
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -452,13 +447,13 @@ function Citizen(homelessArray, unemployedArray, age = 0) {
     this.name = (Math.random() * 100) + 1;
     this.age = age;
     this.health = 65;
-    this.sick = false;
     this.homeless = true;
     this.unemployed = true;
     this.birthCooldown = 0;
     this.givingBirth = false;
     homelessArray.unshift(this);
     unemployedArray.unshift(this);
+    this.consume = 5;
 }
 Citizen.constructor = Citizen;
 
@@ -470,6 +465,7 @@ Citizen.prototype.addToHouse = function (houseGroup){
             if(house.add(this)){
                 found = true;
                 this.homeless = false;
+                this.consume = 3;
             }
         }
     }, this);
@@ -501,18 +497,18 @@ Citizen.prototype.tick = function(foodAmount, waterAmount, healing, house, homel
     if(this.birthCooldown > 0)
         this.birthCooldown--;
 
-    if(foodAmount <= 0)
+    if(foodAmount < this.consume)
         this.health -= 5;
     else 
         this.health += 2;
 
-    if(waterAmount <= 0)
+    if(waterAmount < this.consume)
         this.health -= 5;
     else 
         this.health += 2;
 
     if(this.age > 100)
-        this.health = this.health * .9;
+        this.health = this.health/2;
 
     if(healing)
         this.health += 10;
