@@ -10,16 +10,6 @@ var PlayScene = {
   },
 
   create: function () {
-
-    //////////////////////////////
-    //Modes (tutorial/main game)
-
-    if (this.mode == 0)
-      console.log('Game');
-
-    if (this.mode == 1)
-      console.log('Tutorial');
-
     //////////////////////////////
     //Tilemap
 
@@ -74,6 +64,7 @@ var PlayScene = {
         var aux = this.game.add.sprite(0, 0, "Road");
         aux.visible = false;
         aux.anchor.setTo(.5, .5);
+        aux.alpha = 0.7;
 
         this.roadSpriteStack.push(aux);
       }
@@ -1320,7 +1311,6 @@ var PlayScene = {
 
     function buildMode(key = undefined, group){
       if(!this._escapeMenu) {
-        this.roadBuilding = false;
 
         if(this._destroyModeActive)
           this._destroyModeActive = false;
@@ -1331,6 +1321,7 @@ var PlayScene = {
           this._buildingModeSprite = this.game.add.sprite(this.game.input.mousePointer.x, this.game.input.mousePointer.y, group.sprite);
           this._buildingModeSprite.anchor.setTo(0.5, 0.5);
           this._buildingModeSprite.alpha = 0.7;
+          this._buildingModeSprite.visible = true;
 
           this._buildingModeType = group;
           
@@ -1338,13 +1329,28 @@ var PlayScene = {
           this._buildModeActive = true;
           this.timeTxt.addColor("#ff0000", 0);
 
-          this.game.world.sendToBack(this._buildingModeSprite);
-          this.game.world.moveUp(this._buildingModeSprite);
-          this.game.world.moveUp(this._buildingModeSprite);
-          this.game.world.moveUp(this._buildingModeSprite);
-          this.game.world.moveUp(this._buildingModeSprite);
-          this.game.world.moveUp(this._buildingModeSprite);
-          this.game.world.moveUp(this._buildingModeSprite);
+          this.game.world.bringToTop(this._buildingModeSprite);
+          this.game.world.moveDown(this._buildingModeSprite);
+          this.game.world.moveDown(this._buildingModeSprite);
+          this.game.world.moveDown(this._buildingModeSprite);
+          this.game.world.moveDown(this._buildingModeSprite);
+          this.game.world.moveDown(this._buildingModeSprite);
+          this.game.world.moveDown(this._buildingModeSprite);
+          this.game.world.moveDown(this._buildingModeSprite);
+          this.game.world.moveDown(this._buildingModeSprite);
+          this.game.world.moveDown(this._buildingModeSprite);
+          this.game.world.moveDown(this._buildingModeSprite);
+          this.game.world.moveDown(this._buildingModeSprite);
+          this.game.world.moveDown(this._buildingModeSprite);
+          this.game.world.moveDown(this._buildingModeSprite);
+          this.game.world.moveDown(this._buildingModeSprite);
+          this.game.world.moveDown(this._buildingModeSprite);
+          this.game.world.moveDown(this._buildingModeSprite);
+          this.game.world.moveDown(this._buildingModeSprite);
+          this.game.world.moveDown(this._buildingModeSprite);
+          this.game.world.moveDown(this._buildingModeSprite);
+          this.game.world.moveDown(this._buildingModeSprite);
+          this.game.world.moveDown(this._buildingModeSprite);
 
           if(group == this.hospitalGroup){
             this._buildingModeArea = this.game.add.sprite(this.game.input.mousePointer.x, this.game.input.mousePointer.y, "area");
@@ -1354,13 +1360,33 @@ var PlayScene = {
             this._buildingModeArea.width = 16*this._tileSize;
             this._buildingModeArea.height = 16*this._tileSize;
 
-            this.game.world.sendToBack(this._buildingModeArea);
-            this.game.world.moveUp(this._buildingModeArea);
-            this.game.world.moveUp(this._buildingModeArea);
-            this.game.world.moveUp(this._buildingModeArea);
-            this.game.world.moveUp(this._buildingModeArea);
-            this.game.world.moveUp(this._buildingModeArea);
+            this.game.world.bringToTop(this._buildingModeArea);
+            this.game.world.moveDown(this._buildingModeArea);
+            this.game.world.moveDown(this._buildingModeArea);
+            this.game.world.moveDown(this._buildingModeArea);
+            this.game.world.moveDown(this._buildingModeArea);
+            this.game.world.moveDown(this._buildingModeArea);
+            this.game.world.moveDown(this._buildingModeArea);
+            this.game.world.moveDown(this._buildingModeArea);
+            this.game.world.moveDown(this._buildingModeArea);
+            this.game.world.moveDown(this._buildingModeArea);
+            this.game.world.moveDown(this._buildingModeArea);
+            this.game.world.moveDown(this._buildingModeArea);
+            this.game.world.moveDown(this._buildingModeArea);
+            this.game.world.moveDown(this._buildingModeArea);
+            this.game.world.moveDown(this._buildingModeArea);
+            this.game.world.moveDown(this._buildingModeArea);
+            this.game.world.moveDown(this._buildingModeArea);
+            this.game.world.moveDown(this._buildingModeArea);
+            this.game.world.moveDown(this._buildingModeArea);
+            this.game.world.moveDown(this._buildingModeArea);
+            this.game.world.moveDown(this._buildingModeArea);
+            this.game.world.moveDown(this._buildingModeArea);
+            this.game.world.moveDown(this._buildingModeArea);
           }
+          
+          if(this.roadBuilding)
+            this.roadBuilding = false;
         }
 
         else {
@@ -1371,6 +1397,8 @@ var PlayScene = {
             this._buildingModeArea.destroy();
 
           this._buildModeActive = false;
+          
+          resetRoadStack.call(this);
         }
       }
     }
@@ -1383,9 +1411,13 @@ var PlayScene = {
           this._destroyModeActive = false;
         }
         else if(this._buildModeActive)
-          if(this._buildingModeType == this.roadGroup && !this.roadBuilding){
+          if(this._buildingModeType == this.roadGroup && !this.roadBuilding && this.buildAllowed(this._buildingModeSprite)){
             this.roadBuilding = true;
+            this._buildingModeSprite.visible = false;
+            resetRoadStack.call(this);
           }
+          else if(this.roadBuilding)
+            buildRoads.call(this);
           else
             build.call(this);
       }
@@ -1422,12 +1454,12 @@ var PlayScene = {
       }
     }
 
-    function build(){
+    this.buildAllowed = function(sprite){
       var overlap = false;
 
       this.buildingGroup.forEach(function (group){
         group.forEach(function(building){
-          overlap = overlap || this.checkOverlap.call(this, this._buildingModeSprite, building);
+          overlap = overlap || this.checkOverlap.call(this, sprite, building);
         }, this);
       }, this);
 
@@ -1435,14 +1467,19 @@ var PlayScene = {
 
       var roadAdjacency;
       this.roadGroup.forEach(function (road){
-        roadAdjacency = roadAdjacency || this.checkAdjacency.call(this, this._buildingModeSprite, road);
+        roadAdjacency = roadAdjacency || this.checkAdjacency.call(this, sprite, road);
       }, this);
 
-      var waterObstacle = this.checkObstacles.call(this, this._buildingModeSprite, "water");
-      var mountainObstacle = this.checkObstacles.call(this, this._buildingModeSprite, "mountain");
+      var waterObstacle = this.checkObstacles.call(this, sprite, "water");
+      var mountainObstacle = this.checkObstacles.call(this, sprite, "mountain");
 
 
-      if(!overlap && !mountainObstacle && (this._buildingModeType == this.roadGroup || (roadAdjacency && this.wood >= this._buildingModeType.wood && this.stone >= this._buildingModeType.stone && !waterObstacle))){
+      return(!overlap && !mountainObstacle && (this._buildingModeType == this.roadGroup || (roadAdjacency && this.wood >= this._buildingModeType.wood && this.stone >= this._buildingModeType.stone && !waterObstacle)))
+    }
+
+    function build(){
+      
+      if(this.buildAllowed(this._buildingModeSprite)){
         var auxBuilding;
 
         var offset = 0;
@@ -1481,21 +1518,18 @@ var PlayScene = {
 
             if (this._buildingModeType.sprite == 'Water')
             {
-
               if (this.mode == 1 && !this.cropCheck)
                 this.cropCheck = true;
             }
 
           if (this._buildingModeType.sprite == 'Crops')
             {
-
               if (this.mode == 1 && !this.woodCheck)
                 this.woodCheck = true;
             }
             
           if (this._buildingModeType.sprite == 'Wood')
             {
-
               if (this.mode == 1 && !this.stoneCheck)
                 this.stoneCheck = true;
             }
@@ -1553,13 +1587,9 @@ var PlayScene = {
         else if(this._buildingModeType == this.houseGroup)
         {
           auxBuilding.updateHospitals(this.hospitalGroup);
-        }      
+        }
 
-        this._buildModeActive = false;
-        if(this._buildingModeSprite !== undefined)
-          this._buildingModeSprite.destroy();
-        if(this._buildingModeArea !== undefined)
-          this._buildingModeArea.destroy();
+        buildMode.call(this, this, this._buildingModeType);
         buildMode.call(this, this, this._buildingModeType);
 
 
@@ -1665,20 +1695,134 @@ var PlayScene = {
     } 
 
     this.getFixedAngle = function(a, b) {
-      var auxAngle = (Math.atan2(b.y - a.y, b.x - a.x) * 180 / Math.PI);
+      var auxAngle = Phaser.Point.angle(a, b);
 
       
+      var angleCos = Math.round(Math.cos(auxAngle));
+      var angleSin = Math.round(Math.sin(auxAngle));
 
-      if(auxAngle > 315 && auxAngle <= 45)
+      if(angleCos < 0)
         auxAngle = 0;
-      else if(auxAngle > 45 && auxAngle <= 135)
-        auxAngle = 90;
-      else if(auxAngle > 135 && auxAngle <= 225)
+      else if(angleCos > 0)
         auxAngle = 180;
+      else if(angleSin > 0)
+        auxAngle = 90;
       else
         auxAngle = 270;
 
       return auxAngle;
+    }
+
+    function resetRoadStack(){
+      
+      while(this.roadSpriteVisible.length > 0) {
+        this.roadSpriteVisible[0].visible = false;
+        this.roadSpriteVisible[0].tint = 0xFFFFFF;
+        this.roadSpriteStack.push(this.roadSpriteVisible[0]);
+        this.roadSpriteVisible.splice(0, 1);
+      }
+    }
+
+    this.placeRoadGuide = function(){
+
+      var auxSprite;
+      if(this.roadSpriteVisible.length > 0)
+        auxSprite = this.roadSpriteVisible[this.roadSpriteVisible.length - 1];
+      else
+        auxSprite = this._buildingModeSprite;
+
+
+      resetRoadStack.call(this);
+
+      var stopLoop = false;
+
+      for(var i = 0; this.roadSpriteStack.length > 0 && !stopLoop; i++){
+
+        this.roadSpriteStack[0].x = this._buildingModeSprite.x + this._tileSize * i * Math.cos(this.currentRoadAngle * (Math.PI / -180)); //angles are inverted, so we need to fix them to calculate sin and cos
+        this.roadSpriteStack[0].y = this._buildingModeSprite.y + this._tileSize * i * Math.sin(this.currentRoadAngle * (Math.PI / -180));
+        this.roadSpriteStack[0].visible = true;
+
+        this.game.world.bringToTop(this.roadSpriteStack[0]);
+        this.game.world.moveDown(this.roadSpriteStack[0]);
+        this.game.world.moveDown(this.roadSpriteStack[0]);
+        this.game.world.moveDown(this.roadSpriteStack[0]);
+        this.game.world.moveDown(this.roadSpriteStack[0]);
+        this.game.world.moveDown(this.roadSpriteStack[0]);
+        this.game.world.moveDown(this.roadSpriteStack[0]);
+        this.game.world.moveDown(this.roadSpriteStack[0]);
+        this.game.world.moveDown(this.roadSpriteStack[0]);
+        this.game.world.moveDown(this.roadSpriteStack[0]);
+        this.game.world.moveDown(this.roadSpriteStack[0]);
+        this.game.world.moveDown(this.roadSpriteStack[0]);
+        this.game.world.moveDown(this.roadSpriteStack[0]);
+        this.game.world.moveDown(this.roadSpriteStack[0]);
+        this.game.world.moveDown(this.roadSpriteStack[0]);
+        this.game.world.moveDown(this.roadSpriteStack[0]);
+        this.game.world.moveDown(this.roadSpriteStack[0]);
+        this.game.world.moveDown(this.roadSpriteStack[0]);
+        this.game.world.moveDown(this.roadSpriteStack[0]);
+        this.game.world.moveDown(this.roadSpriteStack[0]);
+        this.game.world.moveDown(this.roadSpriteStack[0]);
+        this.game.world.moveDown(this.roadSpriteStack[0]);
+
+        this.roadSpriteVisible.push(this.roadSpriteStack[0]);
+        
+        this.roadSpriteStack.splice(0, 1);
+
+        auxSprite = this.roadSpriteVisible[this.roadSpriteVisible.length - 1];
+        stopLoop =  (this.currentRoadAngle == 0 && auxSprite.right >= this.game.input.worldX) ||
+                    (this.currentRoadAngle == 90 && auxSprite.top <= this.game.input.worldY) ||
+                    (this.currentRoadAngle == 180 && auxSprite.left <= this.game.input.worldX) ||
+                    (this.currentRoadAngle == 270 && auxSprite.bottom >= this.game.input.worldY);
+      }
+
+      var obstacle = false;
+      this.roadSpriteVisible.forEach(function(sprite){obstacle = obstacle || !this.buildAllowed(sprite);}, this);
+
+      if(obstacle)
+        this.roadSpriteVisible.forEach(function(sprite){sprite.tint = 0xFF0000;}, this);
+      else
+        this.roadSpriteVisible.forEach(function(sprite){sprite.tint = 0xFFFFFF;}, this);
+
+    }
+
+    function buildRoads() {
+
+      var obstacle = false;
+      this.roadSpriteVisible.forEach(function(sprite){obstacle = obstacle || !this.buildAllowed(sprite);}, this);
+
+      if(!obstacle){
+        while(this.roadSpriteVisible.length > 0) {
+          var auxBuilding = new Classes.Road(this.game, this.roadSpriteVisible[0].x, this.roadSpriteVisible[0].y, this._buildingModeType.sprite);
+
+          this.wood -= this._buildingModeType.wood;
+          this.stone -= this._buildingModeType.stone;
+  
+          auxBuilding.anchor.setTo(0.5, 0.5);
+  
+          auxBuilding.inputEnabled = true;
+          auxBuilding.input.priorityID = 1;
+          auxBuilding.events.onInputOver.add(mouseOver, this, 0, auxBuilding);
+          auxBuilding.events.onInputOut.add(mouseOut, this, 0, auxBuilding);
+          auxBuilding.events.onInputDown.add(destroy, this);
+          auxBuilding.over = false;
+          auxBuilding.visible = true;
+  
+          
+          this.woodTxt.text = this.wood;
+          this.stoneTxt.text = this.stone;
+  
+          this._buildingModeType.add(auxBuilding);
+
+          this.roadSpriteVisible[0].visible = false;
+          this.roadSpriteVisible[0].tint = 0xFFFFFF;
+          this.roadSpriteStack.push(this.roadSpriteVisible[0]);
+          this.roadSpriteVisible.splice(0, 1);
+        }
+      }
+      
+      buildMode.call(this, this, this._buildingModeType);
+      buildMode.call(this, this, this._buildingModeType);
     }
 
   //////////////////////////////
@@ -2150,30 +2294,18 @@ var PlayScene = {
 
       else if(this._buildModeActive){
 
-        if(true){/*this.roadBuilding) {
+        if(this.roadBuilding) {
 
           var auxAngle;
           
-          if(this.roadSpriteVisible.length != 0)
-            auxAngle = this.getFixedAngle(this.game.input, this.roadSpriteVisible[this.roadSpriteVisible.length - 1]);
-          else
-            auxAngle = this.getFixedAngle(this.game.input, this._buildingModeSprite);
+          auxAngle = this.getFixedAngle(this._buildingModeSprite, this.game.input);
 
-          if(auxAngle != this.currentRoadAngle){
-            this.currentRoadAngle = auxAngle
-            for(var i = 0; i < roadSpriteVisible.length; i++) {
-              roadSpriteVisible[i].visible = false;
-              roadSpriteStack.push(roadSpriteVisible[i]);
-              roadSpriteVisible.splice(i, 1);
-              i--; 
-            }
-          }
+          this.currentRoadAngle = auxAngle
           
-
-
+          this.placeRoadGuide();
         }
 
-        else {*/
+        else {
 
           var offset = 0;
 
@@ -2187,29 +2319,8 @@ var PlayScene = {
             this._buildingModeArea.x = Math.round(this.game.input.worldX / this._tileSize) * this._tileSize;
             this._buildingModeArea.y = offset + Math.round(this.game.input.worldY / this._tileSize) * this._tileSize;
           }
-
-          var overlap = false;
-
-          this.buildingGroup.forEach(function (group){
-            group.forEach(function(building){
-              overlap = overlap || this.checkOverlap.call(this, this._buildingModeSprite, building);
-            }, this);
-
-          }, this);
-
-          overlap = overlap || this.game.input.mousePointer.x < 6 || this.game.input.mousePointer.x > 640 || this.game.input.mousePointer.y < 44 || this.game.input.mousePointer.y > 539;
-
-          var roadAdjacency = (this._buildingModeType == this.roadGroup);
-
-          this.roadGroup.forEach(function (road){
-            roadAdjacency = roadAdjacency || this.checkAdjacency.call(this, this._buildingModeSprite, road);
-          }, this);
-
-          var waterObstacle = this.checkObstacles.call(this, this._buildingModeSprite, "water");
-          var mountainObstacle = this.checkObstacles.call(this, this._buildingModeSprite, "mountain");
-
-
-          if(!overlap && !mountainObstacle && (this._buildingModeType == this.roadGroup || (roadAdjacency && this.wood >= this._buildingModeType.wood && this.stone >= this._buildingModeType.stone && !waterObstacle)))
+          
+          if(this.buildAllowed(this._buildingModeSprite))
             this._buildingModeSprite.tint = 0xFFFFFF;
           else
             this._buildingModeSprite.tint = 0xFF0000;
@@ -2244,6 +2355,8 @@ var PlayScene = {
         this.cameraCheckRight = true;
       }
     }
+
+    this.UI.forEach(function(a){this.game.world.bringToTop(a)}, this);
   },
 
   saveGame:function()
@@ -2303,31 +2416,6 @@ var PlayScene = {
 
     //update arrays
   },
-
-  render: function() {
-    /*this.game.debug.text("Current speed: " + this.timeScale, 10, 485);
-    this.game.debug.text("Food: " + this.food, 10, 500);
-    this.game.debug.text("Game paused: " + this.paused, 10, 515);    
-    var mode = "NONE";
-    if(this._buildModeActive)
-      mode = "building";
-    else if(this._destroyModeActive)
-      mode = "destroying";
-
-    this.game.debug.text("Current mode: " + mode, 10, 530);
-
-    this.game.debug.text("Current time: " + this.currentTime.hour + ":00", 10, 545);
-
-    if(this.currentTime.hour >= this.shiftStart && this.currentTime.hour<= this.shiftEnd)
-      this.game.debug.text("WORK TIME!!", 10, 560);
-    
-    var aux = 0;
-
-    this.houseGroup.forEach(function(house){aux += house.countCitizens();});
-    this.game.debug.text("Citizens in homes: " + aux, 10, 575);
-
-    this.game.debug.text("Homeless citizens: " + this.homelessArray.length, 10, 590);*/
-  }
 };
 
 module.exports = PlayScene;
