@@ -569,21 +569,28 @@ Citizen.prototype.tick = function(foodAmount, waterAmount, healing, house, homel
     if(this.birthCooldown > 0)
         this.birthCooldown--;
 
-    if(this.sick)
-        this.health -= 5;
+    /*if(this.sick)
+        this.health -= 5;*/
+
     if(foodAmount <= 0)
         this.health -= 5;
+    else 
+        this.health += 2;
+
     if(waterAmount <= 0)
         this.health -= 5;
+    else 
+        this.health += 2;
+
     if(this.age > 100)
         this.health = this.health * .9;
+
     if(healing)
     {
         this.health += 10;
 
-        /*if (this.health >= 100)
+    if (this.health >= 100)
         this.health = 100;
-        */
     }
 
     if (this.health <= 0){
@@ -597,10 +604,10 @@ Citizen.prototype.tick = function(foodAmount, waterAmount, healing, house, homel
 
     
     else if(this.homeless){
-        this.health -= 2;
+        this.health -= 5;
     }
 
-    this.health -= 25;
+    //this.health -= 25;
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

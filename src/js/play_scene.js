@@ -46,8 +46,8 @@ var PlayScene = {
           this.currentTime = { "hour": 0, "buffer": 0};
           this.homelessArray = [];
           this.unemployedArray = [];
-          this.shiftStart = 8;
-          this.shiftEnd = 20;
+          this.shiftStart = 9;
+          this.shiftEnd = 17;
           this._tileSize = this.map.tileWidth;
           this._buildModeActive = false;
           this._destroyModeActive = false;
@@ -583,7 +583,7 @@ var PlayScene = {
         auxColor = "#008500";
       }
 
-      this.woodTxtGain = this.game.add.text(this.foodTxtGain.x, this.woodIcon.centerY + 3, auxSymbol + this.woodGain, {font: "30px console"});
+      this.woodTxtGain = this.game.add.text(this.foodTxtGain.x + 3, this.woodIcon.centerY + 3, auxSymbol + this.woodGain, {font: "30px console"});
       this.woodTxtGain.anchor.setTo(0, .5);
       this.woodTxtGain.fixedToCamera = true;
       this.woodTxtGain.smoothed = false;
@@ -625,7 +625,7 @@ var PlayScene = {
         auxColor = "#008500";
       }
 
-      this.stoneTxtGain = this.game.add.text(this.foodTxtGain.x, this.stoneIcon.centerY + 3, auxSymbol + this.stoneGain, {font: "30px console"});
+      this.stoneTxtGain = this.game.add.text(this.foodTxtGain.x + 3, this.stoneIcon.centerY + 3, auxSymbol + this.stoneGain, {font: "30px console"});
       this.stoneTxtGain.anchor.setTo(0, .5);
       this.stoneTxtGain.fixedToCamera = true;
       this.stoneTxtGain.smoothed = false;
@@ -669,7 +669,7 @@ var PlayScene = {
       auxColor = "#008500";
     }
 
-    this.uraniumTxtGain = this.game.add.text(this.foodTxtGain.x, this.uraniumIcon.centerY + 3, auxSymbol + this.uraniumGain, {font: "30px console"});
+    this.uraniumTxtGain = this.game.add.text(this.foodTxtGain.x + 3, this.uraniumIcon.centerY + 3, auxSymbol + this.uraniumGain, {font: "30px console"});
     this.uraniumTxtGain.anchor.setTo(0, .5);
     this.uraniumTxtGain.fixedToCamera = true;
     this.uraniumTxtGain.smoothed = false;
@@ -713,7 +713,7 @@ var PlayScene = {
       auxColor = "#008500";
     }
 
-    this.energyTxtGain = this.game.add.text(this.foodTxtGain.x, this.energyIcon.centerY + 3, auxSymbol + this.energyGain, {font: "30px console"});
+    this.energyTxtGain = this.game.add.text(this.foodTxtGain.x + 3, this.energyIcon.centerY + 3, auxSymbol + this.energyGain, {font: "30px console"});
     this.energyTxtGain.anchor.setTo(0, .5);
     this.energyTxtGain.fixedToCamera = true;
     this.energyTxtGain.smoothed = false;
@@ -1660,7 +1660,7 @@ var PlayScene = {
 
             this.woodGroup.forEach(function(prod){
 
-              if (this.energy > 0)
+              if (this.energy > this.woodGroup.consume)
               {
                 this.energy =- this.woodGroup.consume;
 
@@ -1683,9 +1683,9 @@ var PlayScene = {
 
             this.windGroup.forEach(function(prod){
 
-              if (this.energy > 0)
+              if (this.energy > this.windGroup.consume)
               {
-                this.energy =- this.woodGroup.consume;
+                this.energy =- this.windGroup.consume;
 
                 if (prod.off)
                   {
@@ -1704,9 +1704,9 @@ var PlayScene = {
             }, this);
 
             this.uraniumGroup.forEach(function(prod){
-              if (this.energy > 0)
+              if (this.energy > this.uraniumGroup.consume)
               {
-                this.energy =- this.woodGroup.consume;
+                this.energy =- this.uraniumGroup.consume;
 
                 if (prod.off)
                 {
@@ -1725,9 +1725,9 @@ var PlayScene = {
             }, this);
 
             this.cropGroup.forEach(function(prod){
-              if (this.energy > 0)
+              if (this.energy > this.cropGroup.consume)
               {
-                this.energy =- this.woodGroup.consume;
+                this.energy =- this.cropGroup.consume;
 
                 if (prod.off)
                   {
@@ -1747,9 +1747,9 @@ var PlayScene = {
 
             this.stoneGroup.forEach(function(prod){
 
-              if (this.energy > 0)
+              if (this.energy > this.stoneGroup.consume)
               {
-                this.energy =- this.woodGroup.consume;
+                this.energy =- this.stoneGroup.consume;
 
                 if (prod.off)
                   {
@@ -1767,6 +1767,28 @@ var PlayScene = {
               this.stone += prod.amount;
             }, this);
 
+            this.waterGroup.forEach(function(prod){
+
+              if (this.energy > this.waterGroup.consume)
+              {
+                this.energy =- this.waterGroup.consume;
+
+                if (prod.off)
+                  {
+                    prod.off = false;
+                    prod.updateAmount();
+                  }
+              }
+
+              else
+                {
+                  prod.off = true;
+                  prod.updateAmount();
+                }
+
+              this.water += prod.amount;
+            }, this);
+
             //update consumers
             this.energyGroup.forEach(function(prod){
               if(this.energy >= this.energyGroup.consume && this.uranium >= prod.consumed){
@@ -1779,7 +1801,6 @@ var PlayScene = {
 
                 this.energy += prod.amount;
                 this.uranium -= prod.consumed;
-
               }
 
               else
@@ -1820,10 +1841,10 @@ var PlayScene = {
 
             this.houseGroup.forEach(function(prod){
               if(this.food >= 5)
-                this.food -= 5;
+                this.food -= 3;
               if(this.water >= 5)
-                this.water -= 5;
-              prod.tick(this.food, this.homelessArray);
+                this.water -= 3;
+              prod.tick(this.food, this.water, prod.hospitalNear, prod, this.homelessArray, this.houseGroup);
 
               for(var i = prod.numberOfBirths; i > 0; i--)
                 var aux = new Classes.Citizen(this.homelessArray, this.unemployedArray);
@@ -1886,7 +1907,7 @@ var PlayScene = {
 
           this.foodGain = 0;
           this.cropGroup.forEach(function(prod){this.foodGain += prod.amount * (this.shiftEnd - this.shiftStart)}, this);
-          this.foodGain -= (aux * 5);
+          this.foodGain -= (this.homelessArray.length * 5 + (aux - this.homelessArray.length ) * 3);
           var auxSymbol = "";
           var auxColor = "#FF0000";
           if(this.foodGain >= 0){
