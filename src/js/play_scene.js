@@ -1913,10 +1913,8 @@ var PlayScene = {
 
               if(this.food >= this.citizenConsume)
                 this.food -= this.citizenConsume * count;
-                this.food -= this.citizenConsume;
               if(this.water >= this.citizenConsume)
                 this.water -= this.citizenConsume * count;
-                this.water -= this.citizenConsume;
               prod.tick(this.food, this.water, prod.hospitalNear, prod, this.homelessArray, this.houseGroup);
 
               for(var i = prod.numberOfBirths; i > 0; i--)
