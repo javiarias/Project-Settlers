@@ -2083,9 +2083,9 @@ var PlayScene = {
 
               var count = prod.countCitizens();
 
-              if(this.food >= this.citizenConsume)
+              if(this.food >= this.citizenConsume * count)
                 this.food -= this.citizenConsume * count;
-              if(this.water >= this.citizenConsume)
+              if(this.water >= this.citizenConsume * count)
                 this.water -= this.citizenConsume * count;
 
               for(var i = prod.numberOfBirths; i > 0; i--)
