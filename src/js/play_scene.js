@@ -1330,27 +1330,6 @@ var PlayScene = {
           this.timeTxt.addColor("#ff0000", 0);
 
           this.game.world.bringToTop(this._buildingModeSprite);
-          this.game.world.moveDown(this._buildingModeSprite);
-          this.game.world.moveDown(this._buildingModeSprite);
-          this.game.world.moveDown(this._buildingModeSprite);
-          this.game.world.moveDown(this._buildingModeSprite);
-          this.game.world.moveDown(this._buildingModeSprite);
-          this.game.world.moveDown(this._buildingModeSprite);
-          this.game.world.moveDown(this._buildingModeSprite);
-          this.game.world.moveDown(this._buildingModeSprite);
-          this.game.world.moveDown(this._buildingModeSprite);
-          this.game.world.moveDown(this._buildingModeSprite);
-          this.game.world.moveDown(this._buildingModeSprite);
-          this.game.world.moveDown(this._buildingModeSprite);
-          this.game.world.moveDown(this._buildingModeSprite);
-          this.game.world.moveDown(this._buildingModeSprite);
-          this.game.world.moveDown(this._buildingModeSprite);
-          this.game.world.moveDown(this._buildingModeSprite);
-          this.game.world.moveDown(this._buildingModeSprite);
-          this.game.world.moveDown(this._buildingModeSprite);
-          this.game.world.moveDown(this._buildingModeSprite);
-          this.game.world.moveDown(this._buildingModeSprite);
-          this.game.world.moveDown(this._buildingModeSprite);
 
           if(group == this.hospitalGroup){
             this._buildingModeArea = this.game.add.sprite(this.game.input.mousePointer.x, this.game.input.mousePointer.y, "area");
@@ -1361,28 +1340,6 @@ var PlayScene = {
             this._buildingModeArea.height = 16*this._tileSize;
 
             this.game.world.bringToTop(this._buildingModeArea);
-            this.game.world.moveDown(this._buildingModeArea);
-            this.game.world.moveDown(this._buildingModeArea);
-            this.game.world.moveDown(this._buildingModeArea);
-            this.game.world.moveDown(this._buildingModeArea);
-            this.game.world.moveDown(this._buildingModeArea);
-            this.game.world.moveDown(this._buildingModeArea);
-            this.game.world.moveDown(this._buildingModeArea);
-            this.game.world.moveDown(this._buildingModeArea);
-            this.game.world.moveDown(this._buildingModeArea);
-            this.game.world.moveDown(this._buildingModeArea);
-            this.game.world.moveDown(this._buildingModeArea);
-            this.game.world.moveDown(this._buildingModeArea);
-            this.game.world.moveDown(this._buildingModeArea);
-            this.game.world.moveDown(this._buildingModeArea);
-            this.game.world.moveDown(this._buildingModeArea);
-            this.game.world.moveDown(this._buildingModeArea);
-            this.game.world.moveDown(this._buildingModeArea);
-            this.game.world.moveDown(this._buildingModeArea);
-            this.game.world.moveDown(this._buildingModeArea);
-            this.game.world.moveDown(this._buildingModeArea);
-            this.game.world.moveDown(this._buildingModeArea);
-            this.game.world.moveDown(this._buildingModeArea);
           }
           
           if(this.roadBuilding)
@@ -1743,27 +1700,6 @@ var PlayScene = {
         this.roadSpriteStack[0].visible = true;
 
         this.game.world.bringToTop(this.roadSpriteStack[0]);
-        this.game.world.moveDown(this.roadSpriteStack[0]);
-        this.game.world.moveDown(this.roadSpriteStack[0]);
-        this.game.world.moveDown(this.roadSpriteStack[0]);
-        this.game.world.moveDown(this.roadSpriteStack[0]);
-        this.game.world.moveDown(this.roadSpriteStack[0]);
-        this.game.world.moveDown(this.roadSpriteStack[0]);
-        this.game.world.moveDown(this.roadSpriteStack[0]);
-        this.game.world.moveDown(this.roadSpriteStack[0]);
-        this.game.world.moveDown(this.roadSpriteStack[0]);
-        this.game.world.moveDown(this.roadSpriteStack[0]);
-        this.game.world.moveDown(this.roadSpriteStack[0]);
-        this.game.world.moveDown(this.roadSpriteStack[0]);
-        this.game.world.moveDown(this.roadSpriteStack[0]);
-        this.game.world.moveDown(this.roadSpriteStack[0]);
-        this.game.world.moveDown(this.roadSpriteStack[0]);
-        this.game.world.moveDown(this.roadSpriteStack[0]);
-        this.game.world.moveDown(this.roadSpriteStack[0]);
-        this.game.world.moveDown(this.roadSpriteStack[0]);
-        this.game.world.moveDown(this.roadSpriteStack[0]);
-        this.game.world.moveDown(this.roadSpriteStack[0]);
-        this.game.world.moveDown(this.roadSpriteStack[0]);
 
         this.roadSpriteVisible.push(this.roadSpriteStack[0]);
         
@@ -2355,8 +2291,6 @@ var PlayScene = {
         this.cameraCheckRight = true;
       }
     }
-
-    this.UI.forEach(function(a){this.game.world.bringToTop(a)}, this);
   },
 
   saveGame:function()
