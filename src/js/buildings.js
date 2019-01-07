@@ -99,7 +99,7 @@ House.prototype.tick = function(foodAmount, waterAmount, homelessArray){
 
     if(this.residentA !== undefined){
         this.residentA.tick(foodAmount, waterAmount, this.hospitalNear, this, homelessArray);
-        if(this.residentA.givingBirth){
+        if(this.residentA !== undefined && this.residentA.givingBirth){
             this.residentA.givingBirth = false;
             this.residentA.birthCooldown = 10;
             this.numberOfBirths++;
@@ -108,7 +108,7 @@ House.prototype.tick = function(foodAmount, waterAmount, homelessArray){
 
     if(this.residentB !== undefined){
         this.residentB.tick(foodAmount, waterAmount, this.hospitalNear, this, homelessArray);
-        if(this.residentB.givingBirth){
+        if(this.residentB !== undefined && this.residentB.givingBirth){
             this.residentB.givingBirth = false;
             this.residentB.birthCooldown = 10;
             this.numberOfBirths++;
@@ -186,9 +186,9 @@ House.prototype.countCitizens = function(){
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function Producer(game, x, y, img, amount, consumed = 0) { 
+function Producer(game, x, y, img, amount, consume = 0) { 
     Phaser.Sprite.call(this, game, x, y, img);
-    this.consumed = consumed;
+    this.consume = consume;
     this.workers = true;
     this.workerA = undefined;
     this.workerB = undefined;
@@ -199,11 +199,11 @@ function Producer(game, x, y, img, amount, consumed = 0) {
     this.totalAmount = amount;
     this.amount = 0;
 
-    this.off = false;
+    this.off = true;
 
     this.tooltip = new Phasetips(this.game, {
         targetObject: this,
-        context: "aaaaaaa: (Not Great) \n aaaaaaa: (Not Great)",
+        context: "building offline, production halved \n",
         strokeColor: 0xff0000,
         position: "top",
         positionOffset: 30,   
@@ -251,6 +251,10 @@ Producer.prototype.updateAmount = function() {
 
     if (this.off)
         this.amount = (this.amount * 0.5);
+
+    this.amount = Math.round(this.amount);
+
+    this.updateTooltip();
 }
 
 Producer.prototype.kill = function(citizen) {
@@ -283,45 +287,25 @@ Producer.prototype.updateTooltip = function() {
 
     var nameA = "Empty";
     var nameB = "";
-    var healthA = "";
-    var healthB = "";
+    var onOff = "Building online, production at max";
     
     if(this.workerA !== undefined){
-
-        var aux = this.workerA.health;
-
-        if(aux >= 75)
-            healthA = "Healthy";
-        else if(aux >= 50)
-            healthA = "Okay";
-        else if(aux >= 25)
-            healthA = "Not great";
-        else
-            healthA = "Dying";
 
         nameA = this.workerA.name;
     }
 
     if(this.workerB !== undefined){
 
-        var aux = this.workerB.health;
-
-        if(aux >= 75)
-            healthB = "Healthy";
-        else if(aux >= 50)
-            healthB = "Okay";
-        else if(aux >= 25)
-            healthB = "Not great";
-        else
-            healthB = "Dying";
-
         nameB = this.workerB.name;
     }
 
+    if(this.off)
+        onOff = "Building offline, production halved"
+
     if (nameA !== "Empty")
-        this.tooltip.updateContent(nameA + " (" + healthA + ")" + "\n" + nameB + " (" + healthB + ")");
+        this.tooltip.updateContent(onOff + "\n" + nameA + "\n" + nameB);
     else
-        this.tooltip.updateContent(nameA);
+        this.tooltip.updateContent(onOff + "\n" + nameA);
 };
 
 Producer.prototype.serialize = function() {
@@ -330,7 +314,7 @@ Producer.prototype.serialize = function() {
 
         saveObject.SpriteData = (this.Sprite.x, this.Sprite.y);
         saveObject.consumes = this.consumes;
-        saveObject.consumed = this.consumed;
+        saveObject.consume = this.consume;
         saveObject.workerA = this.workerA;
         saveObject.workerB = this.workerB;
         saveObject.dataA = "";
@@ -343,7 +327,7 @@ Producer.prototype.serialize = function() {
 
         var fields = [
             'consumes',
-            'consumed',
+            'consume',
             'workerA',
             'workerB',
             'dataA',
@@ -401,81 +385,40 @@ function Hospital(game, x, y, img, amount) {
     this.area = 16; //en tiles
     this.workers = false;
     this.full = false;
-    this.consumed = amount;
+    this.consume = amount;
 
-    this.off = false;
+    this.off = true;
+
+    this.tooltip = new Phasetips(this.game, {
+        targetObject: this,
+        context: "building offline, production halved",
+        strokeColor: 0xff0000,
+        position: "top",
+        positionOffset: 30,   
+        animation: "fade",
+        fixedToCamera: false
+      });
+
+    this.tooltip.updateContent("Empty");
 }
 Hospital.prototype = Object.create(Phaser.Sprite.prototype);
 Hospital.constructor = Hospital;
 
-/*Hospital.prototype.add = function(citizen) {
 
-    var added = false;
-
-    if(this.workerA === undefined){
-        this.workerA = citizen;
-        added = true;
-    }
-
-    else if(this.workerB === undefined){
-        this.workerB = citizen;
-        added = true;
-    }
-
-    this.full = (this.workerA !== undefined && this.workerB !== undefined);
-
-    return added;
-};
-
-Hospital.prototype.updateAmount = function() {
-    if (this.workerA === undefined && this.workerB === undefined)
-        this.amount = 0;
-
-    else if (!this.full)
-        this.amount = 0.5 * this.totalAmount;
-
-    else
-        this.amount = this.totalAmount;
-}
-
-Hospital.prototype.kill = function(citizen) {
-    if(this.workerA == citizen){
-        this.workerA = undefined;
-        this.full = false;
-    }
-
-    else if(this.workerB == citizen){
-        this.workerB = undefined;
-        this.full = false;
-    }
-};*/
 
 Hospital.prototype.bulldoze = function(unemployedArray) {
-    
-    /*if(this.workerA !== undefined){
-        this.workerA.unemployed = true;
-        unemployedArray.unshift(this.workerA);
-    }
-    if(this.workerB !== undefined){
-        this.workerB.unemployed = true;
-        unemployedArray.unshift(this.workerB);
-    }*/
+
 };
 
-/*Hospital.prototype.healing = function(houseGroup) {
-  
-    forEach(function (houseGroup){
-        group.forEach(function(building){
-         if (this.checkOverlap(this.Sprite, building))
-         {
-             building.residentA.health++;
-             console.log(building.residentA.health);
-             building.residentB.health++;
-             console.log(building.residentB.health);
-         }
-        }, this);
-    }, this);
-};*/
+Hospital.prototype.updateTooltip = function() {
+
+    var onOff = "Building online, working";
+
+    if(this.off)
+        onOff = "Building offline"
+
+    this.tooltip.updateContent(onOff);
+};
 
 Hospital.prototype.checkArea = function(a, b){
 
@@ -505,20 +448,9 @@ Road.constructor = Road;
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-function Cleaner(game, x, y, img) {} //i'd leave the code for this for when we have a bunch of the game made. It'd probably be mid/late-game stuff and we need an algorithm to process stuff around it
-Cleaner.prototype = Object.create(Phaser.Sprite.prototype);
-Cleaner.constructor = Cleaner;
-
-function Decor(game, x, y, img) {} //i'd leave the code for this for when we have a bunch of the game made, too
-Decor.prototype = Object.create(Phaser.Sprite.prototype);
-Decor.constructor = Decor;
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 function Citizen(homelessArray, unemployedArray) {
     this.name = (Math.random() * 100) + 1;
-    this.age = 0; //De momento no es necesario
+    this.age = 0;
     this.health = 65;
     this.sick = false;
     this.homeless = true;
@@ -569,9 +501,6 @@ Citizen.prototype.tick = function(foodAmount, waterAmount, healing, house, homel
     if(this.birthCooldown > 0)
         this.birthCooldown--;
 
-    /*if(this.sick)
-        this.health -= 5;*/
-
     if(foodAmount <= 0)
         this.health -= 5;
     else 
@@ -586,20 +515,10 @@ Citizen.prototype.tick = function(foodAmount, waterAmount, healing, house, homel
         this.health = this.health * .9;
 
     if(healing)
-    {
         this.health += 10;
 
-    if (this.health >= 100)
-        this.health = 100;
-    }
-
-    if (this.health <= 0){
-        if(!this.homeless)
-            house.kill(this);
-    }
-
     var aux = Math.floor((Math.random() * 100) + 1);
-    if (!this.homeless && house.full && this.birthCooldown <= 0 && aux < 5) //Probabilidad que se puede cambiar
+    if (!this.homeless && house.full && this.birthCooldown <= 0 && aux < 5)
         this.givingBirth = true;
 
     
@@ -607,7 +526,13 @@ Citizen.prototype.tick = function(foodAmount, waterAmount, healing, house, homel
         this.health -= 5;
     }
 
-    //this.health -= 25;
+    if (this.health >= 100)
+        this.health = 100;
+
+    if (this.health <= 0){
+        if(!this.homeless)
+            house.kill(this);
+    }
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -616,8 +541,6 @@ module.exports = {
     Road: Road,
     House: House,
     Producer: Producer,
-    Cleaner: Cleaner,
-    Decor: Decor,
     Hospital: Hospital,
     Citizen: Citizen
 };
