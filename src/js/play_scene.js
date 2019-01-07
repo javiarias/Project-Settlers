@@ -1420,7 +1420,7 @@ var PlayScene = {
         }, this);
       }, this);
 
-      overlap = overlap || this.game.input.mousePointer.x < 6 || this.game.input.mousePointer.x > 640 || this.game.input.mousePointer.y < 44 || this.game.input.mousePointer.y > 539;
+      overlap = overlap || sprite.left < 6 + this.game.camera.x || sprite.right > 640 + this.game.camera.x || sprite.top < 44 + this.game.camera.y || sprite.bottom > 539 + this.game.camera.y;
 
       var roadAdjacency;
       this.roadGroup.forEach(function (road){
@@ -1526,7 +1526,7 @@ var PlayScene = {
         auxBuilding.anchor.setTo(0.5, 0.5);
 
         auxBuilding.inputEnabled = true;
-        auxBuilding.input.priorityID = 1;
+        auxBuilding.input.priorityID = 0;
         auxBuilding.events.onInputOver.add(mouseOver, this, 0, auxBuilding);
         auxBuilding.events.onInputOut.add(mouseOut, this, 0, auxBuilding);
         auxBuilding.events.onInputDown.add(destroy, this);
@@ -1737,7 +1737,7 @@ var PlayScene = {
           auxBuilding.anchor.setTo(0.5, 0.5);
   
           auxBuilding.inputEnabled = true;
-          auxBuilding.input.priorityID = 1;
+          auxBuilding.input.priorityID = 0;
           auxBuilding.events.onInputOver.add(mouseOver, this, 0, auxBuilding);
           auxBuilding.events.onInputOut.add(mouseOut, this, 0, auxBuilding);
           auxBuilding.events.onInputDown.add(destroy, this);
