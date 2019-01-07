@@ -47,9 +47,6 @@ var PlayScene = {
       this.gameMusic.play();
       this.gameMusic.volume = this.volume / 100;
 
-    //////////////////////////////
-    //misc. variables
-
       this.paused = true;
       this.timeScale = 1;
       this.currentTime = { "hour": 0, "buffer": 0};
@@ -93,9 +90,6 @@ var PlayScene = {
       this.energyGain = 0;
       this.waterGain = 0;
       this.stoneGain = 0;
-
-      this.citizenConsume = 3;
-      this.homelessConsume = 5;
 
     //////////////////////////////
     //Groups
@@ -146,7 +140,7 @@ var PlayScene = {
       this.energyGroup.stone = 45;
       this.energyGroup.wood = 30;
       this.energyGroup.consume = 2;
-      this.energyGroup.produce = 20;
+      this.energyGroup.produce = 10;
 
       this.windGroup = this.game.add.group();
       this.buildingGroup.add(this.windGroup);
@@ -1907,13 +1901,11 @@ var PlayScene = {
 
             this.houseGroup.forEach(function(prod){
               prod.tick(this.food, this.water);
-
-              var count = prod.countCitizens();
-
               if(this.food >= this.citizenConsume)
-                this.food -= this.citizenConsume * count;
+                this.food -= this.citizenConsume;
               if(this.water >= this.citizenConsume)
-                this.water -= this.citizenConsume * count;
+                this.water -= this.citizenConsume;
+              prod.tick(this.food, this.water, prod.hospitalNear, prod, this.homelessArray, this.houseGroup);
 
               for(var i = prod.numberOfBirths; i > 0; i--)
                 var aux = new Classes.Citizen(this.homelessArray, this.unemployedArray);
@@ -1973,10 +1965,10 @@ var PlayScene = {
           this.homelessTxt.text = this.homelessArray.length;
           this.unemployedTxt.text = this.unemployedArray.length;
           this.citizensTxt.text = aux;
- 
+
           this.foodGain = 0;
           this.cropGroup.forEach(function(prod){this.foodGain += prod.amount * (this.shiftEnd - this.shiftStart)}, this);
-          this.foodGain -= (this.homelessArray.length * this.homelessConsume + (aux - this.homelessArray.length ) * this.citizenConsume);
+          this.foodGain -= (this.homelessArray.length * 5 + (aux - this.homelessArray.length ) * 3);
           var auxSymbol = "";
           var auxColor = "#FF0000";
           if(this.foodGain >= 0){
@@ -2012,7 +2004,7 @@ var PlayScene = {
 
           this.waterGain = 0;
           this.waterGroup.forEach(function(prod){this.waterGain += prod.amount * (this.shiftEnd - this.shiftStart)}, this);
-          this.waterGain -= (this.homelessArray.length * this.homelessConsume + (aux - this.homelessArray.length ) * this.citizenConsume);
+          this.waterGain -= (aux * 5);
           auxSymbol = "";
           auxColor = "#FF0000";
           if(this.waterGain >= 0){

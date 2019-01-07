@@ -32,13 +32,11 @@ House.prototype.add = function(citizen) {
     if(this.residentA === undefined){
         this.residentA = citizen;
         added = true;
-        this.residentA.consume = 3;
     }
 
     else if(this.residentB === undefined){
         this.residentB = citizen;
         added = true;
-        this.residentB.consume = 3;
     }
 
     this.full = (this.residentA !== undefined && this.residentB !== undefined);
@@ -87,12 +85,10 @@ House.prototype.bulldoze = function(homelessArray) {
     if(this.residentA !== undefined){
         this.residentA.homeless = true;
         homelessArray.unshift(this.residentA);
-        this.residentA.consume = 5;
     }
     if(this.residentB !== undefined){
         this.residentB.homeless = true;
         homelessArray.unshift(this.residentB);
-        this.residentB.consume = 5;
     }
 
     this.tooltip.destroy();
@@ -176,7 +172,16 @@ House.prototype.updateTooltip = function() {
 };
 
 House.prototype.countCitizens = function(){
-    return ((this.residentA !== undefined) + (this.residentB !== undefined));
+    var ret = 0;
+
+    if(this.residentA !== undefined){
+        ret++;
+    }
+    if(this.residentB !== undefined){
+        ret++;
+    }
+
+    return ret;
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -447,6 +452,7 @@ function Citizen(homelessArray, unemployedArray, age = 0) {
     this.name = (Math.random() * 100) + 1;
     this.age = age;
     this.health = 65;
+    this.sick = false;
     this.homeless = true;
     this.unemployed = true;
     this.birthCooldown = 0;
@@ -469,7 +475,6 @@ Citizen.prototype.addToHouse = function (houseGroup){
             if(house.add(this)){
                 found = true;
                 this.homeless = false;
-                this.consume = 3;
             }
         }
     }, this);
@@ -501,12 +506,12 @@ Citizen.prototype.tick = function(foodAmount, waterAmount, healing, house = unde
     if(this.birthCooldown > 0)
         this.birthCooldown--;
 
-    if(foodAmount < this.consume)
+    if(foodAmount <= 0)
         this.health -= 5;
     else 
         this.health += 2;
 
-    if(waterAmount < this.consume)
+    if(waterAmount <= 0)
         this.health -= 5;
     else 
         this.health += 2;
