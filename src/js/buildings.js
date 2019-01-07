@@ -98,11 +98,11 @@ House.prototype.bulldoze = function(homelessArray) {
     this.tooltip.destroy();
 };
 
-House.prototype.tick = function(foodAmount, waterAmount, homelessArray){
+House.prototype.tick = function(foodAmount, waterAmount){
     this.numberOfBirths = 0;
 
     if(this.residentA !== undefined){
-        this.residentA.tick(foodAmount, waterAmount, this.hospitalNear, this, homelessArray);
+        this.residentA.tick(foodAmount, waterAmount, this.hospitalNear, this);
         if(this.residentA !== undefined && this.residentA.givingBirth){
             this.residentA.givingBirth = false;
             this.residentA.birthCooldown = 10;
@@ -111,7 +111,7 @@ House.prototype.tick = function(foodAmount, waterAmount, homelessArray){
     }
 
     if(this.residentB !== undefined){
-        this.residentB.tick(foodAmount, waterAmount, this.hospitalNear, this, homelessArray);
+        this.residentB.tick(foodAmount, waterAmount, this.hospitalNear, this);
         if(this.residentB !== undefined && this.residentB.givingBirth){
             this.residentB.givingBirth = false;
             this.residentB.birthCooldown = 10;
@@ -443,9 +443,9 @@ Road.constructor = Road;
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-function Citizen(homelessArray, unemployedArray) {
+function Citizen(homelessArray, unemployedArray, age = 0) {
     this.name = (Math.random() * 100) + 1;
-    this.age = 0;
+    this.age = age;
     this.health = 65;
     this.homeless = true;
     this.unemployed = true;
@@ -453,7 +453,11 @@ function Citizen(homelessArray, unemployedArray) {
     this.givingBirth = false;
     homelessArray.unshift(this);
     unemployedArray.unshift(this);
+
+
     this.consume = 5;
+    this.minAge = 20;
+    this.maxAge = 75;
 }
 Citizen.constructor = Citizen;
 
@@ -491,7 +495,7 @@ Citizen.prototype.addToProducer = function (producerGroup){
     return found;
 };
 
-Citizen.prototype.tick = function(foodAmount, waterAmount, healing, house, homelessArray, houseGroup = null){
+Citizen.prototype.tick = function(foodAmount, waterAmount, healing, house = undefined){
     this.age++;
 
     if(this.birthCooldown > 0)
@@ -508,19 +512,20 @@ Citizen.prototype.tick = function(foodAmount, waterAmount, healing, house, homel
         this.health += 2;
 
     if(this.age > 100)
-        this.health = this.health/2;
+        this.health = this.health * 0.75;
 
     if(healing)
         this.health += 10;
 
-    var aux = Math.floor((Math.random() * 100) + 1);
-    if (!this.homeless && house.full && this.birthCooldown <= 0 && aux < 5)
-        this.givingBirth = true;
+    if (!this.homeless && house.full && this.birthCooldown <= 0 && this.age >= this.minAge && this.age <= this.maxAge){
+        var aux = Math.floor((Math.random() * 100) + 1);
+        if(aux <= 10)
+            this.givingBirth = true;
+        }
 
     
-    else if(this.homeless){
+    else if(this.homeless)
         this.health -= 5;
-    }
 
     if (this.health >= 100)
         this.health = 100;

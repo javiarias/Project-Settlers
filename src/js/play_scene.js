@@ -1907,7 +1907,7 @@ var PlayScene = {
             this.timeTxt.addColor("#000000", 0);
 
             this.houseGroup.forEach(function(prod){
-              prod.tick(this.food, this.water, prod.hospitalNear, prod, this.homelessArray, this.houseGroup);
+              prod.tick(this.food, this.water);
 
               var count = prod.countCitizens();
 
@@ -1921,7 +1921,7 @@ var PlayScene = {
             }, this);
 
             for (var i = this.homelessArray.length - 1; i >= 0; i--) {
-              this.homelessArray[i].tick(this.food, this.water, false, null, this.homelessArray, this.houseGroup);
+              this.homelessArray[i].tick(this.food, this.water, false);
               if(this.food >= this.homelessConsume)
                 this.food -= this.homelessConsume;
               if(this.water >= this.homelessConsume)
