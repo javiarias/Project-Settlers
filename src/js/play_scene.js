@@ -1652,7 +1652,20 @@ var PlayScene = {
     } 
 
     this.getFixedAngle = function(a, b) {
-      var auxAngle = Phaser.Point.angle(a, b);
+
+      var pointA = new Phaser.Point(a.x, a.y);
+      var pointB = new Phaser.Point(b.x, b.y);
+
+      if(a.worldX !== undefined)
+        pointA = new Phaser.Point(a.worldX, a.worldY);
+
+      if(b.worldX !== undefined)
+        pointB = new Phaser.Point(b.worldX, b.worldY);
+
+      var auxAngle = Phaser.Point.angle(pointA, pointB);
+
+      console.log(a.x + ", " + a.y);
+      console.log(b.worldX + ", " + b.y);
 
       
       var angleCos = Math.round(Math.cos(auxAngle));
