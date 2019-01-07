@@ -508,7 +508,7 @@ Citizen.prototype.tick = function(foodAmount, waterAmount, healing, house, homel
         this.health += 2;
 
     if(this.age > 100)
-        this.health = this.health * .9;
+        this.health = this.health/2;
 
     if(healing)
         this.health += 10;
