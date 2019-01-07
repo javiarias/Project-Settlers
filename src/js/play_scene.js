@@ -47,6 +47,10 @@ var PlayScene = {
       this.gameMusic.play();
       this.gameMusic.volume = this.volume / 100;
 
+
+    //////////////////////////////
+    //misc. variables
+
       this.paused = true;
       this.timeScale = 1;
       this.currentTime = { "hour": 0, "buffer": 0};
@@ -90,6 +94,9 @@ var PlayScene = {
       this.energyGain = 0;
       this.waterGain = 0;
       this.stoneGain = 0;
+
+      this.citizenConsume = 3;
+      this.homelessConsume = 5;
 
     //////////////////////////////
     //Groups
@@ -1901,9 +1908,14 @@ var PlayScene = {
 
             this.houseGroup.forEach(function(prod){
               prod.tick(this.food, this.water);
+
+              var count = prod.countCitizens();
+
               if(this.food >= this.citizenConsume)
+                this.food -= this.citizenConsume * count;
                 this.food -= this.citizenConsume;
               if(this.water >= this.citizenConsume)
+                this.water -= this.citizenConsume * count;
                 this.water -= this.citizenConsume;
               prod.tick(this.food, this.water, prod.hospitalNear, prod, this.homelessArray, this.houseGroup);
 
@@ -1968,7 +1980,7 @@ var PlayScene = {
 
           this.foodGain = 0;
           this.cropGroup.forEach(function(prod){this.foodGain += prod.amount * (this.shiftEnd - this.shiftStart)}, this);
-          this.foodGain -= (this.homelessArray.length * 5 + (aux - this.homelessArray.length ) * 3);
+          this.foodGain -= (this.homelessArray.length * this.homelessConsume + (aux - this.homelessArray.length ) * this.citizenConsume);
           var auxSymbol = "";
           var auxColor = "#FF0000";
           if(this.foodGain >= 0){
@@ -2004,7 +2016,7 @@ var PlayScene = {
 
           this.waterGain = 0;
           this.waterGroup.forEach(function(prod){this.waterGain += prod.amount * (this.shiftEnd - this.shiftStart)}, this);
-          this.waterGain -= (aux * 5);
+          this.waterGain -= (this.homelessArray.length * this.homelessConsume + (aux - this.homelessArray.length ) * this.citizenConsume);
           auxSymbol = "";
           auxColor = "#FF0000";
           if(this.waterGain >= 0){
