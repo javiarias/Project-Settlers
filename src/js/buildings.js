@@ -516,7 +516,7 @@ Citizen.prototype.tick = function(foodAmount, waterAmount, healing, house = unde
 
     if(healing)
         this.health += 10;
-
+        
     if (!this.homeless && house.full && this.birthCooldown <= 0 && this.age >= this.minAge && this.age <= this.maxAge){
         var aux = Math.floor((Math.random() * 100) + 1);
         if(aux <= 10)
