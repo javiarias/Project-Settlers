@@ -62,11 +62,24 @@ var PlayScene = {
       this._buildModeActive = false;
       this._destroyModeActive = false;
       this._escapeMenu = false;
+      this.roadBuilding = false;
       this.fade;
 
       this._buildingModeSprite;
       this._buildingModeType = "";
       this._buildingModeArea;
+
+      this.roadSpriteStack = [];
+      for(var i = 0; i < 40; i++){
+        var aux = this.game.add.sprite(0, 0, "Road");
+        aux.visible = false;
+        aux.anchor.setTo(.5, .5);
+
+        this.roadSpriteStack.push(aux);
+      }
+
+      this.roadSpriteVisible = [];
+      this.currentRoadAngle = 0;
 
     //////////////////////////////
     //Resources
@@ -1260,11 +1273,14 @@ var PlayScene = {
 
     function buildMode(key = undefined, group){
       if(!this._escapeMenu) {
+        this.roadBuilding = false;
+
         if(this._destroyModeActive)
           this._destroyModeActive = false;
 
 
         if(!this._buildModeActive){
+
           this._buildingModeSprite = this.game.add.sprite(this.game.input.mousePointer.x, this.game.input.mousePointer.y, group.sprite);
           this._buildingModeSprite.anchor.setTo(0.5, 0.5);
           this._buildingModeSprite.alpha = 0.7;
@@ -1320,7 +1336,11 @@ var PlayScene = {
           this._destroyModeActive = false;
         }
         else if(this._buildModeActive)
-          build.call(this);
+          if(this._buildingModeType == this.roadGroup && !this.roadBuilding){
+            this.roadBuilding = true;
+          }
+          else
+            build.call(this);
       }
     }
 
@@ -1588,6 +1608,23 @@ var PlayScene = {
     {
       var citizen = new Classes.Citizen(this.homelessArray, this.unemployedArray, 20);
     } 
+
+    this.getFixedAngle = function(a, b) {
+      var auxAngle = (Math.atan2(b.y - a.y, b.x - a.x) * 180 / Math.PI);
+
+      
+
+      if(auxAngle > 315 && auxAngle <= 45)
+        auxAngle = 0;
+      else if(auxAngle > 45 && auxAngle <= 135)
+        auxAngle = 90;
+      else if(auxAngle > 135 && auxAngle <= 225)
+        auxAngle = 180;
+      else
+        auxAngle = 270;
+
+      return auxAngle;
+    }
 
   //////////////////////////////
   //initial creation of citizens
@@ -2059,44 +2096,70 @@ var PlayScene = {
 
       else if(this._buildModeActive){
 
-        var offset = 0;
+        if(true){/*this.roadBuilding) {
 
-        if((this._buildingModeSprite.height / 16) % 2 == 0)
-          offset = 8;
+          var auxAngle;
+          
+          if(this.roadSpriteVisible.length != 0)
+            auxAngle = this.getFixedAngle(this.game.input, this.roadSpriteVisible[this.roadSpriteVisible.length - 1]);
+          else
+            auxAngle = this.getFixedAngle(this.game.input, this._buildingModeSprite);
 
-        this._buildingModeSprite.x = Math.round(this.game.input.worldX / this._tileSize) * this._tileSize;
-        this._buildingModeSprite.y = offset + Math.round(this.game.input.worldY / this._tileSize) * this._tileSize;
+          if(auxAngle != this.currentRoadAngle){
+            this.currentRoadAngle = auxAngle
+            for(var i = 0; i < roadSpriteVisible.length; i++) {
+              roadSpriteVisible[i].visible = false;
+              roadSpriteStack.push(roadSpriteVisible[i]);
+              roadSpriteVisible.splice(i, 1);
+              i--; 
+            }
+          }
+          
 
-        if(this._buildingModeArea !== undefined){
-          this._buildingModeArea.x = Math.round(this.game.input.worldX / this._tileSize) * this._tileSize;
-          this._buildingModeArea.y = offset + Math.round(this.game.input.worldY / this._tileSize) * this._tileSize;
+
         }
 
-        var overlap = false;
+        else {*/
 
-        this.buildingGroup.forEach(function (group){
-          group.forEach(function(building){
-            overlap = overlap || this.checkOverlap.call(this, this._buildingModeSprite, building);
+          var offset = 0;
+
+          if((this._buildingModeSprite.height / 16) % 2 == 0)
+            offset = 8;
+
+          this._buildingModeSprite.x = Math.round(this.game.input.worldX / this._tileSize) * this._tileSize;
+          this._buildingModeSprite.y = offset + Math.round(this.game.input.worldY / this._tileSize) * this._tileSize;
+
+          if(this._buildingModeArea !== undefined){
+            this._buildingModeArea.x = Math.round(this.game.input.worldX / this._tileSize) * this._tileSize;
+            this._buildingModeArea.y = offset + Math.round(this.game.input.worldY / this._tileSize) * this._tileSize;
+          }
+
+          var overlap = false;
+
+          this.buildingGroup.forEach(function (group){
+            group.forEach(function(building){
+              overlap = overlap || this.checkOverlap.call(this, this._buildingModeSprite, building);
+            }, this);
+
           }, this);
 
-        }, this);
+          overlap = overlap || this.game.input.mousePointer.x < 6 || this.game.input.mousePointer.x > 640 || this.game.input.mousePointer.y < 44 || this.game.input.mousePointer.y > 539;
 
-        overlap = overlap || this.game.input.mousePointer.x < 6 || this.game.input.mousePointer.x > 640 || this.game.input.mousePointer.y < 44 || this.game.input.mousePointer.y > 539;
+          var roadAdjacency = (this._buildingModeType == this.roadGroup);
 
-        var roadAdjacency = (this._buildingModeType == this.roadGroup);
+          this.roadGroup.forEach(function (road){
+            roadAdjacency = roadAdjacency || this.checkAdjacency.call(this, this._buildingModeSprite, road);
+          }, this);
 
-        this.roadGroup.forEach(function (road){
-          roadAdjacency = roadAdjacency || this.checkAdjacency.call(this, this._buildingModeSprite, road);
-        }, this);
-
-      var waterObstacle = this.checkObstacles.call(this, this._buildingModeSprite, "water");
-      var mountainObstacle = this.checkObstacles.call(this, this._buildingModeSprite, "mountain");
+          var waterObstacle = this.checkObstacles.call(this, this._buildingModeSprite, "water");
+          var mountainObstacle = this.checkObstacles.call(this, this._buildingModeSprite, "mountain");
 
 
-      if(!overlap && !mountainObstacle && (this._buildingModeType == this.roadGroup || (roadAdjacency && this.wood >= this._buildingModeType.wood && this.stone >= this._buildingModeType.stone && !waterObstacle)))
-          this._buildingModeSprite.tint = 0xFFFFFF; //el sprite se pone de color normal si se puede construir
-        else
-          this._buildingModeSprite.tint = 0xFF0000;
+          if(!overlap && !mountainObstacle && (this._buildingModeType == this.roadGroup || (roadAdjacency && this.wood >= this._buildingModeType.wood && this.stone >= this._buildingModeType.stone && !waterObstacle)))
+            this._buildingModeSprite.tint = 0xFFFFFF;
+          else
+            this._buildingModeSprite.tint = 0xFF0000;
+        }
       }
 
       if (this.cursors.up.isDown || this.cursorsAlt.up.isDown){
