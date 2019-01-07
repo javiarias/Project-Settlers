@@ -71,7 +71,7 @@ var PlayScene = {
         this.wood = 75;
         this.uranium = 0;
         this.energy = 0;
-        this.water = 50;
+        this.water = 100;
         this.stone = 75;
       }
 
@@ -108,7 +108,7 @@ var PlayScene = {
       this.waterGroup.stone = 10;
       this.waterGroup.wood = 10;
       this.waterGroup.consume = 1;
-      this.waterGroup.produce = 1;
+      this.waterGroup.produce = 2;
 
       this.cropGroup = this.game.add.group();
       this.buildingGroup.add(this.cropGroup);
@@ -116,7 +116,7 @@ var PlayScene = {
       this.cropGroup.stone = 10;
       this.cropGroup.wood = 10;
       this.cropGroup.consume = 1;
-      this.cropGroup.produce = 1;
+      this.cropGroup.produce = 2;
 
       this.woodGroup = this.game.add.group();
       this.buildingGroup.add(this.woodGroup);
@@ -140,7 +140,7 @@ var PlayScene = {
       this.energyGroup.stone = 45;
       this.energyGroup.wood = 30;
       this.energyGroup.consume = 2;
-      this.energyGroup.produce = 45;
+      this.energyGroup.produce = 20;
 
       this.windGroup = this.game.add.group();
       this.buildingGroup.add(this.windGroup);
@@ -169,7 +169,6 @@ var PlayScene = {
       this.stoneGroup.wood = 15;
       this.stoneGroup.consume = 3;
       this.stoneGroup.produce = 1;
-
 
     //////////////////////////////
     //pause menu
@@ -1580,7 +1579,7 @@ var PlayScene = {
 
     function addCitizen()
     {
-      var citizen = new Classes.Citizen(this.homelessArray, this.unemployedArray);
+      var citizen = new Classes.Citizen(this.homelessArray, this.unemployedArray, 20);
     } 
 
   //////////////////////////////

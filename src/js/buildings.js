@@ -448,9 +448,9 @@ Road.constructor = Road;
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-function Citizen(homelessArray, unemployedArray) {
+function Citizen(homelessArray, unemployedArray, age = 0) {
     this.name = (Math.random() * 100) + 1;
-    this.age = 0;
+    this.age = age;
     this.health = 65;
     this.sick = false;
     this.homeless = true;
@@ -518,12 +518,12 @@ Citizen.prototype.tick = function(foodAmount, waterAmount, healing, house, homel
         this.health += 10;
 
     var aux = Math.floor((Math.random() * 100) + 1);
-    if (!this.homeless && house.full && this.birthCooldown <= 0 && aux < 5)
+    if (!this.homeless && house.full && this.birthCooldown <= 0 && aux < 10 && this.age > 20 && this.age < 75)
         this.givingBirth = true;
 
     
     else if(this.homeless){
-        this.health -= 5;
+        this.health -= 10;
     }
 
     if (this.health >= 100)
