@@ -210,6 +210,7 @@ var PlayScene = {
       pauseSettings.fixedToCamera = true;
       pauseSettings.smoothed = false;
       pauseSettings.onDownSound = this.buttonSound;
+      pauseSettings.input.priorityID = 2;
       this.pauseMenu.add(pauseSettings);
 
       var pauseMinimize = this.game.add.button(pauseBkg.x, pauseBkg.y + 3, "minBttn", escape, this, 0, 0, 1);
@@ -217,26 +218,29 @@ var PlayScene = {
       pauseMinimize.fixedToCamera = true;
       pauseMinimize.smoothed = false;
       pauseMinimize.onDownSound = this.buttonSound;
+      pauseMinimize.input.priorityID = 2;
       this.pauseMenu.add(pauseMinimize);
 
       if (this.mode == 0)
       {
-      var saveBttn = this.game.add.button(pauseBkg.x + 72, pauseBkg.y + 3, "saveBttn", function(){this.saveGame();this.gameMusic.stop();this.game.state.start('main');}, this, 0, 0, 1);
-      saveBttn.anchor.setTo(0.5, 0.5);
-      saveBttn.fixedToCamera = true;
-      saveBttn.smoothed = false;
-      saveBttn.onDownSound = this.buttonSound;
-      this.pauseMenu.add(saveBttn);
+        var saveBttn = this.game.add.button(pauseBkg.x + 72, pauseBkg.y + 3, "saveBttn", function(){this.saveGame(); this.gameMusic.stop(); this.game.state.start('main');}, this, 0, 0, 1);
+        saveBttn.anchor.setTo(0.5, 0.5);
+        saveBttn.fixedToCamera = true;
+        saveBttn.smoothed = false;
+        saveBttn.onDownSound = this.buttonSound;
+        saveBttn.input.priorityID = 2;
+        this.pauseMenu.add(saveBttn);
       }
 
       else if (this.mode == 1)
       {
-      var pauseExit = this.game.add.button(pauseBkg.x + 72, pauseBkg.y + 3, "exitBttn", function(){this.gameMusic.stop();this.game.state.start('main');}, this, 0, 0, 1);
-      pauseExit.anchor.setTo(0.5, 0.5);
-      pauseExit.fixedToCamera = true;
-      pauseExit.smoothed = false;
-      pauseExit.onDownSound = this.buttonSound;
-      this.pauseMenu.add(pauseExit);
+        var pauseExit = this.game.add.button(pauseBkg.x + 72, pauseBkg.y + 3, "exitBttn", function(){this.gameMusic.stop();this.game.state.start('main');}, this, 0, 0, 1);
+        pauseExit.anchor.setTo(0.5, 0.5);
+        pauseExit.fixedToCamera = true;
+        pauseExit.smoothed = false;
+        pauseExit.onDownSound = this.buttonSound;
+        pauseExit.input.priorityID = 2;
+        this.pauseMenu.add(pauseExit);
       }
 
       this.pauseMenu.visible = false;
@@ -262,6 +266,7 @@ var PlayScene = {
       optionsMinus.fixedToCamera = true;
       optionsMinus.smoothed = false;
       optionsMinus.onDownSound = this.buttonSound;
+      optionsMinus.input.priorityID = 2;
       this.optionsMenu.add(optionsMinus);
       
       var optionsPlus = this.game.add.button(optionsBkg.x + 77, optionsBkg.y - 20, "plusBttn", function(){updateVolume.call(this, 5);}, this, 0, 0, 1);
@@ -269,6 +274,7 @@ var PlayScene = {
       optionsPlus.fixedToCamera = true;
       optionsPlus.smoothed = false;
       optionsPlus.onDownSound = this.buttonSound;
+      optionsPlus.input.priorityID = 2;
       this.optionsMenu.add(optionsPlus);
 
       var optionsBack = this.game.add.button(optionsBkg.x - 47, optionsBkg.y + 48, "backBttn", function(){this.optionsMenu.visible = false; this.pauseMenu.visible = true; this.game.world.bringToTop(this.pauseMenu);}, this, 0, 0, 1);
@@ -276,15 +282,15 @@ var PlayScene = {
       optionsBack.fixedToCamera = true;
       optionsBack.smoothed = false;
       optionsBack.onDownSound = this.buttonSound;
+      optionsPlus.input.priorityID = 2;
       this.optionsMenu.add(optionsBack);
 
       var optionsMute = this.game.add.button(optionsBkg.x + 47, optionsBkg.y + 48, "muteBttn", function(){mute.call(this);}, this, 0, 0, 1);
-      if(this.game.sound.mute)
-        optionsMute.setFrames(2, 2, 3);
       optionsMute.anchor.setTo(0.5, 0.5);
       optionsMute.fixedToCamera = true;
       optionsMute.smoothed = false;
       optionsMute.onDownSound = this.buttonSound;
+      optionsMute.input.priorityID = 2;
       this.optionsMenu.add(optionsMute);
 
       this.optionsMenu.visible = false;
@@ -323,6 +329,8 @@ var PlayScene = {
       this.UIBkg = this.game.add.sprite(0, 0, "UI");
       this.UIBkg.fixedToCamera = true;
       this.UIBkg.smoothed = false;
+      this.UIBkg.inputEnabled = true;
+      this.UIBkg.input.useHandCursor = false;
 
       this.UI.add(this.UIBkg);
 
@@ -335,6 +343,7 @@ var PlayScene = {
       escapeBttn.smoothed = false;
       escapeBttn.scale.setTo(0.7, 0.7);
       escapeBttn.onDownSound = this.buttonSound;
+      escapeBttn.input.priorityID = 2;
       this.UI.add(escapeBttn);
 
       var numberOfButtons = 11;
@@ -353,6 +362,7 @@ var PlayScene = {
       this.roadBttn.smoothed = false;
       this.roadBttn.scale.setTo(scale, scale);
       this.roadBttn.onDownSound = this.buttonSound;
+      this.roadBttn.input.priorityID = 2;
       if (this.mode == 1)
       {
         this.roadBttn.visible = false;
@@ -366,6 +376,7 @@ var PlayScene = {
       this.houseBttn.smoothed = false;
       this.houseBttn.scale.setTo(scale, scale);
       this.houseBttn.onDownSound = this.buttonSound;
+      this.houseBttn.input.priorityID = 2;
       if (this.mode == 1)
       {
         this.houseBttn.visible = false;
@@ -379,6 +390,7 @@ var PlayScene = {
       this.waterBttn.smoothed = false;
       this.waterBttn.scale.setTo(scale, scale);
       this.waterBttn.onDownSound = this.buttonSound;
+      this.waterBttn.input.priorityID = 2;
       if (this.mode == 1)
       {
         this.waterBttn.visible = false;
@@ -392,6 +404,7 @@ var PlayScene = {
       this.cropBttn.smoothed = false;
       this.cropBttn.scale.setTo(scale, scale);
       this.cropBttn.onDownSound = this.buttonSound;
+      this.cropBttn.input.priorityID = 2;
       if (this.mode == 1)
       {
         this.cropBttn.visible = false;
@@ -405,6 +418,7 @@ var PlayScene = {
       this.woodBttn.smoothed = false;
       this.woodBttn.scale.setTo(scale, scale);
       this.woodBttn.onDownSound = this.buttonSound;
+      this.woodBttn.input.priorityID = 2;
       if (this.mode == 1)
       {
         this.woodBttn.visible = false;
@@ -418,6 +432,7 @@ var PlayScene = {
       this.stoneBttn.smoothed = false;
       this.stoneBttn.scale.setTo(scale, scale);
       this.stoneBttn.onDownSound = this.buttonSound;
+      this.stoneBttn.input.priorityID = 2;
       if (this.mode == 1)
       {
         this.stoneBttn.visible = false;
@@ -431,6 +446,7 @@ var PlayScene = {
       this.uraniumBttn.smoothed = false;
       this.uraniumBttn.scale.setTo(scale, scale);
       this.uraniumBttn.onDownSound = this.buttonSound;
+      this.uraniumBttn.input.priorityID = 2;
       if (this.mode == 1)
       {
         this.uraniumBttn.visible = false;
@@ -444,6 +460,7 @@ var PlayScene = {
       this.energyBttn.smoothed = false;
       this.energyBttn.scale.setTo(scale, scale);
       this.energyBttn.onDownSound = this.buttonSound;
+      this.energyBttn.input.priorityID = 2;
       if (this.mode == 1)
       {
         this.energyBttn.visible = false;
@@ -457,6 +474,7 @@ var PlayScene = {
       this.windBttn.smoothed = false;
       this.windBttn.scale.setTo(scale, scale);
       this.windBttn.onDownSound = this.buttonSound;
+      this.windBttn.input.priorityID = 2;
       if (this.mode == 1)
       {
         this.windBttn.visible = false;
@@ -470,6 +488,7 @@ var PlayScene = {
       this.hospitalBttn.smoothed = false;
       this.hospitalBttn.scale.setTo(scale, scale);
       this.hospitalBttn.onDownSound = this.buttonSound;
+      this.hospitalBttn.input.priorityID = 2;
       if (this.mode == 1)
       {
         this.hospitalBttn.visible = false;
@@ -483,6 +502,7 @@ var PlayScene = {
       this.bulldozeBttn.smoothed = false;
       this.bulldozeBttn.scale.setTo(scale, scale);
       this.bulldozeBttn.onDownSound = this.buttonSound;
+      this.bulldozeBttn.input.priorityID = 2;
       if (this.mode == 1)
       {
         this.bulldozeBttn.visible = false;
@@ -516,6 +536,9 @@ var PlayScene = {
       this.foodIcon.anchor.setTo(1, 0);
       this.foodIcon.fixedToCamera = true;
       this.foodIcon.smoothed = false;
+      this.foodIcon.inputEnabled = true;
+      this.foodIcon.input.useHandCursor = false;
+      this.foodIcon.input.priorityID = 1;
 
       this.foodTxtGroup.add(this.foodIcon);
 
@@ -562,6 +585,9 @@ var PlayScene = {
       this.waterIcon.anchor.setTo(1, 0);
       this.waterIcon.fixedToCamera = true;
       this.waterIcon.smoothed = false;
+      this.waterIcon.inputEnabled = true;
+      this.waterIcon.input.useHandCursor = false;
+      this.waterIcon.input.priorityID = 1;
 
       this.waterTxtGroup.add(this.waterIcon);
 
@@ -608,6 +634,9 @@ var PlayScene = {
       this.woodIcon.anchor.setTo(.5, 0);
       this.woodIcon.fixedToCamera = true;
       this.woodIcon.smoothed = false;
+      this.woodIcon.inputEnabled = true;
+      this.woodIcon.input.useHandCursor = false;
+      this.woodIcon.input.priorityID = 1;
 
       this.woodTxtGroup.add(this.woodIcon);
 
@@ -655,7 +684,10 @@ var PlayScene = {
       this.stoneIcon.anchor.setTo(.5, 0);
       this.stoneIcon.fixedToCamera = true;
       this.stoneIcon.smoothed = false;
-
+      this.stoneIcon.inputEnabled = true;
+      this.stoneIcon.input.useHandCursor = false;
+      this.stoneIcon.input.priorityID = 1;
+      
       this.stoneTxtGroup.add(this.stoneIcon);
 
 
@@ -702,6 +734,9 @@ var PlayScene = {
       this.uraniumIcon.anchor.setTo(.5, 0);
       this.uraniumIcon.fixedToCamera = true;
       this.uraniumIcon.smoothed = false;
+      this.uraniumIcon.inputEnabled = true;
+      this.uraniumIcon.input.useHandCursor = false;
+      this.uraniumIcon.input.priorityID = 1;
 
       this.uraniumTxtGroup.add(this.uraniumIcon);
       
@@ -749,6 +784,9 @@ var PlayScene = {
       this.energyIcon.anchor.setTo(.5, 0);
       this.energyIcon.fixedToCamera = true;
       this.energyIcon.smoothed = false;
+      this.energyIcon.inputEnabled = true;
+      this.energyIcon.input.useHandCursor = false;
+      this.energyIcon.input.priorityID = 1;
 
       this.energyTxtGroup.add(this.energyIcon);
 
@@ -796,7 +834,10 @@ var PlayScene = {
       this.citizensIcon.anchor.setTo(.5, 0);
       this.citizensIcon.fixedToCamera = true;
       this.citizensIcon.smoothed = false;
-
+      this.citizensIcon.inputEnabled = true;
+      this.citizensIcon.input.useHandCursor = false;
+      this.citizensIcon.input.priorityID = 1;
+      
       this.citizensTxtGroup.add(this.citizensIcon);
 
 
@@ -827,6 +868,9 @@ var PlayScene = {
       this.homelessIcon.anchor.setTo(.5, 0);
       this.homelessIcon.fixedToCamera = true;
       this.homelessIcon.smoothed = false;
+      this.homelessIcon.inputEnabled = true;
+      this.homelessIcon.input.useHandCursor = false;
+      this.homelessIcon.input.priorityID = 1;
 
       this.homelessTxtGroup.add(this.homelessIcon);
 
@@ -858,7 +902,10 @@ var PlayScene = {
     this.unemployedIcon.anchor.setTo(.5, 0);
     this.unemployedIcon.fixedToCamera = true;
     this.unemployedIcon.smoothed = false;
-
+    this.unemployedIcon.inputEnabled = true;
+    this.unemployedIcon.input.useHandCursor = false;
+    this.unemployedIcon.input.priorityID = 1;
+    
     this.unemployedTxtGroup.add(this.unemployedIcon);
 
 
@@ -1565,6 +1612,14 @@ var PlayScene = {
         this.UI.forEach(function(button){
           button.inputEnabled = !this._escapeMenu;
         }, this);
+        
+        this.buildingGroup.forEach(function(group){
+          group.forEach(function(a){
+            if(a.tooltip !== undefined){
+                a.tooltip.toggleTooltip(!this._escapeMenu);
+            }
+          }, this);
+        }, this);
       }
     }
 
@@ -1952,7 +2007,6 @@ var PlayScene = {
                 this.food -= this.citizenConsume * count;
               if(this.water >= this.citizenConsume)
                 this.water -= this.citizenConsume * count;
-              prod.tick(this.food, this.water, prod.hospitalNear, prod, this.homelessArray, this.houseGroup);
 
               for(var i = prod.numberOfBirths; i > 0; i--)
                 var aux = new Classes.Citizen(this.homelessArray, this.unemployedArray);
@@ -2190,8 +2244,6 @@ var PlayScene = {
         this.cameraCheckRight = true;
       }
     }
-
-    this.UIBkg.inputEnabled = !this.cameraCheck;
   },
 
   saveGame:function()

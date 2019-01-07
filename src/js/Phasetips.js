@@ -17,56 +17,62 @@ var Phasetips = function(localGame, options) {
     };
 
     this.onHoverOver = function() {
-        if (_this.tweenObj) {
-            _this.tweenObj.stop();
-        }
-        if (_options.animation === "fade") {
-            _this.tweenObj = game.add.tween(_this.mainGroup).to({
-                alpha: 1
-            }, _options.animationSpeedShow, Phaser.Easing.Linear.None, true, _options.animationDelay, 0, false);
-        } else if (_options.animation === "slide") {
+        if(_this.enabled) {
+            if (_this.tweenObj) {
+                _this.tweenObj.stop();
+            }
+            if (_options.animation === "fade") {
+                _this.tweenObj = game.add.tween(_this.mainGroup).to({
+                    alpha: 1
+                }, _options.animationSpeedShow, Phaser.Easing.Linear.None, true, _options.animationDelay, 0, false);
+            } else if (_options.animation === "slide") {
 
-        } else if (_options.animation === "grow") {
+            } else if (_options.animation === "grow") {
 
-            _this.mainGroup.pivot.setTo(_this.mainGroup.width / 2, _this.mainGroup.height);
-            _this.mainGroup.pivot.setTo(_this.mainGroup.width / 2, _this.mainGroup.height);
-            _this.mainGroup.x = _this.mainGroup.initialX + _this.mainGroup.width / 2;
-            _this.mainGroup.y = _this.mainGroup.initialY + _this.mainGroup.height;
-            _this.mainGroup.scale.setTo(0, 0);
-            _this.mainGroup.alpha = 1;
-            _this.tweenObj = game.add.tween(_this.mainGroup.scale).to({
-                x: 1,
-                y: 1
-            }, _options.animationSpeedShow, Phaser.Easing.Linear.None, true, _options.animationDelay, 0, false);
-        } else {
-            _this.mainGroup.visible = true;
-            _this.mainGroup.alpha = 1;
-        }
+                _this.mainGroup.pivot.setTo(_this.mainGroup.width / 2, _this.mainGroup.height);
+                _this.mainGroup.pivot.setTo(_this.mainGroup.width / 2, _this.mainGroup.height);
+                _this.mainGroup.x = _this.mainGroup.initialX + _this.mainGroup.width / 2;
+                _this.mainGroup.y = _this.mainGroup.initialY + _this.mainGroup.height;
+                _this.mainGroup.scale.setTo(0, 0);
+                _this.mainGroup.alpha = 1;
+                _this.tweenObj = game.add.tween(_this.mainGroup.scale).to({
+                    x: 1,
+                    y: 1
+                }, _options.animationSpeedShow, Phaser.Easing.Linear.None, true, _options.animationDelay, 0, false);
+            } else {
+                _this.mainGroup.visible = true;
+                _this.mainGroup.alpha = 1;
+            }
 
-        if (_options.onHoverCallback) {
-            _options.onHoverCallback(_this);
+            if (_options.onHoverCallback) {
+                _options.onHoverCallback(_this);
+            }
         }
     };
 
     this.onHoverOut = function() {
-        if (_this.tweenObj) {
-            _this.tweenObj.stop();
-        }
+        if(_this.enabled){
+            if (_this.tweenObj) {
+                _this.tweenObj.stop();
+            }
 
-        if (_options.animation === "fade") {
-            _this.tweenObj = game.add.tween(_this.mainGroup).to({
-                alpha: 0
-            }, _options.animationSpeedHide, Phaser.Easing.Linear.None, true, 0, 0, false);
-        } else {
-            _this.mainGroup.alpha = 0;
-        }
+            if (_options.animation === "fade") {
+                _this.tweenObj = game.add.tween(_this.mainGroup).to({
+                    alpha: 0
+                }, _options.animationSpeedHide, Phaser.Easing.Linear.None, true, 0, 0, false);
+            } else {
+                _this.mainGroup.alpha = 0;
+            }
 
-        if (_options.onOutCallback) {
-            _options.onOutCallback(_this);
+            if (_options.onOutCallback) {
+                _options.onOutCallback(_this);
+            }
         }
     };
 
     this.createTooltips = function() {
+
+        _this.enabled = true;
 
         // layout
         var _width = _options.width || "auto";
@@ -335,6 +341,9 @@ var Phasetips = function(localGame, options) {
         },
         updateContent: function(string) {
             _this.tooltipContent.text = string;
+        },
+        toggleTooltip: function(bool) {
+            _this.enabled = bool;
         }
     };
 };
