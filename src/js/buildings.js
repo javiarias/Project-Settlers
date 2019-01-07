@@ -170,7 +170,7 @@ House.prototype.updateTooltip = function() {
         hospital = "Hospital in range! \n"
 
     if (nameA != "Empty"){
-        if(nameB == "Empty")
+        if(nameB == "")
             this.tooltip.updateContent(hospital + nameA + ": " + ageA + " old " + "(" + healthA + ")" + "\n" + nameB);
         else
             this.tooltip.updateContent(hospital + nameA + ": " + ageA + " old " + "(" + healthA + ")" + "\n" + nameB + ": " + ageB + " old " + "(" + healthB + ")");
@@ -449,8 +449,8 @@ Road.constructor = Road;
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-function Citizen(homelessArray, unemployedArray, age = 0) {
-    this.name = (Math.random() * 100) + 1;
+function Citizen(homelessArray, unemployedArray, names, surnames, age = 0) {
+    this.name = names[Math.round(Math.random() * 20)] + " " + surnames[Math.round(Math.random() * 20)];
     this.age = age;
     this.health = 65;
     this.homeless = true;
