@@ -1,16 +1,29 @@
 <h1 align="center"> Project Settlers </h1>
 
-<p align="center"> <a href = "#ENG"> English :uk: </a> | <a href = "#ESP"> Español :es: </a> </p>
+<p align="center"> <a href = "#ENG"> English :uk: </a>
 
 
 ## <a name="ENG"> :uk: </a>
 
-**Project Settlers** (WIP) is a project to create a real-time resource management game.
 To deal with a possible global nuclear catastrophe, the government has developed a simulator through which citizens of the future like you will be ready and able to cope with anything that slows down the resurgence of the human race.
 
 Your objective will be to rebuild human society, starting from a small population and a limited amount of resources. You will have to keep your citizens healthy and happy by providing food and clean water, generating energy, monitoring radiation levels and keeping your city clean and safe. To do this, you will have access to blueprints of various facilities such as farms, decorative structures, water filters, roads, hospitals...
 
 But beware! The world of the future is (EVEN) worse than today, and you may not have the same conveniences you have now. Toxic climate, unexpected mutations, lack of food... Moreover, resources are not infinite: you will have to scout the moors for ruins to explore and exploit.
+
+
+
+
+**Project Settlers** is a real-time resource management game created by <a href="http://github.com/javiarias">Javier Arias</a> and <a href="http://github.com/IgnOry">Ignacio Ory</a>, two second-year students of Game Development at the Complutense University of Madrid (Universidad Complutense De Madrid"), as a four month proyect to learn about Javascript and designing games for the web.
+
+The game counts with pixel-art graphics and an aesthetic inspired by old operating systems like Windows 98
+Players are able to build and modify their own post-apocalyptic town from a top-down perspective, and will have to manage resources and space to help the town's citizens survive and prosper, providing theem with sustenance, jobs and places to live in.
+
+
+As fans of games like The Settlers and Frostpunk, we wanted to make a game that would not only help us learn about a new programming language, but also be fun to design and create from the start. There were many bumps along the road (most of them thanks to Javascript), but we think we managed to make a good homage to the genre in the small time we had to develop this game. We only hope you, the player, will enjoy playing it just as much as we did making it.
+
+
+
 
 ### Features:
 
@@ -18,30 +31,18 @@ But beware! The world of the future is (EVEN) worse than today, and you may not 
 - Real time game system.
 - Retro graphics.
 - A (simple) simulation of society
+- **Playable online, NO downloads required!**
+- Saves stored locally, so you only need to play from your browser of choice.
+
+### List of assets used:
+
+- Webpage background (https://opengameart.org/content/communication-terminal-32x32)
+-
+-
+-
+
 
 We don't have any images from the project yet, but we do have several references (The Settlers, Frostpunk, Anno, Fallout) to offer in order to give a basic idea of how the game will look like.
 
 <img src="https://www.freegameempire.com/Img/Cache/Games/Settlers-2/Screenshot-5.png" />
 (Source: www.freegameempire.com)
-
-
-## <a name="ESP"> :es: </a>
-
-**Project Settlers** (nombre provisional) es un proyecto para crear un videojuego de gestión de recursos en tiempo real.
-Para hacer frente a una posible catástrofe nuclear a nivel mundial, el gobierno ha desarrollado un simulador gracias al cual los ciudadanos del futuro como tú podrán estar preparados y hacer frente a todo aquello que frene el resurgimiento de la raza humana.
-
-Tu objetivo será reconstruir la sociedad humana, partiendo de una población reducida y una cantidad limitada de recursos. Deberás mantener a tus ciudadanos sanos y contentos produciendo alimentos, potabilizando agua, generando energía, vigilando los niveles de radiación y manteniendo tu ciudad limpia y segura. Para ello, contarás con los planos de diversas instalaciones tales como granjas, decoraciones, filtros de agua, caminos, hospitales...
-
-Pero, ¡ten cuidado! El mundo del futuro es (AÚN) peor que el actual, y quizá no dispongas de las mismas comodidades que tienes ahora. Clima tóxico, mutaciones inesperadas, falta de alimento... Además, los recursos no son eternos: tendrás que explorar los páramos en busca de ruinas que explorar y explotar.
-
-### Características:
-
-- Perspectiva cenital.
-- Sistema de juego en tiempo real.
-- Gráficos retro.
-- Simulación (sencilla) de la sociedad.
-
-Aún no contamos con imágenes del proyecto, pero sí tenemos diversas referencias (The Settlers, Frostpunk, Anno, Fallout) que ofrecer con el fin de dar una idea básica de la apariencia del juego. 
-
-<img src="https://www.freegameempire.com/Img/Cache/Games/Settlers-2/Screenshot-5.png" />
-(Fuente: www.freegameempire.com)
