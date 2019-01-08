@@ -380,15 +380,24 @@ var PlayScene = require('./play_scene.js');
       this.background = this.game.add.sprite(0, 0, "mainBkg");
       this.background.smoothed = false;
   
-      this.infoTxt = this.game.add.text(this.game.width/2, this.game.height/5, ("Project Settlers is a resource management game in \nwhich you will have to guide your citizens after a \nnuclear war, which has made life even more difficult\n(and turned water green). BLABLABLA"), {font: "console", fontSize: 40, fill: "#000000"});
+      this.infoTxt = this.game.add.text(this.game.width/2, this.game.height/5, ("Project Settlers is a resource management game in which you will have\nto guide your citizens after a nuclear war, which has made life even\n more difficult (and turned water green)."), {font: "console", fontSize: 30, fill: "#000000", align: "center"});
       this.infoTxt.anchor.setTo(0.5, 0.5);
       this.infoTxt.smoothed = false;
-  
-      this.creatorsTxt = this.game.add.text(this.infoTxt.x, this.infoTxt.y + 100, ("Project Settlers has been created by:"), {font: "console", fontSize: 40, fill: "#000000", align: "center"});
+
+      this.controlsTxt = this.game.add.text(this.infoTxt.x, this.infoTxt.y + 125, ("Controls: \n Camera movement: WASD/Arrow keys \n Interact: Left Click"), {font: "console", fontSize: 30, fill: "#000000", align: "center"});
+      this.controlsTxt.anchor.setTo(0.5, 0.5);
+      this.controlsTxt.smoothed = false;
+
+      this.controlsUnderline = this.game.add.graphics(this.controlsTxt.left, this.controlsTxt.bottom - 65);
+      this.controlsUnderline.lineStyle(2, 0x000000);
+      this.controlsUnderline.moveTo(this.controlsTxt.width- 225, 0);
+      this.controlsUnderline.lineTo(this.controlsTxt.width - 140, 0);
+
+      this.creatorsTxt = this.game.add.text(this.controlsTxt.x, this.controlsTxt.y + 100, ("Project Settlers has been created by:"), {font: "console", fontSize: 30, fill: "#000000", align: "center"});
       this.creatorsTxt.anchor.setTo(0.5, 0.5);
       this.creatorsTxt.smoothed = false;
   
-      this.javiTxt = this.game.add.text(this.infoTxt.x - 100, this.creatorsTxt.y + 50, ("Javier Arias"), {font: "console", fontSize: 40, fill: "#000000", align: "center"});
+      this.javiTxt = this.game.add.text(this.infoTxt.x - 100, this.creatorsTxt.y + 50, ("Javier Arias"), {font: "console", fontSize: 30, fill: "#000000", align: "center"});
       this.javiTxt.anchor.setTo(0.5, 0.5);
       this.javiTxt.smoothed = false;
       this.javiTxt.inputEnabled = true;
@@ -401,7 +410,7 @@ var PlayScene = require('./play_scene.js');
       this.javiUnderline.moveTo(0, 0);
       this.javiUnderline.lineTo(this.javiTxt.width, 0);
   
-      this.ignacioTxt = this.game.add.text(this.infoTxt.x + 100, this.creatorsTxt.y + 50, ("Ignacio Ory"), {font: "console", fontSize: 40, fill: "#000000", align: "center"});
+      this.ignacioTxt = this.game.add.text(this.infoTxt.x + 100, this.creatorsTxt.y + 50, ("Ignacio Ory"), {font: "console", fontSize: 30, fill: "#000000", align: "center"});
       this.ignacioTxt.anchor.setTo(0.5, 0.5);
       this.ignacioTxt.smoothed = false;
       this.ignacioTxt.inputEnabled = true;
@@ -413,6 +422,22 @@ var PlayScene = require('./play_scene.js');
       this.ignacioUnderline.lineStyle(2, 0x000000);
       this.ignacioUnderline.moveTo(0, 0);
       this.ignacioUnderline.lineTo(this.ignacioTxt.width, 0);
+
+      this.licenseTxt = this.game.add.text(this.infoTxt.x, this.javiTxt.y + 75, ("Published under the Creative Commons \nAttribution-NonCommercial-ShareAlike license."), {font: "console", fontSize: 30, fill: "#000000", align: "center"});
+      this.licenseTxt.anchor.setTo(0.5, 0.5);
+      this.licenseTxt.smoothed = false;
+      this.licenseTxt.inputEnabled = true;
+      this.licenseTxt.events.onInputOver.add(this.over, this);
+      this.licenseTxt.events.onInputOut.add(this.out, this);
+      this.licenseTxt.events.onInputDown.add(this.down3, this);
+      this.licenseUnderline2 = this.game.add.graphics(this.licenseTxt.left, this.licenseTxt.bottom - 35);
+      this.licenseUnderline2.lineStyle(2, 0x000000);
+      this.licenseUnderline2.moveTo(20, 0);
+      this.licenseUnderline2.lineTo(this.licenseTxt.width - 35, 0);
+      this.licenseUnderline = this.game.add.graphics(this.licenseTxt.left, this.licenseTxt.bottom - 7);
+      this.licenseUnderline.lineStyle(2, 0x000000);
+      this.licenseUnderline.moveTo(0, 0);
+      this.licenseUnderline.lineTo(this.licenseTxt.width, 0);
   
       this.back = this.game.add.button(this.game.camera.x + this.game.width/2, this.game.camera.y + 3.55 * (this.game.height/4), "backBttn", this.goMenu, this, 0, 0, 1);
       this.back.anchor.setTo(0.5, 0.5);
@@ -440,6 +465,10 @@ var PlayScene = require('./play_scene.js');
   
     down2: function(item) {
       window.open("http://github.com/IgnOry", "_blank");
+    },
+
+    down3: function(item) {
+      window.open("http://creativecommons.org/licenses/by-nc-sa/4.0/", "_blank");
     },
 
     goMenu: function(){
