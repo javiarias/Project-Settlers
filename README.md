@@ -21,7 +21,7 @@ Players are able to build and modify their own post-apocalyptic town from a top-
 As fans of games like The Settlers and Frostpunk, we wanted to make a game that would not only help us learn about a new programming language, but also be fun to design and create from the start. There were many bumps along the road (most of them thanks to Javascript), but we think we managed to make a good homage to the genre in the small time we had to develop this game. We only hope you, the player, will enjoy playing it just as much as we did making it.
 
 
-### Features:
+## Features
 
 - Top-down perspective.
 - Real time game system.
@@ -30,7 +30,7 @@ As fans of games like The Settlers and Frostpunk, we wanted to make a game that 
 - **Playable online, NO downloads required!**
 - Saves stored locally, so you only need to play from your browser of choice.
 
-### List of assets used:
+## List of assets used
 
 - Webpage background (https://opengameart.org/content/communication-terminal-32x32)
 - Tileset and buildings, with some editing (https://opengameart.org/content/colony-sim-extended-version)
@@ -42,6 +42,9 @@ As fans of games like The Settlers and Frostpunk, we wanted to make a game that 
 - Everything else: made by us!
 
 
-We don't have any images from the project yet, but we do have several references (The Settlers, Frostpunk, Anno, Fallout) to offer in order to give a basic idea of how the game will look like.
+## Screenshots
 
-<img src="screenshots\eins" /> </img>
+![alt text](screenshots/eins.jpg)
+![alt text](screenshots/zwei.jpg)
+![alt text](screenshots/drei.jpg)
+![alt text](screenshots/vier.jpg)
