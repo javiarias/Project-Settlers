@@ -536,7 +536,7 @@ Road.unserialize = function(state, game) {
 
 function Citizen(homelessArray, unemployedArray, names, surnames, age = 0, health = 65) {
     
-    this.name = names[Math.round(Math.random() * names.length)] + " " + surnames[Math.round(Math.random() * surnames.length)];
+    this.name = names[Math.round(Math.random() * names.length - 1)] + " " + surnames[Math.round(Math.random() * surnames.length - 1)];
 
     this.age = age;
     this.health = health;
