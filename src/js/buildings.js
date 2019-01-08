@@ -436,6 +436,12 @@ Hospital.prototype.updateTooltip = function() {
     this.tooltip.updateContent(onOff);
 };
 
+Hospital.prototype.bulldoze = function(){
+    
+    this.tooltip.destroy();
+    
+};
+
 Hospital.prototype.checkArea = function(a, b){
 
     var x = Phaser.Rectangle.clone(a);

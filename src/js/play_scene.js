@@ -148,7 +148,7 @@ var PlayScene = {
     this.uraniumGroup.stone = 30;
     this.uraniumGroup.wood = 30;
     this.uraniumGroup.consume = 3;
-    this.uraniumGroup.produce = 1;
+    this.uraniumGroup.produce = 2;
 
     this.energyGroup = this.game.add.group();
     this.buildingGroup.add(this.energyGroup);
@@ -988,8 +988,8 @@ var PlayScene = {
     this.tipWater = new Phasetips(this.game, {
       targetObject: this.waterBttn,
       width: 200,
-      height: 80,
-      context: "Water:\n  Gives drinkable water.\nCost:\n  10 Wood, 10 Stone",
+      height: 110,
+      context: "Water:\n  Provides 3 Water/hour max.\nCost:\n  10 Wood, 10 Stone, optional 1 Energy/hour",
       strokeColor: 0xff0000,
       position: "top",
       positionOffset: 50,   
@@ -1000,8 +1000,8 @@ var PlayScene = {
     this.tipCrop = new Phasetips(this.game, {
       targetObject: this.cropBttn,
       width: 250,
-      height: 80,
-      context: "Farm:\n  Provides food for your citizens.\nCost:\n  10 Wood, 10 Stone",
+      height: 110,
+      context: "Farm:\n  Provides 3 Food/hour max.\nCost:\n  10 Wood, 10 Stone, optional 1 Energy/hour",
       strokeColor: 0xff0000,
       position: "top",
       positionOffset: 50,   
@@ -1012,8 +1012,8 @@ var PlayScene = {
     this.tipStone = new Phasetips(this.game, {
       targetObject: this.stoneBttn,
       width: 250,
-      height: 80,
-      context: "Quarry:\n  Used to mine stone for building.\nCost:\n  15 Wood, 15 Stone",
+      height: 110,
+      context: "Quarry:\n  Produces 1 Stone/hour max.\nCost:\n  15 Wood, 15 Stone, optional 3 Energy/hour",
       strokeColor: 0xff0000,
       position: "top",
       positionOffset: 50,   
@@ -1024,8 +1024,8 @@ var PlayScene = {
     this.tipWood = new Phasetips(this.game, {
       targetObject: this.woodBttn,
       width: 250,
-      height: 80,
-      context: "Sawmill:\n  Used to cut wood for building.\nCost:\n  15 Wood, 10 Stone",
+      height: 110,
+      context: "Sawmill:\n  Produces 1 Wood/hour max.\nCost:\n  15 Wood, 10 Stone, optional 3 Energy/hour",
       strokeColor: 0xff0000,
       position: "top",
       positionOffset: 50,   
@@ -1036,8 +1036,8 @@ var PlayScene = {
     this.tipUranium = new Phasetips(this.game, {
       targetObject: this.uraniumBttn,
       width: 200,
-      height: 80,
-      context: "Uranium Mine:\n  Used to mine uranium.\nCost:\n  30 Wood, 30 Stone",
+      height: 110,
+      context: "Uranium Mine:\n  Mines 2 Uranium/hour max.\nCost:\n  30 Wood, 30 Stone, optional 3 Energy/hour",
       strokeColor: 0xff0000,
       position: "top",
       positionOffset: 50,   
@@ -1048,8 +1048,8 @@ var PlayScene = {
     this.tipWind = new Phasetips(this.game, {
       targetObject: this.windBttn,
       width: 250,
-      height: 80,
-      context: "Wind Turbine:\n  Used to produce wind energy.\nCost:\n  30 Wood, 45 Stone",
+      height: 110,
+      context: "Wind Turbine:\n  Produces 5 Energy/hour max for free.\nCost:\n  30 Wood, 45 Stone",
       strokeColor: 0xff0000,
       position: "top",
       positionOffset: 50,   
@@ -1060,8 +1060,8 @@ var PlayScene = {
     this.tipEnergy = new Phasetips(this.game, {
       targetObject: this.energyBttn,
       width: 250,
-      height: 100,
-      context: "Nuclear Plant:\n  Used to produce energy by consuming Uranium.\nCost:\n  30 Wood, 35 Stone",
+      height: 125,
+      context: "Nuclear Plant:\n  Produces 10 Energy/hour max by consuming Uranium when online.\nCost:\n  30 Wood, 35 Stone, 4 Uranium/hour",
       strokeColor: 0xff0000,
       position: "top",
       positionOffset: 50,   
@@ -1073,7 +1073,7 @@ var PlayScene = {
       targetObject: this.hospitalBttn,
       width: 270,
       height: 100,
-      context: "Hospital:\n  Used to heal your citizens.\nCost:\n  25 Wood, 25 Stone, 4 daily energy",
+      context: "Hospital:\n  Used to heal your citizens.\nCost:\n  25 Wood, 25 Stone, 4 Energy/hour",
       strokeColor: 0xff0000,
       position: "top",
       positionOffset: 50,   
@@ -1136,7 +1136,7 @@ var PlayScene = {
       this.tipTutorialWater = new Phasetips(this.game, {
         targetObject: this.waterBttn,
         width: 200,
-        height: 165,
+        height: 195,
         context: "Citizens need drinkable water to survive. Build these to provide it",
         strokeColor: 0xff0000,
         position: "top",
@@ -1159,7 +1159,7 @@ var PlayScene = {
         targetObject: this.cropBttn,
         context: "You will need food as well as water. Farms should take care of that",
         width: 250,
-        height: 115,
+        height: 145,
         strokeColor: 0xff0000,
         position: "top",
         positionOffset: 100,  
@@ -1170,7 +1170,7 @@ var PlayScene = {
         targetObject: this.woodBttn,
         context: "Nothing is free, and you will need resources to create more buildings. Let's build a Sawmill",
         width: 250,
-        height: 100,
+        height: 130,
         strokeColor: 0xff0000,
         position: "top",
         positionOffset: 115,   
@@ -1181,7 +1181,7 @@ var PlayScene = {
         targetObject: this.stoneBttn,
         context: "You will need Stone as well, so let's will build a Quarry",
         width: 250,
-        height: 95,
+        height: 125,
         strokeColor: 0xff0000,
         position: "top",
         positionOffset: 100,  
@@ -1192,7 +1192,7 @@ var PlayScene = {
         targetObject: this.uraniumBttn,
         context: "Uranium is a source of energy. Build Mines to extract it",
         width: 200,
-        height: 95,
+        height: 125,
         strokeColor: 0xff0000,
         position: "top",
         positionOffset: 100,  
@@ -1203,7 +1203,7 @@ var PlayScene = {
         targetObject: this.energyBttn,
         context: "Energy is a need. Without energy to power your buildings, their production will be halved! \nWith this you can produce energy from uranium",
         width: 250,
-        height: 170,
+        height: 200,
         strokeColor: 0xff0000,
         position: "top",
         positionOffset: 100,  
@@ -1214,7 +1214,7 @@ var PlayScene = {
         targetObject: this.windBttn,
         context: "This building allows you to obtain energy without uranium, thanks to the power of wind",
         width: 250,
-        height: 115,
+        height: 145,
         strokeColor: 0xff0000,
         position: "top",
         positionOffset: 100,  
@@ -1225,7 +1225,7 @@ var PlayScene = {
         targetObject: this.hospitalBttn,
         context: "Hospitals allow you to improve the health of citizens. Sadly, energy is required for them to work",
         width: 315,
-        height: 125,
+        height: 135,
         strokeColor: 0xff0000,
         position: "top",
         positionOffset: 100,  
@@ -1236,7 +1236,7 @@ var PlayScene = {
         targetObject: this.bulldozeBttn,
         context: "If you want to replace a building, you should bulldoze it first. You'll get some of the resources you spent building it back.",
         width: 420,
-        height: 90,
+        height: 130,
         strokeColor: 0xff0000,
         position: "top",
         positionOffset: 85,  
@@ -2053,7 +2053,7 @@ var PlayScene = {
 
     if (this.timeCheck)
     {
-      this.timeTxt.visible = true;
+      this.timeTxtGroup.visible = true;
       this.timescaleTxt.visible = true;
     }
   },
@@ -2398,7 +2398,7 @@ var PlayScene = {
         if(sprite.area !== undefined){
           sprite.off = true;
           this.houseGroup.forEach(function (house) { house.updateSingleHospital(sprite); }, this);
-          sprite.bulldoze(this.unemployedArray);
+          sprite.bulldoze();
         }
         
         else if(sprite.hospitalNear !== undefined)
