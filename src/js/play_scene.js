@@ -1548,13 +1548,6 @@ var PlayScene = {
 
         buildMode.call(this, this, this._buildingModeType);
         buildMode.call(this, this, this._buildingModeType);
-
-
-        if(this.wood < 1)
-          this.woodTxt.addColor("#FF0000", 0);
-
-        if(this.stone < 1)
-          this.stoneTxt.addColor("#FF0000", 0);
       }
     }
 
