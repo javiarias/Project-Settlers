@@ -2390,60 +2390,45 @@ var PlayScene = {
           this.stone += Math.round(group.stone/2);
         }
       }.bind(this, sprite));
+
+      if(sprite.img == "Hospital"){
+        sprite.off = true;
+        this.houseGroup.forEach(function (house) { house.updateSingleHospital(sprite); }, this);
+        sprite.bulldoze();
+      } 
+      else if(sprite.img == "House")
+        sprite.bulldoze(this.homelessArray);
+      else if (sprite.img == "Road"){
+        this.buildingGroup.forEach(function (sprite, group)
+        {
+          var found = false;
+
+          if (group != this.roadGroup && !found)
+          {
+            group.forEach(function (building){
+              if (!found && this.checkAdjacency(building, sprite)){
+
+                found = true;
+                building.bulldoze();
+                building.destroy();
+
+              }
+            }, this);
+          }
+
+          if(found){
+            this.wood += Math.round(group.wood/2);
+            this.stone += Math.round(group.stone/2);
+          }
+        }.bind(this, sprite));
+      }
+      else
+        sprite.bulldoze(this.unemployedArray);
+
+      sprite.destroy();
       
       this.woodTxt.text = this.wood;
       this.stoneTxt.text = this.stone;
-
-      if(sprite.full !== undefined){ //hospital
-        if(sprite.area !== undefined){
-          sprite.off = true;
-          this.houseGroup.forEach(function (house) { house.updateSingleHospital(sprite); }, this);
-          sprite.bulldoze();
-        } 
-        
-        else if(sprite.hospitalNear !== undefined) //casas
-          sprite.bulldoze(this.homelessArray);
-        else if (sprite.workerA !== undefined)
-          sprite.bulldoze(this.unemployedArray); //producers
-        else
-          {
-            this.buildingGroup.forEach(function (sprite, group)
-            {
-              var found = false;
-
-              if (group != this.roadGroup && !found)
-              {
-                group.forEach(function (building){
-                  if (this.checkAdjacency(sprite, building))
-                    {
-                      found = true;
-                      building.destroy();
-                    }
-                  }, this);
-                }
-              }, this);
-
-            sprite.bulldoze();
-            }
-          }
-
-      /*this.buildingGroup.forEach(function(sprite, group){
-        var found = false;
-
-        if (!found && group != this.roadGroup)
-         {
-           group.forEach(building)
-           {
-           if (this.checkAdjacency(sprite, building))
-            {
-              found = true;
-              building.destroy();
-           }
-          }
-        }
-      },this);*/
-
-      sprite.destroy();
 
 
       if (this.mode == 1 && !this.timeCheck)

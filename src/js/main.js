@@ -177,7 +177,7 @@ var PlayScene = require('./play_scene.js');
       this.tutorialtxt.anchor.setTo(0.5, 0.5);
       this.tutorialtxt.smoothed = false;
 
-      this.options = this.game.add.button(this.game.camera.x + (this.game.width/1.625), this.game.camera.y + 3.55 * (this.game.height/4), "settBttn", function(){this.optionsMain.visible = true; this.game.world.bringToTop(this.optionsMain); this.play.inputEnabled = false; this.options.inputEnabled = false; this.load.inputEnabled = false; this.tutorial.inputEnabled = false;}, this, 0, 0, 1);
+      this.options = this.game.add.button(this.load.x, this.game.camera.y + 3.55 * (this.game.height/4), "settBttn", function(){this.optionsMain.visible = true; this.game.world.bringToTop(this.optionsMain); this.play.inputEnabled = false; this.options.inputEnabled = false; this.load.inputEnabled = false; this.tutorial.inputEnabled = false;}, this, 0, 0, 1);
       this.options.anchor.setTo(.5, .5);
       this.options.smoothed = false;
       this.options.onDownSound = this.game.buttonSound;
@@ -186,7 +186,7 @@ var PlayScene = require('./play_scene.js');
       this.optionsTxt.anchor.setTo(0.5, 0.5);
       this.optionsTxt.smoothed = false;
 
-      this.info = this.game.add.button(this.game.camera.x + (this.game.width/2.6), this.game.camera.y + 3.55 * (this.game.height/4), "infoBttn", this.goinfo, this, 0, 0, 1);
+      this.info = this.game.add.button(this.play.x, this.game.camera.y + 3.55 * (this.game.height/4), "infoBttn", this.goinfo, this, 0, 0, 1);
       this.info.anchor.setTo(.5, .5);
       this.info.smoothed = false;
       this.info.onDownSound = this.game.buttonSound;
@@ -195,7 +195,7 @@ var PlayScene = require('./play_scene.js');
       this.infoTxt.anchor.setTo(0.5, 0.5);
       this.infoTxt.smoothed = false;
 
-      this.deleteSave = this.game.add.button(700, this.game.camera.y + 3.55 * (this.game.height/4), "clearBttn", this.clearSave, this, 0, 0, 1);
+      this.deleteSave = this.game.add.button(this.tutorial.x, this.game.camera.y + 3.55 * (this.game.height/4), "clearBttn", this.clearSave, this, 0, 0, 1);
       this.deleteSave.anchor.setTo(.5, .5);
       this.deleteSave.smoothed = false;
       this.deleteSave.onDownSound = this.game.buttonSound;
