@@ -32,7 +32,7 @@ var PlayScene = {
       this.volume = 50;
 
       this.gameMusic = this.game.add.audio('gameSound', 1, true); 
-      this.buttonSound = this.game.add.audio('buttonSound');
+      this.buttonSound = this.game.add.audio('buttonSound');  
 
       this.gameMusic.play();
       this.gameMusic.volume = this.volume / 100;
@@ -40,6 +40,8 @@ var PlayScene = {
 
     //////////////////////////////
     //misc. variables
+      this.names = ["Tatiana", "Olga", "Elena", "Svetlana", "Irina", "Ekaterina", "Anna", "Kaja", "Natalia", "Anastasía", "Marina", "Sergey", "Alexandr", "Alexey", "Andrey", "Vladímir", "Iosif", "Dmitry", "Nikolay", "Yuri", "Oleg"];
+      this.surnames = ["Smirnov", "Ivanov", "Kuznetsov", "Popov", "Sokolov", "Lébedev", "Kozlov", "Nóvikov", "Morózov", "Petrov", "Vólkov", "Solovióv", "Vasíliev", "Záitsev", "Pávlov", "Semiónov", "Gólubev", "Vinográdov", "Bogdánov", "Vorobiov", "Korsakov"];
 
       this.paused = true;
       this.timeScale = 1;
@@ -1641,7 +1643,7 @@ var PlayScene = {
 
     function addCitizen()
     {
-      var citizen = new Classes.Citizen(this.homelessArray, this.unemployedArray, 20);
+      var citizen = new Classes.Citizen(this.homelessArray, this.unemployedArray, this.names, this.surnames, 20);
     } 
 
     this.getFixedAngle = function(a, b) {
@@ -2095,7 +2097,7 @@ var PlayScene = {
                 this.water -= this.citizenConsume * count;
 
               for(var i = prod.numberOfBirths; i > 0; i--)
-                var aux = new Classes.Citizen(this.homelessArray, this.unemployedArray);
+                var aux = new Classes.Citizen(this.homelessArray, this.unemployedArray, this.names, this.surnames);
             }, this);
 
             for (var i = this.homelessArray.length - 1; i >= 0; i--) {
