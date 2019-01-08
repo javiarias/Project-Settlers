@@ -319,6 +319,8 @@ Producer.prototype.kill = function(citizen) {
         this.workerB = undefined;
         this.full = false;
     }
+
+    this.updateTooltip();
 };
 
 Producer.prototype.bulldoze = function(unemployedArray) {

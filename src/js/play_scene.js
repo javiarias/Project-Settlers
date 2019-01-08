@@ -31,14 +31,15 @@ var PlayScene = {
     //////////////////////////////
     //music
 
-      this.volume = 50;
+      if(!this.game.gameMusic){
+        this.game.gameMusic = this.game.add.audio('gameSound', 1, true);
+        this.game.gameMusic.loop = true;
+      }
 
-      this.gameMusic = this.game.add.audio('gameSound', 1, true); 
-      this.buttonSound = this.game.add.audio('buttonSound');  
-
-      this.gameMusic.play();
-      this.gameMusic.volume = this.volume / 100;
-
+      if(!this.game.gameMusic.isPlaying){
+        this.game.gameMusic.play();
+        this.game.gameMusic.volume = this.game.volume / 100;
+      }
 
     //////////////////////////////
     //misc. variables
@@ -204,7 +205,7 @@ var PlayScene = {
       pauseSettings.anchor.setTo(0.5, 0.5);
       pauseSettings.fixedToCamera = true;
       pauseSettings.smoothed = false;
-      pauseSettings.onDownSound = this.buttonSound;
+      pauseSettings.onDownSound = this.game.buttonSound;
       pauseSettings.input.priorityID = 2;
       this.pauseMenu.add(pauseSettings);
 
@@ -212,28 +213,28 @@ var PlayScene = {
       pauseMinimize.anchor.setTo(0.5, 0.5);
       pauseMinimize.fixedToCamera = true;
       pauseMinimize.smoothed = false;
-      pauseMinimize.onDownSound = this.buttonSound;
+      pauseMinimize.onDownSound = this.game.buttonSound;
       pauseMinimize.input.priorityID = 2;
       this.pauseMenu.add(pauseMinimize);
 
       if (this.mode == 0)
       {
-        var saveBttn = this.game.add.button(pauseBkg.x + 72, pauseBkg.y + 3, "saveBttn", function(){this.saveGame(); this.gameMusic.stop(); this.game.state.start('main');}, this, 0, 0, 1);
+        var saveBttn = this.game.add.button(pauseBkg.x + 72, pauseBkg.y + 3, "saveBttn", function(){this.saveGame(); this.game.gameMusic.stop(); this.game.state.start('main');}, this, 0, 0, 1);
         saveBttn.anchor.setTo(0.5, 0.5);
         saveBttn.fixedToCamera = true;
         saveBttn.smoothed = false;
-        saveBttn.onDownSound = this.buttonSound;
+        saveBttn.onDownSound = this.game.buttonSound;
         saveBttn.input.priorityID = 2;
         this.pauseMenu.add(saveBttn);
       }
 
       else if (this.mode == 1)
       {
-        var pauseExit = this.game.add.button(pauseBkg.x + 72, pauseBkg.y + 3, "exitBttn", function(){this.gameMusic.stop();this.game.state.start('main');}, this, 0, 0, 1);
+        var pauseExit = this.game.add.button(pauseBkg.x + 72, pauseBkg.y + 3, "exitBttn", function(){this.game.gameMusic.stop();this.game.state.start('main');}, this, 0, 0, 1);
         pauseExit.anchor.setTo(0.5, 0.5);
         pauseExit.fixedToCamera = true;
         pauseExit.smoothed = false;
-        pauseExit.onDownSound = this.buttonSound;
+        pauseExit.onDownSound = this.game.buttonSound;
         pauseExit.input.priorityID = 2;
         this.pauseMenu.add(pauseExit);
       }
@@ -250,7 +251,7 @@ var PlayScene = {
       optionsBkg.smoothed = false;
       this.optionsMenu.add(optionsBkg);
 
-      var volumeText = this.game.add.text(optionsBkg.x, optionsBkg.y - 20, this.volume, {font: "50px console"});
+      var volumeText = this.game.add.text(optionsBkg.x, optionsBkg.y - 20, this.game.volume, {font: "50px console"});
       volumeText.anchor.setTo(0.5, 0.5);
       volumeText.fixedToCamera = true;
       volumeText.smoothed = false;
@@ -260,7 +261,7 @@ var PlayScene = {
       optionsMinus.anchor.setTo(0.5, 0.5);
       optionsMinus.fixedToCamera = true;
       optionsMinus.smoothed = false;
-      optionsMinus.onDownSound = this.buttonSound;
+      optionsMinus.onDownSound = this.game.buttonSound;
       optionsMinus.input.priorityID = 2;
       this.optionsMenu.add(optionsMinus);
       
@@ -268,7 +269,7 @@ var PlayScene = {
       optionsPlus.anchor.setTo(0.5, 0.5);
       optionsPlus.fixedToCamera = true;
       optionsPlus.smoothed = false;
-      optionsPlus.onDownSound = this.buttonSound;
+      optionsPlus.onDownSound = this.game.buttonSound;
       optionsPlus.input.priorityID = 2;
       this.optionsMenu.add(optionsPlus);
 
@@ -276,7 +277,7 @@ var PlayScene = {
       optionsBack.anchor.setTo(0.5, 0.5);
       optionsBack.fixedToCamera = true;
       optionsBack.smoothed = false;
-      optionsBack.onDownSound = this.buttonSound;
+      optionsBack.onDownSound = this.game.buttonSound;
       optionsPlus.input.priorityID = 2;
       this.optionsMenu.add(optionsBack);
 
@@ -284,21 +285,21 @@ var PlayScene = {
       optionsMute.anchor.setTo(0.5, 0.5);
       optionsMute.fixedToCamera = true;
       optionsMute.smoothed = false;
-      optionsMute.onDownSound = this.buttonSound;
+      optionsMute.onDownSound = this.game.buttonSound;
       optionsMute.input.priorityID = 2;
       this.optionsMenu.add(optionsMute);
 
       this.optionsMenu.visible = false;
 
       function updateVolume(update){
-        if(this.volume + update >= 0 && this.volume + update <= 100){
+        if(this.game.volume + update >= 0 && this.game.volume + update <= 100){
 
-          this.volume += update;
-          this.gameMusic.volume = this.volume / 100;
+          this.game.volume += update;
+          this.game.gameMusic.volume = this.game.volume / 100;
 
           this.optionsMenu.forEach(function(text){
             if (text.text !== null)
-              text.text = this.volume;
+              text.text = this.game.volume;
             }, this);
         }
       }
@@ -337,7 +338,7 @@ var PlayScene = {
       escapeBttn.fixedToCamera = true;
       escapeBttn.smoothed = false;
       escapeBttn.scale.setTo(0.7, 0.7);
-      escapeBttn.onDownSound = this.buttonSound;
+      escapeBttn.onDownSound = this.game.buttonSound;
       escapeBttn.input.priorityID = 2;
       this.UI.add(escapeBttn);
 
@@ -356,7 +357,7 @@ var PlayScene = {
       this.roadBttn.fixedToCamera = true;
       this.roadBttn.smoothed = false;
       this.roadBttn.scale.setTo(scale, scale);
-      this.roadBttn.onDownSound = this.buttonSound;
+      this.roadBttn.onDownSound = this.game.buttonSound;
       this.roadBttn.input.priorityID = 2;
       if (this.mode == 1)
       {
@@ -370,7 +371,7 @@ var PlayScene = {
       this.houseBttn.fixedToCamera = true;
       this.houseBttn.smoothed = false;
       this.houseBttn.scale.setTo(scale, scale);
-      this.houseBttn.onDownSound = this.buttonSound;
+      this.houseBttn.onDownSound = this.game.buttonSound;
       this.houseBttn.input.priorityID = 2;
       if (this.mode == 1)
       {
@@ -384,7 +385,7 @@ var PlayScene = {
       this.waterBttn.fixedToCamera = true;
       this.waterBttn.smoothed = false;
       this.waterBttn.scale.setTo(scale, scale);
-      this.waterBttn.onDownSound = this.buttonSound;
+      this.waterBttn.onDownSound = this.game.buttonSound;
       this.waterBttn.input.priorityID = 2;
       if (this.mode == 1)
       {
@@ -398,7 +399,7 @@ var PlayScene = {
       this.cropBttn.fixedToCamera = true;
       this.cropBttn.smoothed = false;
       this.cropBttn.scale.setTo(scale, scale);
-      this.cropBttn.onDownSound = this.buttonSound;
+      this.cropBttn.onDownSound = this.game.buttonSound;
       this.cropBttn.input.priorityID = 2;
       if (this.mode == 1)
       {
@@ -412,7 +413,7 @@ var PlayScene = {
       this.woodBttn.fixedToCamera = true;
       this.woodBttn.smoothed = false;
       this.woodBttn.scale.setTo(scale, scale);
-      this.woodBttn.onDownSound = this.buttonSound;
+      this.woodBttn.onDownSound = this.game.buttonSound;
       this.woodBttn.input.priorityID = 2;
       if (this.mode == 1)
       {
@@ -426,7 +427,7 @@ var PlayScene = {
       this.stoneBttn.fixedToCamera = true;
       this.stoneBttn.smoothed = false;
       this.stoneBttn.scale.setTo(scale, scale);
-      this.stoneBttn.onDownSound = this.buttonSound;
+      this.stoneBttn.onDownSound = this.game.buttonSound;
       this.stoneBttn.input.priorityID = 2;
       if (this.mode == 1)
       {
@@ -440,7 +441,7 @@ var PlayScene = {
       this.uraniumBttn.fixedToCamera = true;
       this.uraniumBttn.smoothed = false;
       this.uraniumBttn.scale.setTo(scale, scale);
-      this.uraniumBttn.onDownSound = this.buttonSound;
+      this.uraniumBttn.onDownSound = this.game.buttonSound;
       this.uraniumBttn.input.priorityID = 2;
       if (this.mode == 1)
       {
@@ -454,7 +455,7 @@ var PlayScene = {
       this.energyBttn.fixedToCamera = true;
       this.energyBttn.smoothed = false;
       this.energyBttn.scale.setTo(scale, scale);
-      this.energyBttn.onDownSound = this.buttonSound;
+      this.energyBttn.onDownSound = this.game.buttonSound;
       this.energyBttn.input.priorityID = 2;
       if (this.mode == 1)
       {
@@ -468,7 +469,7 @@ var PlayScene = {
       this.windBttn.fixedToCamera = true;
       this.windBttn.smoothed = false;
       this.windBttn.scale.setTo(scale, scale);
-      this.windBttn.onDownSound = this.buttonSound;
+      this.windBttn.onDownSound = this.game.buttonSound;
       this.windBttn.input.priorityID = 2;
       if (this.mode == 1)
       {
@@ -482,7 +483,7 @@ var PlayScene = {
       this.hospitalBttn.fixedToCamera = true;
       this.hospitalBttn.smoothed = false;
       this.hospitalBttn.scale.setTo(scale, scale);
-      this.hospitalBttn.onDownSound = this.buttonSound;
+      this.hospitalBttn.onDownSound = this.game.buttonSound;
       this.hospitalBttn.input.priorityID = 2;
       if (this.mode == 1)
       {
@@ -496,7 +497,7 @@ var PlayScene = {
       this.bulldozeBttn.fixedToCamera = true;
       this.bulldozeBttn.smoothed = false;
       this.bulldozeBttn.scale.setTo(scale, scale);
-      this.bulldozeBttn.onDownSound = this.buttonSound;
+      this.bulldozeBttn.onDownSound = this.game.buttonSound;
       this.bulldozeBttn.input.priorityID = 2;
       if (this.mode == 1)
       {
@@ -1768,101 +1769,10 @@ var PlayScene = {
       buildMode.call(this, this, this._buildingModeType);
     }
 
-    this.updateGain = function(){
-
-      var aux = this.homelessArray.length;
-
-      this.houseGroup.forEach(function(house){aux += house.countCitizens();});
-
-
-      this.homelessTxt.text = this.homelessArray.length;
-      this.unemployedTxt.text = this.unemployedArray.length;
-      this.citizensTxt.text = aux;
-
-      this.foodGain = 0;
-      this.cropGroup.forEach(function(prod){this.foodGain += prod.amount * (this.shiftEnd - this.shiftStart)}, this);
-      this.foodGain -= (this.homelessArray.length * this.homelessConsume + (aux - this.homelessArray.length ) * this.citizenConsume);
-      var auxSymbol = "";
-      var auxColor = "#FF0000";
-      if(this.foodGain >= 0){
-        auxSymbol = "+";
-        auxColor = "#008500";
-      }
-      this.foodTxtGain.text = auxSymbol + this.foodGain;
-      this.foodTxtGain.addColor(auxColor, 0);
-
-
-      this.woodGain = 0;
-      this.woodGroup.forEach(function(prod){this.woodGain += prod.amount * (this.shiftEnd - this.shiftStart)}, this);
-      auxSymbol = "";
-      auxColor = "#FF0000";
-      if(this.woodGain >= 0){
-        auxSymbol = "+";
-        auxColor = "#008500";
-      }
-      this.woodTxtGain.text = auxSymbol + this.woodGain;
-      this.woodTxtGain.addColor(auxColor, 0);
-
-
-      this.stoneGain = 0;
-      this.stoneGroup.forEach(function(prod){this.stoneGain += prod.amount * (this.shiftEnd - this.shiftStart)}, this);
-      auxSymbol = "";
-      auxColor = "#FF0000";
-      if(this.woodGain >= 0){
-        auxSymbol = "+";
-        auxColor = "#008500";
-      }
-      this.stoneTxtGain.text = auxSymbol + this.stoneGain;
-      this.stoneTxtGain.addColor(auxColor, 0);
-
-      this.waterGain = 0;
-      this.waterGroup.forEach(function(prod){this.waterGain += prod.amount * (this.shiftEnd - this.shiftStart)}, this);
-      this.waterGain -= (this.homelessArray.length * this.homelessConsume + (aux - this.homelessArray.length ) * this.citizenConsume);
-      auxSymbol = "";
-      auxColor = "#FF0000";
-      if(this.waterGain >= 0){
-        auxSymbol = "+";
-        auxColor = "#008500";
-      }
-      this.waterTxtGain.text = auxSymbol + this.waterGain;
-      this.waterTxtGain.addColor(auxColor, 0);
-
-
-      this.energyGain = 0;
-      this.buildingGroup.forEach(function(group){
-        if(group == this.energyGroup || group == this.windGroup)
-          group.forEach(function(prod){ if(!prod.off){this.energyGain += prod.amount * (this.shiftEnd - this.shiftStart)}}, this);
-        
-        else if(group != this.houseGroup && group != this.roadGroup)
-          group.forEach(function(prod){ if(!prod.off){this.energyGain -= prod.consume * (this.shiftEnd - this.shiftStart)}}, this);
-      }, this);
-      auxSymbol = "";
-      auxColor = "#FF0000";
-      if(this.energyGain >= 0){
-        auxSymbol = "+";
-        auxColor = "#008500";
-      }
-      this.energyTxtGain.text = auxSymbol + this.energyGain;
-      this.energyTxtGain.addColor(auxColor, 0);
-
-
-      this.uraniumGain = 0;
-      this.uraniumGroup.forEach(function(prod){this.uraniumGain += prod.amount * (this.shiftEnd - this.shiftStart)}, this);
-      auxSymbol = "";
-      auxColor = "#FF0000";
-      if(this.uraniumGain >= 0){
-        auxSymbol = "+";
-        auxColor = "#008500";
-      }
-      this.uraniumTxtGain.text = auxSymbol + this.uraniumGain;
-      this.uraniumTxtGain.addColor(auxColor, 0);
-    }
-
   //////////////////////////////
   //initialitzation of a new game
 
     if(!this.loading){
-
       for(var i = 0; i < 5; i++)
         addCitizen.call(this);
     }
@@ -1877,113 +1787,9 @@ var PlayScene = {
 
   update: function () {
     if (this.mode == 1)
-    { 
-        if (this.cameraCheckUp && this.cameraCheckDown && this.cameraCheckLeft && this.cameraCheckRight)
-      {
-          this.cameraCheck = true;
-      }
-
-      if (this.cameraCheck)
-      {
-        this.citizensIcon.visible = true;
-        this.citizensTxt.visible = true;
-        this.homelessIcon.visible = true;
-        this.homelessTxt.visible = true;
-        this.unemployedIcon.visible = true;
-        this.unemployedTxt.visible = true;
-        this.roadCheck = true;
-      }  
-      
-      if (this.roadCheck)
-      {    
-        this.roadBttn.visible = true;
-        this.roadBttn.input.enabled = true;
-      }
-
-      if (this.houseCheck)
-      {
-        this.houseBttn.visible = true;
-        this.houseBttn.input.enabled = true;
-      }
-
-      if (this.waterCheck)
-      {
-        this.waterBttn.visible = true;
-        this.waterBttn.input.enabled = true;
-        this.waterIcon.visible = true;
-        this.waterTxt.visible = true;
-        this.waterTxtGain.visible = true;
-      }
-
-      if (this.cropCheck)
-      {
-        this.cropBttn.visible = true;
-        this.cropBttn.input.enabled = true;
-        this.foodIcon.visible = true;
-        this.foodTxt.visible = true;
-        this.foodTxtGain.visible = true;
-      }
-
-      if (this.woodCheck)
-      {
-        this.woodBttn.visible = true;
-        this.woodBttn.input.enabled = true;
-        this.woodIcon.visible = true;
-        this.woodTxt.visible = true;
-        this.woodTxtGain.visible = true;
-      }
-
-      if (this.stoneCheck)
-      {
-        this.stoneBttn.visible = true;
-        this.stoneBttn.input.enabled = true;
-        this.stoneIcon.visible = true;
-        this.stoneTxt.visible = true;
-        this.stoneTxtGain.visible = true;
-      }
-
-      if (this.uraniumCheck) 
-      {
-        this.uraniumBttn.visible = true;
-        this.uraniumBttn.input.enabled = true;
-        this.uraniumIcon.visible = true;
-        this.uraniumTxt.visible = true;
-        this.uraniumTxtGain.visible = true;
-      }
-
-      if (this.energyCheck) 
-      {
-        this.energyBttn.visible = true;
-        this.energyBttn.input.enabled = true;
-        this.energyIcon.visible = true;
-        this.energyTxt.visible = true;
-        this.energyTxtGain.visible = true;
-      }
-
-      if (this.windCheck) 
-      {
-        this.windBttn.visible = true;
-        this.windBttn.input.enabled = true;
-      }
-
-      if (this.hospitalCheck)
-      {
-        this.hospitalBttn.visible = true;
-        this.hospitalBttn.input.enabled = true;
-      }
-
-      if (this.bulldozeCheck)
-      {
-        this.bulldozeBttn.visible = true;
-        this.bulldozeBttn.input.enabled = true;
-      }
-
-      if (this.timeCheck)
-      {
-        this.timeTxt.visible = true;
-        this.timescaleTxt.visible = true;
-      }
-    }  
+    {
+      this.tutorialCheck();
+    }
 
     if(!this._escapeMenu) {
       if(!this.paused){
@@ -1992,265 +1798,40 @@ var PlayScene = {
         if (this.currentTime.buffer >= 20) { //if buffer > 20, update. AKA, speed 1 = every 20 loops, speed 2 = every 10 loops... etc.
           
         ////////////////////////////////////////
-        //update clock
+        //update time
           this.currentTime.buffer = 0;
 
           this.currentTime.hour = (this.currentTime.hour + 1) % 24; 
-        
-        ////////////////////////////////////////
-        //update producers
-          if(this.currentTime.hour >= this.shiftStart && this.currentTime.hour < this.shiftEnd){
 
+        ////////////////////////////////////////
+        //work time update
+          if(this.currentTime.hour >= this.shiftStart && this.currentTime.hour < this.shiftEnd){
+        
             this.timeTxt.addColor("#008500", 0);
 
-          ////////////////////////////////////////
-          //Energy producers
-            this.energyGroup.forEach(function(prod){
-              if(this.uranium > prod.consume){
-                
-                if (prod.off)
-                {
-                  prod.off = false;
-                  prod.updateAmount();
-                }
-
-                this.energy += prod.amount;
-                this.uranium -= prod.consume;
-              }
-
-              else
-                {
-                  prod.off = true;
-                  prod.updateAmount();
-                }
-
-            }, this);
-
-            this.windGroup.forEach(function(prod){
-
-              if(prod.off){
-                prod.off = false;
-                prod.updateAmount();
-              }
-
-              this.energy += prod.amount;
-
-            }, this);
-
-          ////////////////////////////////////////
-          //Resource producers
-
-            this.cropGroup.forEach(function(prod){
-              if (this.energy >= prod.consume)
-              {
-                this.energy -= prod.consume;
-
-                if (prod.off)
-                  {
-                    prod.off = false;
-                    prod.updateAmount();
-                  }
-              }
-
-              else
-                {
-                  prod.off = true;
-                  prod.updateAmount();
-                }
-
-              this.food += prod.amount;
-            }, this);
-
-            this.waterGroup.forEach(function(prod){
-
-              if (this.energy >= prod.consume)
-              {
-                this.energy -= prod.consume;
-
-                if (prod.off)
-                  {
-                    prod.off = false;
-                    prod.updateAmount();
-                  }
-              }
-
-              else
-                {
-                  prod.off = true;
-                  prod.updateAmount();
-                }
-
-              this.water += prod.amount;
-            }, this);
-
-            this.woodGroup.forEach(function(prod){
-
-              if (this.energy >= prod.consume)
-              {
-                this.energy -= prod.consume;
-
-                if (prod.off)
-                  {
-                    prod.off = false;
-                    prod.updateAmount();
-                  }
-              }
-
-              else
-                {
-                  prod.off = true;
-                  prod.updateAmount();
-                }
-
-
-              this.wood += prod.amount;
-            }, this);
-
-            this.stoneGroup.forEach(function(prod){
-
-              if (this.energy >= prod.consume)
-              {
-                this.energy -= prod.consume;
-
-                if (prod.off)
-                  {
-                    prod.off = false;
-                    prod.updateAmount();
-                  }
-              }
-
-              else
-                {
-                  prod.off = true;
-                  prod.updateAmount();
-                }
-
-              this.stone += prod.amount;
-            }, this);
-
-            this.uraniumGroup.forEach(function(prod){
-              if (this.energy >= prod.consume)
-              {
-                this.energy -= prod.consume;
-
-                if (prod.off)
-                {
-                  prod.off = false;
-                  prod.updateAmount();
-                }
-              }
-
-              else
-                {
-                  prod.off = true;
-                  prod.updateAmount();
-                }
-
-              this.uranium += prod.amount;
-            }, this);
-
-          ////////////////////////////////////////
-          //Others
-
-            this.hospitalGroup.forEach(function(prod){
-              if(this.energy >= prod.amount){
-
-                this.energy -= prod.amount;
-
-                if(prod.off){
-                  this.houseGroup.forEach(function (house) { house.updateSingleHospital(prod, true); }, this);
-                  prod.updateTooltip();
-                }
-
-                prod.off = false
-              }
-              
-              else{
-                this.houseGroup.forEach(function (house) { house.updateSingleHospital(prod, false); }, this);
-                prod.off = true;
-                prod.updateTooltip();
-              }
-            }, this);
-
-            this.foodTxt.text = this.food;
-            this.woodTxt.text = this.wood;
-            this.stoneTxt.text = this.stone;
-            this.waterTxt.text = this.water;
-            this.energyTxt.text = this.energy;
-            this.uraniumTxt.text = this.uranium;
+            this.updateBuildings();
           }
 
+        ////////////////////////////////////////
+        //citizen update
           else if(this.currentTime.hour == 0){
             
             this.timeTxt.addColor("#000000", 0);
 
-            this.houseGroup.forEach(function(prod){
-              prod.tick(this.food, this.water);
-
-              var count = prod.countCitizens();
-
-              if(this.food >= this.citizenConsume * count)
-                this.food -= this.citizenConsume * count;
-              if(this.water >= this.citizenConsume * count)
-                this.water -= this.citizenConsume * count;
-
-              for(var i = prod.numberOfBirths; i > 0; i--)
-                var aux = new Classes.Citizen(this.homelessArray, this.unemployedArray, this.names, this.surnames);
-            }, this);
-
-            for (var i = this.homelessArray.length - 1; i >= 0; i--) {
-              this.homelessArray[i].tick(this.food, this.water, false);
-              if(this.food >= this.homelessConsume)
-                this.food -= this.homelessConsume;
-              if(this.water >= this.homelessConsume)
-                this.water -= this.homelessConsume;
-            }
-         
-            this.foodTxt.text = this.food;
-            this.waterTxt.text = this.water;
+            this.tickCitizens();
           }
 
           else
             this.timeTxt.addColor("#000000", 0);
 
-          var originalLength = this.homelessArray.length;
-          for (var i = this.homelessArray.length - 1; i >= 0; i--) {
-            if(!this.homelessArray[i].homeless || this.homelessArray[i].health <= 0 || this.homelessArray[i].addToHouse(this.houseGroup))
-              this.homelessArray.splice(i, 1);
+        ////////////////////////////////////////
+        //try to place citizens in houses/buildings, update the gain and the clock
 
-            if(this.homelessArray.length > originalLength)
-              i += (this.homelessArray.length - originalLength);
-          }
-
-          originalLength = this.unemployedArray.length;
-          for (var i = this.unemployedArray.length - 1; i >= 0; i--) {
-            if(!this.unemployedArray[i].unemployed || this.unemployedArray[i].health <= 0 || this.unemployedArray[i].addToProducer(this.buildingGroup))
-              this.unemployedArray.splice(i, 1);
-
-            if(this.unemployedArray.length > originalLength)
-              i += (this.unemployedArray.length - originalLength);
-          }
-
-          this.timeTxt.text = this.currentTime.hour + ":00";
-
-          var aux = this.homelessArray.length;
-
-          this.houseGroup.forEach(function(house){aux += house.countCitizens();});
-          
-          if (aux == 0)
-          {
-            this.gameMusic.stop();
-            this.game.state.start('defeat');
-          }
-
-          if (aux == 1000000)
-          {
-            this.gameMusic.stop();
-            this.game.state.start('win');
-          }
+          this.updateCitizenArrays();
 
           this.updateGain();
 
+          this.timeTxt.text = this.currentTime.hour + ":00";
         }
       }
 
@@ -2289,33 +1870,9 @@ var PlayScene = {
         }
       }
 
-      if (this.cursors.up.isDown || this.cursorsAlt.up.isDown){
-        this.game.camera.y -= 16;
-      
-        if (this.mode == 1 && !this.cameraCheckUp)
-          this.cameraCheckUp = true;
-      }
+      this.cameraMovement();
 
-      else if (this.cursors.down.isDown || this.cursorsAlt.down.isDown){
-        this.game.camera.y += 16;
-      
-        if (this.mode == 1 && !this.cameraCheckDown)
-        this.cameraCheckDown = true;
-      }
-
-      if (this.cursors.left.isDown || this.cursorsAlt.left.isDown){
-        this.game.camera.x -= 16;
-      
-        if (this.mode == 1 && !this.cameraCheckLeft)
-        this.cameraCheckLeft = true; 
-      }
-
-      else if (this.cursors.right.isDown || this.cursorsAlt.right.isDown){
-        this.game.camera.x += 16;
-      
-        if (this.mode == 1 && !this.cameraCheckRight)
-        this.cameraCheckRight = true;
-      }
+      this.checkEndGame();
     }
   },
 
@@ -2385,9 +1942,7 @@ var PlayScene = {
 
     saveObject.variables.currentTime = this.currentTime;
 
-    saveObject.variables.muted = this.game.sound.mute;
-
-    saveObject.variables.volume = this.volume;
+    saveObject.variables.volume = this.game.volume;
     
 
     localStorage.setItem("save", JSON.stringify(saveObject));
@@ -2563,22 +2118,12 @@ var PlayScene = {
     this.currentTime = saveobject.variables.currentTime;
     this.timeTxt.text = this.currentTime.hour + ":00";
 
-    this.game.sound.mute = JSON.parse(saveobject.variables.muted);
-    this.optionsMenu.forEach(function(button){
-      if(button.key == "muteBttn"){
-        if(this.game.sound.mute)
-          button.setFrames(2, 2, 3);
-        else
-          button.setFrames(0, 0, 1);
-      }
-    }, this);
-
-    this.volume = JSON.parse(saveobject.variables.volume);
-    this.gameMusic.volume = this.volume / 100;
+    this.game.volume = JSON.parse(saveobject.variables.volume);
+    this.game.gameMusic.volume = this.game.volume / 100;
 
     this.optionsMenu.forEach(function(text){
       if (text.text !== null)
-        text.text = this.volume;
+        text.text = this.game.volume;
       }, this);
     
 
@@ -2590,6 +2135,479 @@ var PlayScene = {
     this.uraniumTxt.text = this.uranium;
     this.houseGroup.forEach(function (house) { house.updateHospitals(this.hospitalGroup)}, this);
   },
+
+  updateBuildings: function(){
+
+  ////////////////////////////////////////
+  //Energy producers
+    this.energyGroup.forEach(function(prod){
+      if(this.uranium > prod.consume){
+        
+        if (prod.off)
+        {
+          prod.off = false;
+          prod.updateAmount();
+        }
+
+        this.energy += prod.amount;
+        this.uranium -= prod.consume;
+      }
+
+      else
+        {
+          prod.off = true;
+          prod.updateAmount();
+        }
+
+    }, this);
+
+    this.windGroup.forEach(function(prod){
+
+      if(prod.off){
+        prod.off = false;
+        prod.updateAmount();
+      }
+
+      this.energy += prod.amount;
+
+    }, this);
+
+  ////////////////////////////////////////
+  //Resource producers
+
+    this.cropGroup.forEach(function(prod){
+      if (this.energy >= prod.consume)
+      {
+        this.energy -= prod.consume;
+
+        if (prod.off)
+          {
+            prod.off = false;
+            prod.updateAmount();
+          }
+      }
+
+      else
+        {
+          prod.off = true;
+          prod.updateAmount();
+        }
+
+      this.food += prod.amount;
+    }, this);
+
+    this.waterGroup.forEach(function(prod){
+
+      if (this.energy >= prod.consume)
+      {
+        this.energy -= prod.consume;
+
+        if (prod.off)
+          {
+            prod.off = false;
+            prod.updateAmount();
+          }
+      }
+
+      else
+        {
+          prod.off = true;
+          prod.updateAmount();
+        }
+
+      this.water += prod.amount;
+    }, this);
+
+    this.woodGroup.forEach(function(prod){
+
+      if (this.energy >= prod.consume)
+      {
+        this.energy -= prod.consume;
+
+        if (prod.off)
+          {
+            prod.off = false;
+            prod.updateAmount();
+          }
+      }
+
+      else
+        {
+          prod.off = true;
+          prod.updateAmount();
+        }
+
+
+      this.wood += prod.amount;
+    }, this);
+
+    this.stoneGroup.forEach(function(prod){
+
+      if (this.energy >= prod.consume)
+      {
+        this.energy -= prod.consume;
+
+        if (prod.off)
+          {
+            prod.off = false;
+            prod.updateAmount();
+          }
+      }
+
+      else
+        {
+          prod.off = true;
+          prod.updateAmount();
+        }
+
+      this.stone += prod.amount;
+    }, this);
+
+    this.uraniumGroup.forEach(function(prod){
+      if (this.energy >= prod.consume)
+      {
+        this.energy -= prod.consume;
+
+        if (prod.off)
+        {
+          prod.off = false;
+          prod.updateAmount();
+        }
+      }
+
+      else
+        {
+          prod.off = true;
+          prod.updateAmount();
+        }
+
+      this.uranium += prod.amount;
+    }, this);
+
+  ////////////////////////////////////////
+  //Others
+
+    this.hospitalGroup.forEach(function(prod){
+      if(this.energy >= prod.amount){
+
+        this.energy -= prod.amount;
+
+        if(prod.off){
+          this.houseGroup.forEach(function (house) { house.updateSingleHospital(prod, true); }, this);
+          prod.updateTooltip();
+        }
+
+        prod.off = false
+      }
+      
+      else{
+        this.houseGroup.forEach(function (house) { house.updateSingleHospital(prod, false); }, this);
+        prod.off = true;
+        prod.updateTooltip();
+      }
+    }, this);
+
+    this.foodTxt.text = this.food;
+    this.woodTxt.text = this.wood;
+    this.stoneTxt.text = this.stone;
+    this.waterTxt.text = this.water;
+    this.energyTxt.text = this.energy;
+    this.uraniumTxt.text = this.uranium;
+  },
+
+  tickCitizens: function(){
+
+    this.houseGroup.forEach(function(prod){
+      prod.tick(this.food, this.water);
+
+      var count = prod.countCitizens();
+
+      if(this.food >= this.citizenConsume * count)
+        this.food -= this.citizenConsume * count;
+      if(this.water >= this.citizenConsume * count)
+        this.water -= this.citizenConsume * count;
+
+      for(var i = prod.numberOfBirths; i > 0; i--)
+        var aux = new Classes.Citizen(this.homelessArray, this.unemployedArray, this.names, this.surnames);
+    }, this);
+
+    for (var i = this.homelessArray.length - 1; i >= 0; i--) {
+      this.homelessArray[i].tick(this.food, this.water, false);
+      if(this.food >= this.homelessConsume)
+        this.food -= this.homelessConsume;
+      if(this.water >= this.homelessConsume)
+        this.water -= this.homelessConsume;
+    }
+  
+    this.foodTxt.text = this.food;
+    this.waterTxt.text = this.water;
+  },
+
+  updateCitizenArrays: function(){
+    var originalLength = this.homelessArray.length;
+        for (var i = this.homelessArray.length - 1; i >= 0; i--) {
+          if(!this.homelessArray[i].homeless || this.homelessArray[i].health <= 0 || this.homelessArray[i].addToHouse(this.houseGroup))
+            this.homelessArray.splice(i, 1);
+
+          if(this.homelessArray.length > originalLength)
+            i += (this.homelessArray.length - originalLength);
+        }
+
+        originalLength = this.unemployedArray.length;
+        for (var i = this.unemployedArray.length - 1; i >= 0; i--) {
+          if(!this.unemployedArray[i].unemployed || this.unemployedArray[i].health <= 0 || this.unemployedArray[i].addToProducer(this.buildingGroup))
+            this.unemployedArray.splice(i, 1);
+
+          if(this.unemployedArray.length > originalLength)
+            i += (this.unemployedArray.length - originalLength);
+        }
+  },
+
+  cameraMovement: function(){
+    if (this.cursors.up.isDown || this.cursorsAlt.up.isDown){
+      this.game.camera.y -= 16;
+    
+      if (this.mode == 1 && !this.cameraCheckUp)
+        this.cameraCheckUp = true;
+    }
+
+    else if (this.cursors.down.isDown || this.cursorsAlt.down.isDown){
+      this.game.camera.y += 16;
+    
+      if (this.mode == 1 && !this.cameraCheckDown)
+      this.cameraCheckDown = true;
+    }
+
+    if (this.cursors.left.isDown || this.cursorsAlt.left.isDown){
+      this.game.camera.x -= 16;
+    
+      if (this.mode == 1 && !this.cameraCheckLeft)
+      this.cameraCheckLeft = true; 
+    }
+
+    else if (this.cursors.right.isDown || this.cursorsAlt.right.isDown){
+      this.game.camera.x += 16;
+    
+      if (this.mode == 1 && !this.cameraCheckRight)
+      this.cameraCheckRight = true;
+    }
+  },
+
+  checkEndGame: function(){
+
+    var aux = this.homelessArray.length;
+
+    this.houseGroup.forEach(function(house){aux += house.countCitizens();});
+    
+    if (aux == 0)
+    {
+      this.game.gameMusic.stop();
+      this.game.state.start('defeat', true, false, 0);
+    }
+
+    else if (aux == 1000000)
+    {
+      this.game.gameMusic.stop();
+      this.game.state.start('win', true, false, 1);
+    }
+  },
+
+  tutorialCheck: function(){
+    
+    if (this.cameraCheckUp && this.cameraCheckDown && this.cameraCheckLeft && this.cameraCheckRight)
+        this.cameraCheck = true;
+
+    if (this.cameraCheck)
+    {
+      this.citizensIcon.visible = true;
+      this.citizensTxt.visible = true;
+      this.homelessIcon.visible = true;
+      this.homelessTxt.visible = true;
+      this.unemployedIcon.visible = true;
+      this.unemployedTxt.visible = true;
+      this.roadCheck = true;
+    }  
+    
+    if (this.roadCheck)
+    {    
+      this.roadBttn.visible = true;
+      this.roadBttn.input.enabled = true;
+    }
+
+    if (this.houseCheck)
+    {
+      this.houseBttn.visible = true;
+      this.houseBttn.input.enabled = true;
+    }
+
+    if (this.waterCheck)
+    {
+      this.waterBttn.visible = true;
+      this.waterBttn.input.enabled = true;
+      this.waterIcon.visible = true;
+      this.waterTxt.visible = true;
+      this.waterTxtGain.visible = true;
+    }
+
+    if (this.cropCheck)
+    {
+      this.cropBttn.visible = true;
+      this.cropBttn.input.enabled = true;
+      this.foodIcon.visible = true;
+      this.foodTxt.visible = true;
+      this.foodTxtGain.visible = true;
+    }
+
+    if (this.woodCheck)
+    {
+      this.woodBttn.visible = true;
+      this.woodBttn.input.enabled = true;
+      this.woodIcon.visible = true;
+      this.woodTxt.visible = true;
+      this.woodTxtGain.visible = true;
+    }
+
+    if (this.stoneCheck)
+    {
+      this.stoneBttn.visible = true;
+      this.stoneBttn.input.enabled = true;
+      this.stoneIcon.visible = true;
+      this.stoneTxt.visible = true;
+      this.stoneTxtGain.visible = true;
+    }
+
+    if (this.uraniumCheck) 
+    {
+      this.uraniumBttn.visible = true;
+      this.uraniumBttn.input.enabled = true;
+      this.uraniumIcon.visible = true;
+      this.uraniumTxt.visible = true;
+      this.uraniumTxtGain.visible = true;
+    }
+
+    if (this.energyCheck) 
+    {
+      this.energyBttn.visible = true;
+      this.energyBttn.input.enabled = true;
+      this.energyIcon.visible = true;
+      this.energyTxt.visible = true;
+      this.energyTxtGain.visible = true;
+    }
+
+    if (this.windCheck) 
+    {
+      this.windBttn.visible = true;
+      this.windBttn.input.enabled = true;
+    }
+
+    if (this.hospitalCheck)
+    {
+      this.hospitalBttn.visible = true;
+      this.hospitalBttn.input.enabled = true;
+    }
+
+    if (this.bulldozeCheck)
+    {
+      this.bulldozeBttn.visible = true;
+      this.bulldozeBttn.input.enabled = true;
+    }
+
+    if (this.timeCheck)
+    {
+      this.timeTxt.visible = true;
+      this.timescaleTxt.visible = true;
+    }
+  },
+
+  updateGain: function(){
+
+    var aux = this.homelessArray.length;
+
+    this.houseGroup.forEach(function(house){aux += house.countCitizens();});
+
+
+    this.homelessTxt.text = this.homelessArray.length;
+    this.unemployedTxt.text = this.unemployedArray.length;
+    this.citizensTxt.text = aux;
+
+    this.foodGain = 0;
+    this.cropGroup.forEach(function(prod){this.foodGain += prod.amount * (this.shiftEnd - this.shiftStart)}, this);
+    this.foodGain -= (this.homelessArray.length * this.homelessConsume + (aux - this.homelessArray.length ) * this.citizenConsume);
+    var auxSymbol = "";
+    var auxColor = "#FF0000";
+    if(this.foodGain >= 0){
+      auxSymbol = "+";
+      auxColor = "#008500";
+    }
+    this.foodTxtGain.text = auxSymbol + this.foodGain;
+    this.foodTxtGain.addColor(auxColor, 0);
+
+
+    this.woodGain = 0;
+    this.woodGroup.forEach(function(prod){this.woodGain += prod.amount * (this.shiftEnd - this.shiftStart)}, this);
+    auxSymbol = "";
+    auxColor = "#FF0000";
+    if(this.woodGain >= 0){
+      auxSymbol = "+";
+      auxColor = "#008500";
+    }
+    this.woodTxtGain.text = auxSymbol + this.woodGain;
+    this.woodTxtGain.addColor(auxColor, 0);
+
+
+    this.stoneGain = 0;
+    this.stoneGroup.forEach(function(prod){this.stoneGain += prod.amount * (this.shiftEnd - this.shiftStart)}, this);
+    auxSymbol = "";
+    auxColor = "#FF0000";
+    if(this.woodGain >= 0){
+      auxSymbol = "+";
+      auxColor = "#008500";
+    }
+    this.stoneTxtGain.text = auxSymbol + this.stoneGain;
+    this.stoneTxtGain.addColor(auxColor, 0);
+
+    this.waterGain = 0;
+    this.waterGroup.forEach(function(prod){this.waterGain += prod.amount * (this.shiftEnd - this.shiftStart)}, this);
+    this.waterGain -= (this.homelessArray.length * this.homelessConsume + (aux - this.homelessArray.length ) * this.citizenConsume);
+    auxSymbol = "";
+    auxColor = "#FF0000";
+    if(this.waterGain >= 0){
+      auxSymbol = "+";
+      auxColor = "#008500";
+    }
+    this.waterTxtGain.text = auxSymbol + this.waterGain;
+    this.waterTxtGain.addColor(auxColor, 0);
+
+
+    this.energyGain = 0;
+    this.buildingGroup.forEach(function(group){
+      if(group == this.energyGroup || group == this.windGroup)
+        group.forEach(function(prod){ if(!prod.off){this.energyGain += prod.amount * (this.shiftEnd - this.shiftStart)}}, this);
+      
+      else if(group != this.houseGroup && group != this.roadGroup)
+        group.forEach(function(prod){ if(!prod.off){this.energyGain -= prod.consume * (this.shiftEnd - this.shiftStart)}}, this);
+    }, this);
+    auxSymbol = "";
+    auxColor = "#FF0000";
+    if(this.energyGain >= 0){
+      auxSymbol = "+";
+      auxColor = "#008500";
+    }
+    this.energyTxtGain.text = auxSymbol + this.energyGain;
+    this.energyTxtGain.addColor(auxColor, 0);
+
+
+    this.uraniumGain = 0;
+    this.uraniumGroup.forEach(function(prod){this.uraniumGain += prod.amount * (this.shiftEnd - this.shiftStart)}, this);
+    auxSymbol = "";
+    auxColor = "#FF0000";
+    if(this.uraniumGain >= 0){
+      auxSymbol = "+";
+      auxColor = "#008500";
+    }
+    this.uraniumTxtGain.text = auxSymbol + this.uraniumGain;
+    this.uraniumTxtGain.addColor(auxColor, 0);
+  }
 };
 
 module.exports = PlayScene;
