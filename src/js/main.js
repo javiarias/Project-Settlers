@@ -11,7 +11,7 @@ var PlayScene = require('./play_scene.js');
       this.scale.pageAlignVertically = true;
     },
     preload: function () {
-      // load here assets required for the loading screen
+      this.game.load.image('preloader_bar', 'images/preloader_bar.png');
       
       this.game.scale.windowConstraints.bottom = 'visual';
       this.game.scale.windowConstraints.right = 'visual';
@@ -25,6 +25,9 @@ var PlayScene = require('./play_scene.js');
   var PreloaderScene = {
 
     preload: function () {
+      this.loadingBar = this.game.add.sprite(0, 240, 'preloader_bar');
+      this.loadingBar.anchor.setTo(0, 0.5);
+      this.load.setPreloadSprite(this.loadingBar);
 
       this.game.load.image('logo', 'images/logo.png');
 
