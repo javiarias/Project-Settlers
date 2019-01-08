@@ -1768,6 +1768,96 @@ var PlayScene = {
       buildMode.call(this, this, this._buildingModeType);
     }
 
+    this.updateGain = function(){
+
+      var aux = this.homelessArray.length;
+
+      this.houseGroup.forEach(function(house){aux += house.countCitizens();});
+
+
+      this.homelessTxt.text = this.homelessArray.length;
+      this.unemployedTxt.text = this.unemployedArray.length;
+      this.citizensTxt.text = aux;
+
+      this.foodGain = 0;
+      this.cropGroup.forEach(function(prod){this.foodGain += prod.amount * (this.shiftEnd - this.shiftStart)}, this);
+      this.foodGain -= (this.homelessArray.length * this.homelessConsume + (aux - this.homelessArray.length ) * this.citizenConsume);
+      var auxSymbol = "";
+      var auxColor = "#FF0000";
+      if(this.foodGain >= 0){
+        auxSymbol = "+";
+        auxColor = "#008500";
+      }
+      this.foodTxtGain.text = auxSymbol + this.foodGain;
+      this.foodTxtGain.addColor(auxColor, 0);
+
+
+      this.woodGain = 0;
+      this.woodGroup.forEach(function(prod){this.woodGain += prod.amount * (this.shiftEnd - this.shiftStart)}, this);
+      auxSymbol = "";
+      auxColor = "#FF0000";
+      if(this.woodGain >= 0){
+        auxSymbol = "+";
+        auxColor = "#008500";
+      }
+      this.woodTxtGain.text = auxSymbol + this.woodGain;
+      this.woodTxtGain.addColor(auxColor, 0);
+
+
+      this.stoneGain = 0;
+      this.stoneGroup.forEach(function(prod){this.stoneGain += prod.amount * (this.shiftEnd - this.shiftStart)}, this);
+      auxSymbol = "";
+      auxColor = "#FF0000";
+      if(this.woodGain >= 0){
+        auxSymbol = "+";
+        auxColor = "#008500";
+      }
+      this.stoneTxtGain.text = auxSymbol + this.stoneGain;
+      this.stoneTxtGain.addColor(auxColor, 0);
+
+      this.waterGain = 0;
+      this.waterGroup.forEach(function(prod){this.waterGain += prod.amount * (this.shiftEnd - this.shiftStart)}, this);
+      this.waterGain -= (this.homelessArray.length * this.homelessConsume + (aux - this.homelessArray.length ) * this.citizenConsume);
+      auxSymbol = "";
+      auxColor = "#FF0000";
+      if(this.waterGain >= 0){
+        auxSymbol = "+";
+        auxColor = "#008500";
+      }
+      this.waterTxtGain.text = auxSymbol + this.waterGain;
+      this.waterTxtGain.addColor(auxColor, 0);
+
+
+      this.energyGain = 0;
+      this.buildingGroup.forEach(function(group){
+        if(group == this.energyGroup || group == this.windGroup)
+          group.forEach(function(prod){ if(!prod.off){this.energyGain += prod.amount * (this.shiftEnd - this.shiftStart)}}, this);
+        
+        else if(group != this.houseGroup && group != this.roadGroup)
+          group.forEach(function(prod){ if(!prod.off){this.energyGain -= prod.consume * (this.shiftEnd - this.shiftStart)}}, this);
+      }, this);
+      auxSymbol = "";
+      auxColor = "#FF0000";
+      if(this.energyGain >= 0){
+        auxSymbol = "+";
+        auxColor = "#008500";
+      }
+      this.energyTxtGain.text = auxSymbol + this.energyGain;
+      this.energyTxtGain.addColor(auxColor, 0);
+
+
+      this.uraniumGain = 0;
+      this.uraniumGroup.forEach(function(prod){this.uraniumGain += prod.amount * (this.shiftEnd - this.shiftStart)}, this);
+      auxSymbol = "";
+      auxColor = "#FF0000";
+      if(this.uraniumGain >= 0){
+        auxSymbol = "+";
+        auxColor = "#008500";
+      }
+      this.uraniumTxtGain.text = auxSymbol + this.uraniumGain;
+      this.uraniumTxtGain.addColor(auxColor, 0);
+    }
+
   //////////////////////////////
   //initialitzation of a new game
 
@@ -2159,87 +2249,7 @@ var PlayScene = {
             this.game.state.start('win');
           }
 
-          this.homelessTxt.text = this.homelessArray.length;
-          this.unemployedTxt.text = this.unemployedArray.length;
-          this.citizensTxt.text = aux;
-
-          this.foodGain = 0;
-          this.cropGroup.forEach(function(prod){this.foodGain += prod.amount * (this.shiftEnd - this.shiftStart)}, this);
-          this.foodGain -= (this.homelessArray.length * this.homelessConsume + (aux - this.homelessArray.length ) * this.citizenConsume);
-          var auxSymbol = "";
-          var auxColor = "#FF0000";
-          if(this.foodGain >= 0){
-            auxSymbol = "+";
-            auxColor = "#008500";
-          }
-          this.foodTxtGain.text = auxSymbol + this.foodGain;
-          this.foodTxtGain.addColor(auxColor, 0);
-
-
-          this.woodGain = 0;
-          this.woodGroup.forEach(function(prod){this.woodGain += prod.amount * (this.shiftEnd - this.shiftStart)}, this);
-          auxSymbol = "";
-          auxColor = "#FF0000";
-          if(this.woodGain >= 0){
-            auxSymbol = "+";
-            auxColor = "#008500";
-          }
-          this.woodTxtGain.text = auxSymbol + this.woodGain;
-          this.woodTxtGain.addColor(auxColor, 0);
-
-
-          this.stoneGain = 0;
-          this.stoneGroup.forEach(function(prod){this.stoneGain += prod.amount * (this.shiftEnd - this.shiftStart)}, this);
-          auxSymbol = "";
-          auxColor = "#FF0000";
-          if(this.woodGain >= 0){
-            auxSymbol = "+";
-            auxColor = "#008500";
-          }
-          this.stoneTxtGain.text = auxSymbol + this.stoneGain;
-          this.stoneTxtGain.addColor(auxColor, 0);
-
-          this.waterGain = 0;
-          this.waterGroup.forEach(function(prod){this.waterGain += prod.amount * (this.shiftEnd - this.shiftStart)}, this);
-          this.waterGain -= (this.homelessArray.length * this.homelessConsume + (aux - this.homelessArray.length ) * this.citizenConsume);
-          auxSymbol = "";
-          auxColor = "#FF0000";
-          if(this.waterGain >= 0){
-            auxSymbol = "+";
-            auxColor = "#008500";
-          }
-          this.waterTxtGain.text = auxSymbol + this.waterGain;
-          this.waterTxtGain.addColor(auxColor, 0);
-
-
-          this.energyGain = 0;
-          this.buildingGroup.forEach(function(group){
-            if(group == this.energyGroup || group == this.windGroup)
-              group.forEach(function(prod){ if(!prod.off){this.energyGain += prod.amount * (this.shiftEnd - this.shiftStart)}}, this);
-            
-            else if(group != this.houseGroup && group != this.roadGroup)
-              group.forEach(function(prod){ if(!prod.off){this.energyGain -= prod.consume * (this.shiftEnd - this.shiftStart)}}, this);
-          }, this);
-          auxSymbol = "";
-          auxColor = "#FF0000";
-          if(this.energyGain >= 0){
-            auxSymbol = "+";
-            auxColor = "#008500";
-          }
-          this.energyTxtGain.text = auxSymbol + this.energyGain;
-          this.energyTxtGain.addColor(auxColor, 0);
-
-
-          this.uraniumGain = 0;
-          this.uraniumGroup.forEach(function(prod){this.uraniumGain += prod.amount * (this.shiftEnd - this.shiftStart)}, this);
-          auxSymbol = "";
-          auxColor = "#FF0000";
-          if(this.uraniumGain >= 0){
-            auxSymbol = "+";
-            auxColor = "#008500";
-          }
-          this.uraniumTxtGain.text = auxSymbol + this.uraniumGain;
-          this.uraniumTxtGain.addColor(auxColor, 0);
+          this.updateGain();
 
         }
       }
@@ -2315,8 +2325,6 @@ var PlayScene = {
 
     saveObject.buildings = {};
 
-    saveObject.buildings.woodGroup = {};
-
     saveObject.buildings.roadGroup = this.roadGroup.children.map(function(prod){
       return JSON.parse(prod.serialize());
     }, this);
@@ -2360,6 +2368,26 @@ var PlayScene = {
     saveObject.homeless = this.homelessArray.map(function(citizen){
       return JSON.parse(citizen.serialize());
     }, this);
+
+    saveObject.variables = {};
+
+    saveObject.variables.food = this.food;
+
+    saveObject.variables.wood = this.wood;
+
+    saveObject.variables.uranium = this.uranium;
+
+    saveObject.variables.energy = this.energy;
+
+    saveObject.variables.water = this.water;
+
+    saveObject.variables.stone = this.stone;
+
+    saveObject.variables.currentTime = this.currentTime;
+
+    saveObject.variables.muted = this.game.sound.mute;
+
+    saveObject.variables.volume = this.volume;
     
 
     localStorage.setItem("save", JSON.stringify(saveObject));
@@ -2372,8 +2400,7 @@ var PlayScene = {
     var saveobject = JSON.parse(state);
 
     saveobject.buildings.roadGroup.forEach(function(prod){
-      var auxBuilding = new Classes.Road(this.game, 40, 40, "Road");
-      auxBuilding = auxBuilding.unserialize(prod, this.game);
+      var auxBuilding = Classes.Road.unserialize(prod, this.game);
 
       auxBuilding.anchor.setTo(0.5, 0.5);
 
@@ -2388,8 +2415,7 @@ var PlayScene = {
     }, this);
     
     saveobject.buildings.woodGroup.forEach(function(prod){
-      var auxBuilding = new Classes.Producer(this.game, 40, 40, "Road", 0, 0);
-      auxBuilding = auxBuilding.unserialize(prod, this.game);
+      var auxBuilding = Classes.Producer.unserialize(prod, this.game);
 
       auxBuilding.anchor.setTo(0.5, 0.5);
 
@@ -2404,8 +2430,7 @@ var PlayScene = {
     }, this);
     
     saveobject.buildings.windGroup.forEach(function(prod){
-      var auxBuilding = new Classes.Producer(this.game, 40, 40, "Road", 0, 0);
-      auxBuilding = auxBuilding.unserialize(prod, this.game);
+      var auxBuilding = Classes.Producer.unserialize(prod, this.game);
 
       auxBuilding.anchor.setTo(0.5, 0.5);
 
@@ -2420,8 +2445,7 @@ var PlayScene = {
     }, this);
     
     saveobject.buildings.uraniumGroup.forEach(function(prod){
-      var auxBuilding = new Classes.Producer(this.game, 40, 40, "Road", 0, 0);
-      auxBuilding = auxBuilding.unserialize(prod, this.game);
+      var auxBuilding = Classes.Producer.unserialize(prod, this.game);
 
       auxBuilding.anchor.setTo(0.5, 0.5);
 
@@ -2436,8 +2460,7 @@ var PlayScene = {
     }, this);
     
     saveobject.buildings.cropGroup.forEach(function(prod){
-      var auxBuilding = new Classes.Producer(this.game, 40, 40, "Road", 0, 0);
-      auxBuilding = auxBuilding.unserialize(prod, this.game);
+      var auxBuilding = Classes.Producer.unserialize(prod, this.game);
 
       auxBuilding.anchor.setTo(0.5, 0.5);
 
@@ -2452,8 +2475,7 @@ var PlayScene = {
     }, this);
     
     saveobject.buildings.stoneGroup.forEach(function(prod){
-      var auxBuilding = new Classes.Producer(this.game, 40, 40, "Road", 0, 0);
-      auxBuilding = auxBuilding.unserialize(prod, this.game);
+      var auxBuilding = Classes.Producer.unserialize(prod, this.game);
 
       auxBuilding.anchor.setTo(0.5, 0.5);
 
@@ -2468,8 +2490,7 @@ var PlayScene = {
     }, this);
     
     saveobject.buildings.energyGroup.forEach(function(prod){
-      var auxBuilding = new Classes.Producer(this.game, 40, 40, "Road", 0, 0);
-      auxBuilding = auxBuilding.unserialize(prod, this.game);
+      var auxBuilding = Classes.Producer.unserialize(prod, this.game);
 
       auxBuilding.anchor.setTo(0.5, 0.5);
 
@@ -2484,8 +2505,7 @@ var PlayScene = {
     }, this);
     
     saveobject.buildings.hospitalGroup.forEach(function(prod){
-      var auxBuilding = new Classes.Hospital(this.game, 40, 40, "Road", 0);
-      auxBuilding = auxBuilding.unserialize(prod, this.game);
+      var auxBuilding = Classes.Hospital.unserialize(prod, this.game);
 
       auxBuilding.anchor.setTo(0.5, 0.5);
 
@@ -2500,8 +2520,7 @@ var PlayScene = {
     }, this);
     
     saveobject.buildings.houseGroup.forEach(function(prod){
-      var auxBuilding = new Classes.House(this.game, 40, 40, "Road", false);
-      auxBuilding = auxBuilding.unserialize(prod, this.game);
+      var auxBuilding = Classes.House.unserialize(prod, this.game);
 
       auxBuilding.anchor.setTo(0.5, 0.5);
 
@@ -2515,17 +2534,61 @@ var PlayScene = {
       this.houseGroup.add(auxBuilding);
     }, this);
 
+    saveobject.citizens.forEach(function(citizen){
+      var auxCitizen;
 
+      if(citizen.residentA)
+        auxCitizen = Classes.Citizen.unserialize(citizen.residentA, this.homelessArray, this.unemployedArray, this.names, this.surnames, this.houseGroup, this.buildingGroup);
+      if(citizen.residentB)
+        auxCitizen = Classes.Citizen.unserialize(citizen.residentB, this.homelessArray, this.unemployedArray, this.names, this.surnames, this.houseGroup, this.buildingGroup);
 
+    }, this);
 
+    saveobject.homeless.forEach(function(citizen){
+      var auxCitizen = Classes.Citizen.unserialize(citizen, this.homelessArray, this.unemployedArray, this.names, this.surnames, this.houseGroup, this.buildingGroup);
+    }, this);
 
-    /*if(this._buildingModeType == this.hospitalGroup){
-          this.houseGroup.forEach(function (house) { house.updateSingleHospital(auxBuilding); }, this);
-        }
-        else if(this._buildingModeType == this.houseGroup)
-        {
-          auxBuilding.updateHospitals(this.hospitalGroup);
-        }*/
+    this.food = JSON.parse(saveobject.variables.food);
+
+    this.wood = JSON.parse(saveobject.variables.wood);
+
+    this.uranium = JSON.parse(saveobject.variables.uranium);
+
+    this.energy = JSON.parse(saveobject.variables.energy);
+
+    this.water = JSON.parse(saveobject.variables.water);
+
+    this.stone = JSON.parse(saveobject.variables.stone);
+
+    this.currentTime = saveobject.variables.currentTime;
+    this.timeTxt.text = this.currentTime.hour + ":00";
+
+    this.game.sound.mute = JSON.parse(saveobject.variables.muted);
+    this.optionsMenu.forEach(function(button){
+      if(button.key == "muteBttn"){
+        if(this.game.sound.mute)
+          button.setFrames(2, 2, 3);
+        else
+          button.setFrames(0, 0, 1);
+      }
+    }, this);
+
+    this.volume = JSON.parse(saveobject.variables.volume);
+    this.gameMusic.volume = this.volume / 100;
+
+    this.optionsMenu.forEach(function(text){
+      if (text.text !== null)
+        text.text = this.volume;
+      }, this);
+    
+
+    this.foodTxt.text = this.food;
+    this.woodTxt.text = this.wood;
+    this.stoneTxt.text = this.stone;
+    this.waterTxt.text = this.water;
+    this.energyTxt.text = this.energy;
+    this.uraniumTxt.text = this.uranium;
+    this.houseGroup.forEach(function (house) { house.updateHospitals(this.hospitalGroup)}, this);
   },
 };
 

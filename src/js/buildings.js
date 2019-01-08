@@ -12,7 +12,7 @@ function House(game, x, y, img, hospitalNear = false) {
 
     this.tooltip = new Phasetips(this.game, {
         targetObject: this,
-        context: "Hospital in range! aaaaaaa: 100 old (Not Great) aaaaaaa: 100 old (Not Great)",
+        context: "Hospital in range! MMMMMMMMMMMMMMM: 100 old (Not Great) MMMMMMMMMMMMMMM: 100 old (Not Great)",
         strokeColor: 0xff0000,
         position: "top",
         positionOffset: 30,   
@@ -172,7 +172,7 @@ House.prototype.updateTooltip = function() {
         hospital = "Hospital in range! \n"
 
     if (nameA != "Empty"){
-        if(nameB == "")
+        if(nameB == "Empty")
             this.tooltip.updateContent(hospital + nameA + ": " + ageA + " old " + "(" + healthA + ")" + "\n" + nameB);
         else
             this.tooltip.updateContent(hospital + nameA + ": " + ageA + " old " + "(" + healthA + ")" + "\n" + nameB + ": " + ageB + " old " + "(" + healthB + ")");
@@ -220,7 +220,7 @@ House.prototype.serialize = function() {
         return JSON.stringify(obj);
 };
 
-House.prototype.unserialize = function(state, game) {
+House.unserialize = function(state, game) {
     
 	if (typeof state === 'string') {
 		state = JSON.parse(state);
@@ -246,6 +246,7 @@ function Producer(game, x, y, img, amount, consume = 0) {
     this.dataB = "";
     this.full = false;
     this.img = img;
+    this.workers = true;
 
     this.totalAmount = amount;
     this.amount = 0;
@@ -381,7 +382,7 @@ Producer.prototype.serialize = function() {
         return JSON.stringify(obj);
 };
 
-Producer.prototype.unserialize = function(state, game) {
+Producer.unserialize = function(state, game) {
     
 	if (typeof state === 'string') {
 		state = JSON.parse(state);
@@ -403,6 +404,7 @@ function Hospital(game, x, y, img, amount) {
     this.area = 16; //en tiles
     this.full = false;
     this.consume = amount;
+    this.workers = false;
 
     this.off = true;
 
@@ -468,7 +470,7 @@ Hospital.prototype.serialize = function() {
         return JSON.stringify(obj);
 };
 
-Hospital.prototype.unserialize = function(state, game) {
+Hospital.unserialize = function(state, game) {
     
 	if (typeof state === 'string') {
 		state = JSON.parse(state);
@@ -512,7 +514,7 @@ Road.prototype.serialize = function() {
         return JSON.stringify(obj);
 };
 
-Road.prototype.unserialize = function(state, game) {
+Road.unserialize = function(state, game) {
     
 	if (typeof state === 'string') {
 		state = JSON.parse(state);
@@ -530,12 +532,12 @@ Road.prototype.unserialize = function(state, game) {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-function Citizen(homelessArray, unemployedArray, names, surnames, age = 0) {
+function Citizen(homelessArray, unemployedArray, names, surnames, age = 0, health = 65) {
     
     this.name = names[Math.round(Math.random() * names.length)] + " " + surnames[Math.round(Math.random() * surnames.length)];
 
     this.age = age;
-    this.health = 65;
+    this.health = health;
     this.homeless = true;
     this.unemployed = true;
     this.birthCooldown = 0;
@@ -674,8 +676,8 @@ Citizen.prototype.serialize = function() {
         }
 
         if(!this.homeless) {
-            obj.houseX = this.house.x;
-            obj.houseY = this.house.y;
+            obj.houseX = this.home.x;
+            obj.houseY = this.home.y;
         }
         else {
             obj.houseX = -1;
@@ -694,7 +696,7 @@ Citizen.prototype.serialize = function() {
         return JSON.stringify(obj);
 };
 
-Citizen.prototype.unserialize = function(state, homelessArray, unemployedArray, names, surnames, houseGroup, producerGroup) {
+Citizen.unserialize = function(state, homelessArray, unemployedArray, names, surnames, houseGroup, producerGroup) {
     
 	if (typeof state === 'string') {
 		state = JSON.parse(state);
@@ -707,10 +709,10 @@ Citizen.prototype.unserialize = function(state, homelessArray, unemployedArray, 
     }
     
     if(state.houseX >= 0 && state.houseY >= 0)
-        this.addToHouse(houseGroup, state.houseX, state.houseY);
+        instance.addToHouse(houseGroup, state.houseX, state.houseY);
     
     if(state.jobX >= 0 && state.jobY >= 0)
-        this.addToProducer(producerGroup, state.jobX, state.jopY);
+        instance.addToProducer(producerGroup, state.jobX, state.jobY);
 
 	return instance;
 };
