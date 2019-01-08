@@ -1435,7 +1435,7 @@ var PlayScene = {
       var mountainObstacle = this.checkObstacles.call(this, sprite, "mountain");
 
 
-      return(!overlap && !mountainObstacle && (this._buildingModeType == this.roadGroup || (roadAdjacency && this.wood >= this._buildingModeType.wood && this.stone >= this._buildingModeType.stone && !waterObstacle)))
+      return(!overlap && !mountainObstacle && (this._buildingModeType == this.roadGroup && this.stone >= (this._buildingModeType.stone * this.roadSpriteVisible.length) || (roadAdjacency && this.wood >= this._buildingModeType.wood && this.stone >= this._buildingModeType.stone && !waterObstacle)))
     }
 
     function build(){
