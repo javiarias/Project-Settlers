@@ -1,8 +1,8 @@
 <h1 align="center"> Project Settlers </h1>
-
-<p align="center"> <a href = "#ENG"> English :uk: </a>
-
-
+<h5 align="center">Published under the <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike</a> license. <h5>
+  
+<h1 align="center"><a href="https://javiarias.github.io/Project-Settlers/dist/">PLAY NOW!</a></h1>
+  
 ## <a name="ENG"> :uk: </a>
 
 To deal with a possible global nuclear catastrophe, the government has developed a simulator through which citizens of the future like you will be ready and able to cope with anything that slows down the resurgence of the human race.
