@@ -26,9 +26,7 @@ var PlayScene = require('./play_scene.js');
 
     preload: function () {
 
-      // TODO: load here the assets for the game
-      /*this.game.load.image('logo', 'images/HERO.png');
-      this.game.load.image('test', 'images/Phaser.png');*/
+      this.game.load.image('logo', 'images/logo.png');
 
       
       this.game.load.image("fade", "images/fade.png");
@@ -78,6 +76,7 @@ var PlayScene = require('./play_scene.js');
       this.game.load.spritesheet('exitBttn', 'images/menu/MenuButtons/exit.png', 55, 48);
       this.game.load.spritesheet('minBttn', 'images/menu/MenuButtons/minimize.png', 55, 48);
       this.game.load.spritesheet('settBttn', 'images/menu/MenuButtons/settings.png', 55, 48);
+      this.game.load.spritesheet('clearBttn', 'images/menu/MenuButtons/clear.png', 55, 48);
       this.game.load.spritesheet('plusBttn', 'images/menu/MenuButtons/plus.png', 55, 48);
       this.game.load.spritesheet('minusBttn', 'images/menu/MenuButtons/minus.png', 55, 48);
       this.game.load.spritesheet('backBttn', 'images/menu/MenuButtons/back.png', 55, 48);
@@ -144,9 +143,9 @@ var PlayScene = require('./play_scene.js');
       this.background = this.game.add.sprite(0, 0, "mainBkg");
       this.background.smoothed = false;
 
-      this.txt = this.game.add.text(this.game.camera.x + (this.game.width/2), this.game.camera.y + (this.game.height/5), "Project Settlers \n BETA!!", {font: "console", fontSize: 60, fill: "#000000", align: "center" });
-      this.txt.anchor.setTo(0.5, 0.5);
-      this.txt.smoothed = false;
+      this.logo = this.game.add.sprite(this.game.camera.x + (this.game.width/2), this.game.camera.y + (this.game.height/4), "logo");
+      this.logo.anchor.setTo(0.5, 0.5);
+      this.logo.smoothed = false;
 
       this.load = this.game.add.button(this.game.camera.x + this.game.width/2, this.game.camera.y + (this.game.height/1.8), 'saveBttn', this.gameLoad, this, 0, 0, 1);
       this.load.anchor.setTo(0.5, 0.5);
@@ -195,6 +194,15 @@ var PlayScene = require('./play_scene.js');
       this.infoTxt = this.game.add.text(this.info.x, this.info.y + this.game.height/15, "Info", {font: "console", fontSize: 40, fill: "#000000", align: "center" });
       this.infoTxt.anchor.setTo(0.5, 0.5);
       this.infoTxt.smoothed = false;
+
+      this.deleteSave = this.game.add.button(700, this.game.camera.y + 3.55 * (this.game.height/4), "clearBttn", this.clearSave, this, 0, 0, 1);
+      this.deleteSave.anchor.setTo(.5, .5);
+      this.deleteSave.smoothed = false;
+      this.deleteSave.onDownSound = this.game.buttonSound;
+
+      this.deleteTxt = this.game.add.text(this.deleteSave.x, this.deleteSave.y + this.game.height/15, "Delete save", {font: "console", fontSize: 40, fill: "#000000", align: "center" });
+      this.deleteTxt.anchor.setTo(0.5, 0.5);
+      this.deleteTxt.smoothed = false;
 
     ////////////////////////////////////////
     //volume menu
@@ -306,6 +314,8 @@ var PlayScene = require('./play_scene.js');
 
     clearSave: function() {
       localStorage.removeItem("save");
+      this.optionsMain.destroy();
+      this.game.state.start('main');
     }
   };
 
