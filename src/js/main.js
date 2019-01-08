@@ -41,12 +41,7 @@ var PreloaderScene = {
     this.game.load.image('Hospital', 'images/buildings/Hospital.png');
     this.game.load.image('House', 'images/buildings/House.png');
     this.game.load.image('Stone', 'images/buildings/Stone.png');
-    //this.game.load.image('Coal', 'images/buildings/Coal.png');
     this.game.load.image('Road', 'images/buildings/road.png');
-    this.game.load.image('Road Down', 'images/buildings/road down.png');
-    this.game.load.image('Road Left', 'images/buildings/road left.png');
-    this.game.load.image('Road Right', 'images/buildings/road right.png');
-    this.game.load.image('Road Up', 'images/buildings/road up.png');
     this.game.load.image('Uranium', 'images/buildings/Uranium.png');
     this.game.load.image('Water', 'images/buildings/Water.png');
     this.game.load.image('Wind', 'images/buildings/Wind.png');
@@ -96,7 +91,6 @@ var PreloaderScene = {
     this.game.load.spritesheet('cropBttn', 'images/menu/UIButtons/crop.png', 55, 48);
     this.game.load.spritesheet('woodBttn', 'images/menu/UIButtons/wood.png', 55, 48);
     this.game.load.spritesheet('stoneBttn', 'images/menu/UIButtons/stone.png', 55, 48);
-    //this.game.load.spritesheet('coalBttn', 'images/menu/UIButtons/coal.png', 55, 48);
     this.game.load.spritesheet('uraniumBttn', 'images/menu/UIButtons/uranium.png', 55, 48);
     this.game.load.spritesheet('windBttn', 'images/menu/UIButtons/wind.png', 55, 48);
     this.game.load.spritesheet('energyBttn', 'images/menu/UIButtons/energy.png', 55, 48);
@@ -124,32 +118,43 @@ var wfconfig = {
 var MainMenu = {
 
   create: function(){
+    
     this.buttonSound = this.game.add.audio('buttonSound');
 
     this.background = this.game.add.sprite(0, 0, "mainBkg");
     this.background.smoothed = false;
 
-    this.txt = this.game.add.text(this.game.camera.x + (this.game.width/2), this.game.camera.y + (this.game.height/5), "Project Settlers \n BETA!!", {font: "console", fontSize: 60, fill: "#ffffff", align: "center" });
+    this.txt = this.game.add.text(this.game.camera.x + (this.game.width/2), this.game.camera.y + (this.game.height/5), "Project Settlers \n BETA!!", {font: "console", fontSize: 60, fill: "#000000", align: "center" });
     this.txt.anchor.setTo(0.5, 0.5);
     this.txt.smoothed = false;
 
-    this.play = this.game.add.button(this.game.camera.x + (this.game.width/2 - 100), this.game.camera.y + (this.game.height/1.8), 'playBttn', gameStart, this, 0, 0, 1);
+    this.load = this.game.add.button(this.game.camera.x + this.game.width/2, this.game.camera.y + (this.game.height/1.8), 'saveBttn', gameLoad, this, 0, 0, 1);
+    this.load.anchor.setTo(0.5, 0.5);
+    this.load.scale.setTo(3, 3);
+    this.load.smoothed = false;
+    this.load.onDownSound = this.buttonSound;
+
+    this.loadtxt = this.game.add.text(this.load.x, this.load.y + this.game.height/6, "Load", {font: "console", fontSize: 50, fill: "#000000", align: "center" });
+    this.loadtxt.anchor.setTo(0.5, 0.5);
+    this.loadtxt.smoothed = false;
+
+    this.play = this.game.add.button(this.load.left - 100, this.load.y, 'playBttn', gameStart, this, 0, 0, 1);
     this.play.anchor.setTo(0.5, 0.5);
     this.play.scale.setTo(3, 3);
     this.play.smoothed = false;
     this.play.onDownSound = this.buttonSound;
 
-    this.playtxt = this.game.add.text(this.play.x, this.play.y + this.game.height/6, "Play", {font: "console", fontSize: 40, fill: "#ffffff", align: "center" });
+    this.playtxt = this.game.add.text(this.play.x, this.play.y + this.game.height/6, "Play", {font: "console", fontSize: 50, fill: "#000000", align: "center" });
     this.playtxt.anchor.setTo(0.5, 0.5);
     this.playtxt.smoothed = false;
 
-    this.tutorial = this.game.add.button(this.game.camera.x + (this.game.width/2 + 100), this.game.camera.y + (this.game.height/1.8), 'tutorialBttn', tutorialStart, this, 0, 0, 1);
+    this.tutorial = this.game.add.button(this.load.right + 100, this.load.y, 'tutorialBttn', tutorialStart, this, 0, 0, 1);
     this.tutorial.anchor.setTo(0.5, 0.5);
     this.tutorial.scale.setTo(3, 3);
     this.tutorial.smoothed = false;
     this.tutorial.onDownSound = this.buttonSound;
 
-    this.tutorialtxt = this.game.add.text(this.tutorial.x, this.tutorial.y + this.game.height/6, "Tutorial", {font: "console", fontSize: 40, fill: "#ffffff", align: "center" });
+    this.tutorialtxt = this.game.add.text(this.tutorial.x, this.tutorial.y + this.game.height/6, "Tutorial", {font: "console", fontSize: 50, fill: "#000000", align: "center" });
     this.tutorialtxt.anchor.setTo(0.5, 0.5);
     this.tutorialtxt.smoothed = false;
 
@@ -246,13 +251,27 @@ var MainMenu = {
     function gameStart() {
       this.menuMusic.stop();
       this.optionsMain.destroy();
-      this.game.state.start('play', true, false, 0);
+      this.game.state.start('play', true, false, 0, false);
     }
 
     function tutorialStart() {
       this.menuMusic.stop();
       this.optionsMain.destroy();
-      this.game.state.start('tutorial', true, false, 1);
+      this.game.state.start('tutorial', true, false, 1, false);
+    }
+
+    function gameLoad() {
+      var state = localStorage.getItem('save');
+      if (state) {
+        this.game = JSON.parse(state);
+        this.menuMusic.stop();
+        this.optionsMain.destroy();
+        this.game.state.start('play', true, false, 1, true);
+      }
+    }
+
+    function clearSave() {
+      localStorage.removeItem("save");
     }
   }
 };
@@ -378,7 +397,7 @@ var DefeatState = {
     function gameStart() {
       this.menuMusic.stop();
       this.optionsMain.destroy();
-      this.game.state.start('play', true, false, 0);
+      this.game.state.start('play', true, false, 0, false);
     }
 
     function goMenu() {
@@ -510,7 +529,7 @@ var WinState = {
     function gameStart() {
       this.menuMusic.stop();
       this.optionsMain.destroy();
-      this.game.state.start('play', true, false, 0);
+      this.game.state.start('play', true, false, 0, false);
     }
 
     function goMenu() {

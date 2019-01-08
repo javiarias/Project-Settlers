@@ -4,9 +4,11 @@ var Phasetips = require("./Phasetips.js");
 
 var PlayScene = {
 
-  init: function(data)
+  init: function(data, loadingSave)
   {
     this.mode = data;
+
+    this.loading = loadingSave;
   },
 
   create: function () {
@@ -2301,53 +2303,56 @@ var PlayScene = {
     }
   },
 
-  saveGame:function()
+  saveGame: function()
   {
     var saveObject = {};
 
     saveObject.buildings = {};
 
     saveObject.buildings.woodGroup = {};
-
     
-    saveObject.buildings.woodGroup = this.woodGroup.forEach(function(prod){
-      return prod.serialize();
+    saveObject.buildings.woodGroup = this.woodGroup.children.map(function(prod){
+      return JSON.parse(prod.serialize());
     }, this);
 
-    saveObject.buildings.windGroup = this.windGroup.forEach(function(prod){
-      return prod.serialize();
+    saveObject.buildings.windGroup = this.windGroup.children.map(function(prod){
+      return JSON.parse(prod.serialize());
     }, this);
 
-    saveObject.buildings.uraniumGroup = this.uraniumGroup.forEach(function(prod){
-      return prod.serialize();
+    saveObject.buildings.uraniumGroup = this.uraniumGroup.children.map(function(prod){
+      return JSON.parse(prod.serialize());
     }, this);
 
-    saveObject.buildings.cropGroup = this.cropGroup.forEach(function(prod){
-      return prod.serialize();
+    saveObject.buildings.cropGroup = this.cropGroup.children.map(function(prod){
+      return JSON.parse(prod.serialize());
     }, this);
 
-    saveObject.buildings.stoneGroup = this.stoneGroup.forEach(function(prod){
-      return prod.serialize();
+    saveObject.buildings.stoneGroup = this.stoneGroup.children.map(function(prod){
+      return JSON.parse(prod.serialize());
     }, this);
 
-    saveObject.buildings.energyGroup = this.energyGroup.forEach(function(prod){
-      return prod.serialize();
+    saveObject.buildings.energyGroup = this.energyGroup.children.map(function(prod){
+      return JSON.parse(prod.serialize());
     }, this);
 
-    saveObject.buildings.hospitalGroup = this.hospitalGroup.forEach(function(prod){
-      return prod.serialize();
+    saveObject.buildings.hospitalGroup = this.hospitalGroup.children.map(function(prod){
+      return JSON.parse(prod.serialize());
     }, this);
 
-    saveObject.buildings.houses = this.houseGroup.forEach(function(house){
-      return house.serialize();
+    saveObject.buildings.houseGroup = this.houseGroup.children.map(function(house){
+      return JSON.parse(house.serialize());
     }, this);
 
-    saveObject.citizen
+    saveObject.citizens = this.houseGroup.map(function(house){
+      return JSON.parse(house.serializeCitizens());
+    }, this);
+
+    saveObject.homeless = this.homelessArray.map(function(citizen){
+      return JSON.parse(citizen.serialize());
+    }, this);
     
-    // localStorage only works with strings, so JSON.stringify first.
+
     localStorage.setItem("save", JSON.stringify(saveObject));
-    //save buildings
-    //save houses (con esto ya se guardan los ciudadanos (?))
   },
 
   loadGame:function()

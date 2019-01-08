@@ -1,10 +1,10 @@
 var Phasetips = require("./Phasetips.js");
 
-function House(game, x, y, img) {
+function House(game, x, y, img, hospitalNear = false) {
     Phaser.Sprite.call(this, game, x, y, img);
     this.residentA = undefined;
     this.residentB = undefined;
-    this.hospitalNear = false;
+    this.hospitalNear = hospitalNear;
     this.full = false;
     this.numberOfBirths = 0;
 
@@ -185,17 +185,64 @@ House.prototype.countCitizens = function(){
     return ((this.residentA !== undefined) + (this.residentB !== undefined));
 };
 
+House.prototype.serializeCitizens = function(){
+
+    var obj = {};
+
+    obj.residentA = JSON.parse(residentA.serialize());
+    obj.residentB = JSON.parse(residentB.serialize());
+
+    return JSON.stringify(obj);
+
+};
+
+House.prototype.serialize = function() {
+
+        var fields = [
+            "x",
+            "y",
+            "img",
+            'hospitalNear',
+            'full',
+            'off'
+        ];
+    
+        var obj = {};
+    
+        for (var i in fields) {
+            var field = fields[i];
+            obj[field] = this[field];
+        }
+
+        return JSON.stringify(obj);
+};
+
+House.prototype.unserialize = function(state, game) {
+    
+	if (typeof state === 'string') {
+		state = JSON.parse(state);
+    }
+    
+	var instance = new House(game, state.x, state.y, state.img, state.hospitalNear);
+    
+	for (var i in state) {
+		instance[i] = state[i];
+	}
+
+	return instance;
+};
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function Producer(game, x, y, img, amount, consume = 0) { 
     Phaser.Sprite.call(this, game, x, y, img);
     this.consume = consume;
-    this.workers = true;
     this.workerA = undefined;
     this.workerB = undefined;
     this.dataA = "";
     this.dataB = "";
     this.full = false;
+    this.img = img;
 
     this.totalAmount = amount;
     this.amount = 0;
@@ -310,29 +357,12 @@ Producer.prototype.updateTooltip = function() {
 };
 
 Producer.prototype.serialize = function() {
-        /*var saveObject = {};
-        //Falta la posición del sprite
-
-        saveObject.SpriteData = (this.Sprite.x, this.Sprite.y);
-        saveObject.consumes = this.consumes;
-        saveObject.consume = this.consume;
-        saveObject.workerA = this.workerA;
-        saveObject.workerB = this.workerB;
-        saveObject.dataA = "";
-        saveObject.dataB = "";
-        saveObject.full = this.full;
-        saveObject.totalAmount = this.totalAmount;
-        saveObject.amount = this.amount;
-
-        saveObject.off = this.off;*/
 
         var fields = [
-            'consumes',
+            "x",
+            "y",
+            "img",
             'consume',
-            'workerA',
-            'workerB',
-            'dataA',
-            'dataB',
             'full',
             'totalAmount',
             'off'
@@ -348,30 +378,14 @@ Producer.prototype.serialize = function() {
         return JSON.stringify(obj);
 };
 
-Producer.Unserialize = function(state) {
-	// We should be able to accept an object or a string.
+Producer.prototype.unserialize = function(state, game) {
+    
 	if (typeof state === 'string') {
 		state = JSON.parse(state);
-	}
-
-	// Default class name
-	var className = 'Character';
-
-	// Class name can be specified in the serialized data.
-	if (state.options.className) {
-		className = state.options.className;
-	}
-
-	// Call our character factory to make a new instance of className
-	var instance = Producer.Factory(
-		className,
-		game, // Game reference. Required
-		0, // x-pos. Required, but overridden by unserialize
-		0, // y-pos. Required, but overridden by unserialize
-		{} // options. Required, but overridden by unserialize
-	);
-
-	// Copy our saved state into the new object
+    }
+    
+	var instance = new Producer(game, state.x, state.y, state.img, state.amount, state.consume);
+    
 	for (var i in state) {
 		instance[i] = state[i];
 	}
@@ -384,7 +398,6 @@ Producer.Unserialize = function(state) {
 function Hospital(game, x, y, img, amount) {
     Phaser.Sprite.call(this, game, x, y, img);
     this.area = 16; //en tiles
-    this.workers = false;
     this.full = false;
     this.consume = amount;
 
@@ -404,12 +417,6 @@ function Hospital(game, x, y, img, amount) {
 }
 Hospital.prototype = Object.create(Phaser.Sprite.prototype);
 Hospital.constructor = Hospital;
-
-
-
-Hospital.prototype.bulldoze = function(unemployedArray) {
-
-};
 
 Hospital.prototype.updateTooltip = function() {
 
@@ -435,7 +442,43 @@ Hospital.prototype.checkArea = function(a, b){
     var ret = Phaser.Rectangle.intersects(x, y)
 
     return ret;
-  }
+};
+
+Hospital.prototype.serialize = function() {
+
+        var fields = [
+            "x",
+            "y",
+            "img",
+            'consume',
+            'full',
+            'off'
+        ];
+    
+        var obj = {};
+    
+        for (var i in fields) {
+            var field = fields[i];
+            obj[field] = this[field];
+        }
+
+        return JSON.stringify(obj);
+};
+
+Hospital.prototype.unserialize = function(state, game) {
+    
+	if (typeof state === 'string') {
+		state = JSON.parse(state);
+    }
+    
+	var instance = new Hospital(game, state.x, state.y, state.img, state.consume);
+    
+	for (var i in state) {
+		instance[i] = state[i];
+	}
+
+	return instance;
+};
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -450,7 +493,9 @@ Road.constructor = Road;
 
 
 function Citizen(homelessArray, unemployedArray, names, surnames, age = 0) {
-    this.name = names[Math.round(Math.random() * 20)] + " " + surnames[Math.round(Math.random() * 20)];
+    
+    this.name = names[Math.round(Math.random() * names.length)] + " " + surnames[Math.round(Math.random() * surnames.length)];
+
     this.age = age;
     this.health = 65;
     this.homeless = true;
@@ -459,7 +504,7 @@ function Citizen(homelessArray, unemployedArray, names, surnames, age = 0) {
     this.givingBirth = false;
     this.home;
     this.job;
-
+    
     homelessArray.unshift(this);
     unemployedArray.unshift(this);
 
@@ -470,11 +515,21 @@ function Citizen(homelessArray, unemployedArray, names, surnames, age = 0) {
 }
 Citizen.constructor = Citizen;
 
-Citizen.prototype.addToHouse = function (houseGroup){
+Citizen.prototype.addToHouse = function (houseGroup, houseX = -1, houseY = -1){
     var found = false;
 
     houseGroup.forEach(function (house) {
-        if(!house.full && !found){
+        if(houseX >= 0 && houseY >= 0){
+            if(house.x == houseX && house.y == houseY){
+                house.add(this);
+                found = true;
+                this.homeless = false;
+                this.consume = 3;
+                this.home = house;
+            }
+        }
+
+        else if(!house.full && !found){
             if(house.add(this)){
                 found = true;
                 this.homeless = false;
@@ -487,12 +542,22 @@ Citizen.prototype.addToHouse = function (houseGroup){
     return found;
 };
 
-Citizen.prototype.addToProducer = function (producerGroup){
+Citizen.prototype.addToProducer = function (producerGroup, prodX = -1, prodY = -1){
     var found = false;
 
     producerGroup.forEach(function (group) {
         group.forEach(function (producer) {
-            if(!producer.full && !found && producer.hospitalNear === undefined && producer.workers){
+            if(prodX >= 0 && prodY >= 0){
+                if(producer.x == prodX && producer.y == prodY){
+                    producer.add(this);
+                    found = true;
+                    this.unemployed = false;
+                    this.job = producer;
+                    producer.updateAmount();
+                }
+            }
+    
+            else if(!producer.full && !found && producer.hospitalNear === undefined && producer.workers){
                 if(producer.add(this)){
                     found = true;
                     this.unemployed = false;
@@ -546,6 +611,67 @@ Citizen.prototype.tick = function(foodAmount, waterAmount, healing){
         if(!this.unemployed)
             this.job.kill(this);
     }
+};
+
+Citizen.prototype.serialize = function() {
+
+        var fields = [
+            "name",
+            "age",
+            "health",
+            'homeless',
+            'unemployed',
+            'birthCooldown',
+            "givingBirth"
+        ];
+    
+        var obj = {};
+    
+        for (var i in fields) {
+            var field = fields[i];
+            obj[field] = this[field];
+        }
+
+        if(!this.homeless) {
+            obj.houseX = this.house.x;
+            obj.houseY = this.house.y;
+        }
+        else {
+            obj.houseX = -1;
+            obj.houseY = -1;
+        }
+
+        if(!this.unemployed) {
+            obj.jobX = this.job.x;
+            obj.jobY = this.job.y;
+        }
+        else {
+            obj.jobX = -1;
+            obj.jobY = -1;
+        }
+
+        return JSON.stringify(obj);
+};
+
+Citizen.prototype.unserialize = function(state, homelessArray, unemployedArray, names, surnames, houseGroup, producerGroup) {
+    
+	if (typeof state === 'string') {
+		state = JSON.parse(state);
+    }
+    
+	var instance = new Citizen(homelessArray, unemployedArray, names, surnames);
+    
+	for (var i in state) {
+		instance[i] = state[i];
+    }
+    
+    if(state.houseX >= 0 && state.houseY >= 0)
+        this.addToHouse(houseGroup, state.houseX, state.houseY);
+    
+    if(state.jobX >= 0 && state.jobY >= 0)
+        this.addToProducer(producerGroup, state.jobX, state.jopY);
+
+	return instance;
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
