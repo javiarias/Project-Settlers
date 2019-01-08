@@ -44,5 +44,4 @@ As fans of games like The Settlers and Frostpunk, we wanted to make a game that 
 
 We don't have any images from the project yet, but we do have several references (The Settlers, Frostpunk, Anno, Fallout) to offer in order to give a basic idea of how the game will look like.
 
-<img src="https://www.freegameempire.com/Img/Cache/Games/Settlers-2/Screenshot-5.png" />
-(Source: www.freegameempire.com)
+<img src="screenshots\eins" /> </img>
