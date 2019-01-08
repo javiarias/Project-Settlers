@@ -1793,10 +1793,9 @@ var PlayScene = {
 
         if(prod.off){
           this.houseGroup.forEach(function (house) { house.updateSingleHospital(prod, true); }, this);
+          prod.off = false
           prod.updateTooltip();
         }
-
-        prod.off = false
       }
       
       else{

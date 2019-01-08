@@ -618,8 +618,7 @@ Citizen.prototype.tick = function(foodAmount, waterAmount, healing){
 
     if(this.age > this.maxAge)
     {
-        this.health = this.health * 0.75 - 1;
-        console.log(this.name + ": " + this.health);
+        this.health = (this.health * 0.75) - 1;
     }    
 
     if(this.birthCooldown > 0)
