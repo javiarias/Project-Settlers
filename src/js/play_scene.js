@@ -123,7 +123,7 @@ var PlayScene = {
       this.waterGroup.stone = 10;
       this.waterGroup.wood = 10;
       this.waterGroup.consume = 1;
-      this.waterGroup.produce = 2;
+      this.waterGroup.produce = 3;
 
       this.cropGroup = this.game.add.group();
       this.buildingGroup.add(this.cropGroup);
@@ -131,7 +131,7 @@ var PlayScene = {
       this.cropGroup.stone = 10;
       this.cropGroup.wood = 10;
       this.cropGroup.consume = 1;
-      this.cropGroup.produce = 2;
+      this.cropGroup.produce = 3;
 
       this.woodGroup = this.game.add.group();
       this.buildingGroup.add(this.woodGroup);
@@ -152,7 +152,7 @@ var PlayScene = {
       this.energyGroup = this.game.add.group();
       this.buildingGroup.add(this.energyGroup);
       this.energyGroup.sprite = 'Energy';
-      this.energyGroup.stone = 45;
+      this.energyGroup.stone = 35;
       this.energyGroup.wood = 30;
       this.energyGroup.consume = 2;
       this.energyGroup.produce = 10;
@@ -162,7 +162,7 @@ var PlayScene = {
       this.windGroup.sprite = 'Wind';
       this.windGroup.stone = 35;
       this.windGroup.wood = 30;
-      this.windGroup.produce = 2;
+      this.windGroup.produce = 5;
 
       this.roadGroup = this.game.add.group();
       this.buildingGroup.add(this.roadGroup);
