@@ -10,13 +10,6 @@ To deal with a possible global nuclear catastrophe, the government has developed
 Your objective will be to rebuild human society, starting from a small population and a limited amount of resources. You will have to keep your citizens healthy and happy by providing food and clean water, generating energy, monitoring radiation levels and keeping your city clean and safe. To do this, you will have access to blueprints of various facilities such as farms, decorative structures, water filters, roads, hospitals...
 
 But beware! The world of the future is (EVEN) worse than today, and you may not have the same conveniences you have now. lack of water and food, no electricity to warm your homes or make work easy... Moreover, resources are not infinite: build more and more as your population grows exponentially.
-\
-\
-\
-\
-\
-\
-\
 **Project Settlers** is a real-time resource management game created by <a href="http://github.com/javiarias">Javier Arias</a> and <a href="http://github.com/IgnOry">Ignacio Ory</a>, two second-year students of Game Development at the Complutense University of Madrid (Universidad Complutense De Madrid"), as a four month proyect to learn about Javascript and designing games for the web.
 
 The game counts with pixel-art graphics and an aesthetic inspired by old operating systems like Windows 98
