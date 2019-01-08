@@ -56,16 +56,16 @@ House.prototype.updateHospitals = function(hospitalGroup) {
 
     hospitalGroup.forEach(function(hospital){
         if(!this.hospitalNear)
-            this.hospitalNear = hospital.checkArea(hospital, this);
+            this.hospitalNear = hospital.checkArea(hospital, this) && !hospital.off;
     }, this);
 
     this.updateTooltip();
 };
 
-House.prototype.updateSingleHospital = function(hospital, turnOn = true) {
+House.prototype.updateSingleHospital = function(hospital) {
 
     if(hospital.checkArea(hospital, this))
-        this.hospitalNear = turnOn;
+        this.hospitalNear = !hospital.off;
 
     this.updateTooltip();
 };

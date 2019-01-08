@@ -1792,16 +1792,18 @@ var PlayScene = {
         this.energy -= prod.amount;
 
         if(prod.off){
-          this.houseGroup.forEach(function (house) { house.updateSingleHospital(prod, true); }, this);
+          this.houseGroup.forEach(function (house) { house.updateSingleHospital(prod); }, this);
           prod.off = false
           prod.updateTooltip();
         }
       }
       
       else{
-        this.houseGroup.forEach(function (house) { house.updateSingleHospital(prod, false); }, this);
-        prod.off = true;
-        prod.updateTooltip();
+        if(!prod.off){
+          this.houseGroup.forEach(function (house) { house.updateSingleHospital(prod); }, this);
+          prod.off = true;
+          prod.updateTooltip();
+        }
       }
     }, this);
 
@@ -2353,7 +2355,8 @@ var PlayScene = {
 
       if(sprite.full !== undefined){
         if(sprite.area !== undefined){
-          this.houseGroup.forEach(function (house) { house.updateSingleHospital(sprite, false); }, this);
+          sprite.off = true;
+          this.houseGroup.forEach(function (house) { house.updateSingleHospital(sprite); }, this);
           sprite.bulldoze(this.unemployedArray);
         }
         
@@ -2523,16 +2526,13 @@ var PlayScene = {
       
       this.woodTxt.text = this.wood;
       this.stoneTxt.text = this.stone;
-
-      this._buildingModeType.add(auxBuilding);
-
-      if(this._buildingModeType == this.hospitalGroup){
-        this.houseGroup.forEach(function (house) { house.updateSingleHospital(auxBuilding); }, this);
-      }
-      else if(this._buildingModeType == this.houseGroup)
+      
+      if(this._buildingModeType == this.houseGroup)
       {
         auxBuilding.updateHospitals(this.hospitalGroup);
       }
+
+      this._buildingModeType.add(auxBuilding);
 
       this.buildMode(this, this._buildingModeType);
       this.buildMode(this, this._buildingModeType);
