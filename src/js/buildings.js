@@ -510,7 +510,10 @@ Citizen.prototype.tick = function(foodAmount, waterAmount, healing){
     this.age++;
 
     if(this.age > this.maxAge)
-        this.health = this.health * 0.75;
+    {
+        this.health = this.health * 0.75 - 1;
+        console.log(this.name + ": " + this.health);
+    }    
 
     if(this.birthCooldown > 0)
         this.birthCooldown--;
