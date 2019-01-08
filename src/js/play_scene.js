@@ -12,881 +12,912 @@ var PlayScene = {
   },
 
   create: function () {
-    //////////////////////////////
-    //Tilemap
+  //////////////////////////////
+  //Tilemap
 
-      this.map = this.game.add.tilemap('tilemap'); 
-      this.map.addTilesetImage("Tileset","patronesTilemap");
+    this.map = this.game.add.tilemap('tilemap'); 
+    this.map.addTilesetImage("Tileset","patronesTilemap");
 
-      //layers
-      this.map.waterLayer = this.map.createLayer ("water");
+    //layers
+    this.map.waterLayer = this.map.createLayer ("water");
 
-      this.map.groundLayer = this.map.createLayer ("soil");
-      this.map.resourcesLayer = this.map.createLayer ("resources");
-      this.map.obstaclesLayer = this.map.createLayer ("obstacles");
+    this.map.groundLayer = this.map.createLayer ("soil");
+    this.map.resourcesLayer = this.map.createLayer ("resources");
+    this.map.obstaclesLayer = this.map.createLayer ("obstacles");
 
-      this.map.waterLayer.resizeWorld();
+    this.map.waterLayer.resizeWorld();
 
 
-    //////////////////////////////
-    //music
+  //////////////////////////////
+  //music
 
-      if(!this.game.gameMusic){
-        this.game.gameMusic = this.game.add.audio('gameSound', 1, true);
-        this.game.gameMusic.loop = true;
-      }
+    if(!this.game.gameMusic){
+      this.game.gameMusic = this.game.add.audio('gameSound', 1, true);
+      this.game.gameMusic.loop = true;
+    }
 
-      if(!this.game.gameMusic.isPlaying){
-        this.game.gameMusic.play();
+    if(!this.game.gameMusic.isPlaying){
+      this.game.gameMusic.play();
+      this.game.gameMusic.volume = this.game.volume / 100;
+    }
+
+  //////////////////////////////
+  //misc. variables
+    this.names = ["Tatiana", "Olga", "Elena", "Svetlana", "Irina", "Ekaterina", "Anna", "Kaja", "Natalia", "Anastasía", "Marina", "Sergey", "Alexandr", "Alexey", "Andrey", "Vladímir", "Iosif", "Dmitry", "Nikolay", "Yuri", "Oleg"];
+    this.surnames = ["Smirnov", "Ivanov", "Kuznetsov", "Popov", "Sokolov", "Lébedev", "Kozlov", "Nóvikov", "Morózov", "Petrov", "Vólkov", "Solovióv", "Vasíliev", "Záitsev", "Pávlov", "Semiónov", "Gólubev", "Vinográdov", "Bogdánov", "Vorobiov", "Korsakov"];
+
+    this.paused = true;
+    this.timeScale = 1;
+    this.currentTime = { "hour": 0, "buffer": 0};
+    this.homelessArray = [];
+    this.unemployedArray = [];
+    this.shiftStart = 9;
+    this.shiftEnd = 17;
+    this._tileSize = this.map.tileWidth;
+    this._buildModeActive = false;
+    this._destroyModeActive = false;
+    this._escapeMenu = false;
+    this.roadBuilding = false;
+    this.fade;
+
+    this._buildingModeSprite;
+    this._buildingModeType = "";
+    this._buildingModeArea;
+
+    this.roadSpriteStack = [];
+    for(var i = 0; i < 40; i++){
+      var aux = this.game.add.sprite(0, 0, "Road");
+      aux.visible = false;
+      aux.anchor.setTo(.5, .5);
+      aux.alpha = 0.7;
+
+      this.roadSpriteStack.push(aux);
+    }
+
+    this.roadSpriteVisible = [];
+    this.currentRoadAngle = 0;
+
+  //////////////////////////////
+  //Resources
+    if (this.mode == 0){
+      this.food = 100;
+      this.wood = 75;
+      this.uranium = 0;
+      this.energy = 0;
+      this.water = 100;
+      this.stone = 75;
+    }
+
+    else if (this.mode == 1){
+      this.food = 999;
+      this.wood = 999;
+      this.uranium = 0;
+      this.energy = 0;
+      this.water = 999;
+      this.stone = 999;
+    }
+
+    this.foodGain = 0;
+    this.woodGain = 0;
+    this.uraniumGain = 0;
+    this.energyGain = 0;
+    this.waterGain = 0;
+    this.stoneGain = 0;
+
+    this.citizenConsume = 3;
+    this.homelessConsume = 5;
+
+  //////////////////////////////
+  //Groups
+
+    this.buildingGroup = this.game.add.group();
+
+    this.houseGroup = this.game.add.group();
+    this.houseGroup.sprite = 'House';
+    this.buildingGroup.add(this.houseGroup);
+    this.houseGroup.stone = 5;
+    this.houseGroup.wood = 5;
+
+    this.waterGroup = this.game.add.group();
+    this.buildingGroup.add(this.waterGroup);
+    this.waterGroup.sprite = 'Water';
+    this.waterGroup.stone = 10;
+    this.waterGroup.wood = 10;
+    this.waterGroup.consume = 1;
+    this.waterGroup.produce = 3;
+
+    this.cropGroup = this.game.add.group();
+    this.buildingGroup.add(this.cropGroup);
+    this.cropGroup.sprite = 'Crops';
+    this.cropGroup.stone = 10;
+    this.cropGroup.wood = 10;
+    this.cropGroup.consume = 1;
+    this.cropGroup.produce = 3;
+
+    this.woodGroup = this.game.add.group();
+    this.buildingGroup.add(this.woodGroup);
+    this.woodGroup.sprite = 'Wood';
+    this.woodGroup.stone = 10;
+    this.woodGroup.wood = 5;
+    this.woodGroup.consume = 3;
+    this.woodGroup.produce = 1;
+
+    this.uraniumGroup = this.game.add.group();
+    this.buildingGroup.add(this.uraniumGroup);
+    this.uraniumGroup.sprite = 'Uranium';
+    this.uraniumGroup.stone = 30;
+    this.uraniumGroup.wood = 30;
+    this.uraniumGroup.consume = 3;
+    this.uraniumGroup.produce = 1;
+
+    this.energyGroup = this.game.add.group();
+    this.buildingGroup.add(this.energyGroup);
+    this.energyGroup.sprite = 'Energy';
+    this.energyGroup.stone = 35;
+    this.energyGroup.wood = 30;
+    this.energyGroup.consume = 2;
+    this.energyGroup.produce = 10;
+
+    this.windGroup = this.game.add.group();
+    this.buildingGroup.add(this.windGroup);
+    this.windGroup.sprite = 'Wind';
+    this.windGroup.stone = 35;
+    this.windGroup.wood = 30;
+    this.windGroup.produce = 5;
+
+    this.roadGroup = this.game.add.group();
+    this.buildingGroup.add(this.roadGroup);
+    this.roadGroup.sprite = 'Road';
+    this.roadGroup.stone = 1;
+    this.roadGroup.wood = 0;
+
+    this.hospitalGroup = this.game.add.group();
+    this.buildingGroup.add(this.hospitalGroup);
+    this.hospitalGroup.sprite = 'Hospital';
+    this.hospitalGroup.stone = 25;
+    this.hospitalGroup.wood = 25;
+    this.hospitalGroup.consume = 4;
+
+    this.stoneGroup = this.game.add.group();
+    this.buildingGroup.add(this.stoneGroup);
+    this.stoneGroup.sprite = 'Stone';
+    this.stoneGroup.stone = 15;
+    this.stoneGroup.wood = 15;
+    this.stoneGroup.consume = 3;
+    this.stoneGroup.produce = 1;
+
+  //////////////////////////////
+  //pause menu
+    this.pauseMenu = this.game.add.group();
+
+    if (this.mode == 0)
+      var pauseBkg = this.game.add.sprite(this.game.camera.x + this.game.camera.width / 2, this.game.camera.y + this.game.camera.height / 2, "pausePlay");
+
+    else if (this.mode == 1)
+      var pauseBkg = this.game.add.sprite(this.game.camera.x + this.game.camera.width / 2, this.game.camera.y + this.game.camera.height / 2, "pauseTutorial");
+
+    pauseBkg.anchor.setTo(.5, .5);
+    pauseBkg.fixedToCamera = true;
+    pauseBkg.smoothed = false;
+    this.pauseMenu.add(pauseBkg);
+
+    var pauseSettings = this.game.add.button(pauseBkg.x - 72, pauseBkg.y + 3, "settBttn", function(){this.optionsMenu.visible = true; this.pauseMenu.visible = false; this.game.world.bringToTop(this.optionsMenu);}, this, 0, 0, 1);
+    pauseSettings.anchor.setTo(0.5, 0.5);
+    pauseSettings.fixedToCamera = true;
+    pauseSettings.smoothed = false;
+    pauseSettings.onDownSound = this.game.buttonSound;
+    pauseSettings.input.priorityID = 2;
+    this.pauseMenu.add(pauseSettings);
+
+    var pauseMinimize = this.game.add.button(pauseBkg.x, pauseBkg.y + 3, "minBttn", this.escape, this, 0, 0, 1);
+    pauseMinimize.anchor.setTo(0.5, 0.5);
+    pauseMinimize.fixedToCamera = true;
+    pauseMinimize.smoothed = false;
+    pauseMinimize.onDownSound = this.game.buttonSound;
+    pauseMinimize.input.priorityID = 2;
+    this.pauseMenu.add(pauseMinimize);
+
+    if (this.mode == 0)
+    {
+      var saveBttn = this.game.add.button(pauseBkg.x + 72, pauseBkg.y + 3, "saveBttn", function(){this.saveGame(); this.game.gameMusic.stop(); this.game.state.start('main');}, this, 0, 0, 1);
+      saveBttn.anchor.setTo(0.5, 0.5);
+      saveBttn.fixedToCamera = true;
+      saveBttn.smoothed = false;
+      saveBttn.onDownSound = this.game.buttonSound;
+      saveBttn.input.priorityID = 2;
+      this.pauseMenu.add(saveBttn);
+    }
+
+    else if (this.mode == 1)
+    {
+      var pauseExit = this.game.add.button(pauseBkg.x + 72, pauseBkg.y + 3, "exitBttn", function(){this.game.gameMusic.stop();this.game.state.start('main');}, this, 0, 0, 1);
+      pauseExit.anchor.setTo(0.5, 0.5);
+      pauseExit.fixedToCamera = true;
+      pauseExit.smoothed = false;
+      pauseExit.onDownSound = this.game.buttonSound;
+      pauseExit.input.priorityID = 2;
+      this.pauseMenu.add(pauseExit);
+    }
+
+    this.pauseMenu.visible = false;
+
+  //////////////////////////////
+  //volume menu
+    this.optionsMenu = this.game.add.group();
+
+    var optionsBkg = this.game.add.sprite(this.game.camera.x + this.game.camera.width / 2, this.game.camera.y + this.game.camera.height / 2, "optionsBkg");
+    optionsBkg.anchor.setTo(.5, .5);
+    optionsBkg.fixedToCamera = true;
+    optionsBkg.smoothed = false;
+    this.optionsMenu.add(optionsBkg);
+
+    var volumeText = this.game.add.text(optionsBkg.x, optionsBkg.y - 20, this.game.volume, {font: "50px console"});
+    volumeText.anchor.setTo(0.5, 0.5);
+    volumeText.fixedToCamera = true;
+    volumeText.smoothed = false;
+    this.optionsMenu.add(volumeText);
+
+    var optionsMinus = this.game.add.button(optionsBkg.x - 77, optionsBkg.y - 20, "minusBttn", function(){updateVolume.call(this, -5);}, this, 0, 0, 1);
+    optionsMinus.anchor.setTo(0.5, 0.5);
+    optionsMinus.fixedToCamera = true;
+    optionsMinus.smoothed = false;
+    optionsMinus.onDownSound = this.game.buttonSound;
+    optionsMinus.input.priorityID = 2;
+    this.optionsMenu.add(optionsMinus);
+    
+    var optionsPlus = this.game.add.button(optionsBkg.x + 77, optionsBkg.y - 20, "plusBttn", function(){updateVolume.call(this, 5);}, this, 0, 0, 1);
+    optionsPlus.anchor.setTo(0.5, 0.5);
+    optionsPlus.fixedToCamera = true;
+    optionsPlus.smoothed = false;
+    optionsPlus.onDownSound = this.game.buttonSound;
+    optionsPlus.input.priorityID = 2;
+    this.optionsMenu.add(optionsPlus);
+
+    var optionsBack = this.game.add.button(optionsBkg.x - 47, optionsBkg.y + 48, "backBttn", function(){this.optionsMenu.visible = false; this.pauseMenu.visible = true; this.game.world.bringToTop(this.pauseMenu);}, this, 0, 0, 1);
+    optionsBack.anchor.setTo(0.5, 0.5);
+    optionsBack.fixedToCamera = true;
+    optionsBack.smoothed = false;
+    optionsBack.onDownSound = this.game.buttonSound;
+    optionsPlus.input.priorityID = 2;
+    this.optionsMenu.add(optionsBack);
+
+    var optionsMute = this.game.add.button(optionsBkg.x + 47, optionsBkg.y + 48, "muteBttn", function(){mute.call(this);}, this, 0, 0, 1);
+    optionsMute.anchor.setTo(0.5, 0.5);
+    optionsMute.fixedToCamera = true;
+    optionsMute.smoothed = false;
+    optionsMute.onDownSound = this.game.buttonSound;
+    optionsMute.input.priorityID = 2;
+    this.optionsMenu.add(optionsMute);
+
+    this.optionsMenu.visible = false;
+
+    function updateVolume(update){
+      if(this.game.volume + update >= 0 && this.game.volume + update <= 100){
+
+        this.game.volume += update;
         this.game.gameMusic.volume = this.game.volume / 100;
+
+        this.optionsMenu.forEach(function(text){
+          if (text.text !== null)
+            text.text = this.game.volume;
+          }, this);
       }
+    }
 
-    //////////////////////////////
-    //misc. variables
-      this.names = ["Tatiana", "Olga", "Elena", "Svetlana", "Irina", "Ekaterina", "Anna", "Kaja", "Natalia", "Anastasía", "Marina", "Sergey", "Alexandr", "Alexey", "Andrey", "Vladímir", "Iosif", "Dmitry", "Nikolay", "Yuri", "Oleg"];
-      this.surnames = ["Smirnov", "Ivanov", "Kuznetsov", "Popov", "Sokolov", "Lébedev", "Kozlov", "Nóvikov", "Morózov", "Petrov", "Vólkov", "Solovióv", "Vasíliev", "Záitsev", "Pávlov", "Semiónov", "Gólubev", "Vinográdov", "Bogdánov", "Vorobiov", "Korsakov"];
-
-      this.paused = true;
-      this.timeScale = 1;
-      this.currentTime = { "hour": 0, "buffer": 0};
-      this.homelessArray = [];
-      this.unemployedArray = [];
-      this.shiftStart = 9;
-      this.shiftEnd = 17;
-      this._tileSize = this.map.tileWidth;
-      this._buildModeActive = false;
-      this._destroyModeActive = false;
-      this._escapeMenu = false;
-      this.roadBuilding = false;
-      this.fade;
-
-      this._buildingModeSprite;
-      this._buildingModeType = "";
-      this._buildingModeArea;
-
-      this.roadSpriteStack = [];
-      for(var i = 0; i < 40; i++){
-        var aux = this.game.add.sprite(0, 0, "Road");
-        aux.visible = false;
-        aux.anchor.setTo(.5, .5);
-        aux.alpha = 0.7;
-
-        this.roadSpriteStack.push(aux);
-      }
-
-      this.roadSpriteVisible = [];
-      this.currentRoadAngle = 0;
-
-    //////////////////////////////
-    //Resources
-      if (this.mode == 0){
-        this.food = 100;
-        this.wood = 75;
-        this.uranium = 0;
-        this.energy = 0;
-        this.water = 100;
-        this.stone = 75;
-      }
-
-      else if (this.mode == 1){
-        this.food = 100;
-        this.wood = 200;
-        this.uranium = 0;
-        this.energy = 0;
-        this.water = 0;
-        this.stone = 200;
-      }
-
-      this.foodGain = 0;
-      this.woodGain = 0;
-      this.uraniumGain = 0;
-      this.energyGain = 0;
-      this.waterGain = 0;
-      this.stoneGain = 0;
-
-      this.citizenConsume = 3;
-      this.homelessConsume = 5;
-
-    //////////////////////////////
-    //Groups
-
-      this.buildingGroup = this.game.add.group();
-
-      this.houseGroup = this.game.add.group();
-      this.houseGroup.sprite = 'House';
-      this.buildingGroup.add(this.houseGroup);
-      this.houseGroup.stone = 5;
-      this.houseGroup.wood = 5;
-
-      this.waterGroup = this.game.add.group();
-      this.buildingGroup.add(this.waterGroup);
-      this.waterGroup.sprite = 'Water';
-      this.waterGroup.stone = 10;
-      this.waterGroup.wood = 10;
-      this.waterGroup.consume = 1;
-      this.waterGroup.produce = 3;
-
-      this.cropGroup = this.game.add.group();
-      this.buildingGroup.add(this.cropGroup);
-      this.cropGroup.sprite = 'Crops';
-      this.cropGroup.stone = 10;
-      this.cropGroup.wood = 10;
-      this.cropGroup.consume = 1;
-      this.cropGroup.produce = 3;
-
-      this.woodGroup = this.game.add.group();
-      this.buildingGroup.add(this.woodGroup);
-      this.woodGroup.sprite = 'Wood';
-      this.woodGroup.stone = 10;
-      this.woodGroup.wood = 5;
-      this.woodGroup.consume = 3;
-      this.woodGroup.produce = 1;
-
-      this.uraniumGroup = this.game.add.group();
-      this.buildingGroup.add(this.uraniumGroup);
-      this.uraniumGroup.sprite = 'Uranium';
-      this.uraniumGroup.stone = 30;
-      this.uraniumGroup.wood = 30;
-      this.uraniumGroup.consume = 3;
-      this.uraniumGroup.produce = 1;
-
-      this.energyGroup = this.game.add.group();
-      this.buildingGroup.add(this.energyGroup);
-      this.energyGroup.sprite = 'Energy';
-      this.energyGroup.stone = 35;
-      this.energyGroup.wood = 30;
-      this.energyGroup.consume = 2;
-      this.energyGroup.produce = 10;
-
-      this.windGroup = this.game.add.group();
-      this.buildingGroup.add(this.windGroup);
-      this.windGroup.sprite = 'Wind';
-      this.windGroup.stone = 35;
-      this.windGroup.wood = 30;
-      this.windGroup.produce = 5;
-
-      this.roadGroup = this.game.add.group();
-      this.buildingGroup.add(this.roadGroup);
-      this.roadGroup.sprite = 'Road';
-      this.roadGroup.stone = 1;
-      this.roadGroup.wood = 0;
-
-      this.hospitalGroup = this.game.add.group();
-      this.buildingGroup.add(this.hospitalGroup);
-      this.hospitalGroup.sprite = 'Hospital';
-      this.hospitalGroup.stone = 25;
-      this.hospitalGroup.wood = 25;
-      this.hospitalGroup.consume = 4;
-
-      this.stoneGroup = this.game.add.group();
-      this.buildingGroup.add(this.stoneGroup);
-      this.stoneGroup.sprite = 'Stone';
-      this.stoneGroup.stone = 15;
-      this.stoneGroup.wood = 15;
-      this.stoneGroup.consume = 3;
-      this.stoneGroup.produce = 1;
-
-    //////////////////////////////
-    //pause menu
-      this.pauseMenu = this.game.add.group();
-
-      if (this.mode == 0)
-        var pauseBkg = this.game.add.sprite(this.game.camera.x + this.game.camera.width / 2, this.game.camera.y + this.game.camera.height / 2, "pausePlay");
-
-      else if (this.mode == 1)
-        var pauseBkg = this.game.add.sprite(this.game.camera.x + this.game.camera.width / 2, this.game.camera.y + this.game.camera.height / 2, "pauseTutorial");
-
-      pauseBkg.anchor.setTo(.5, .5);
-      pauseBkg.fixedToCamera = true;
-      pauseBkg.smoothed = false;
-      this.pauseMenu.add(pauseBkg);
-
-      var pauseSettings = this.game.add.button(pauseBkg.x - 72, pauseBkg.y + 3, "settBttn", function(){this.optionsMenu.visible = true; this.pauseMenu.visible = false; this.game.world.bringToTop(this.optionsMenu);}, this, 0, 0, 1);
-      pauseSettings.anchor.setTo(0.5, 0.5);
-      pauseSettings.fixedToCamera = true;
-      pauseSettings.smoothed = false;
-      pauseSettings.onDownSound = this.game.buttonSound;
-      pauseSettings.input.priorityID = 2;
-      this.pauseMenu.add(pauseSettings);
-
-      var pauseMinimize = this.game.add.button(pauseBkg.x, pauseBkg.y + 3, "minBttn", this.escape, this, 0, 0, 1);
-      pauseMinimize.anchor.setTo(0.5, 0.5);
-      pauseMinimize.fixedToCamera = true;
-      pauseMinimize.smoothed = false;
-      pauseMinimize.onDownSound = this.game.buttonSound;
-      pauseMinimize.input.priorityID = 2;
-      this.pauseMenu.add(pauseMinimize);
-
-      if (this.mode == 0)
-      {
-        var saveBttn = this.game.add.button(pauseBkg.x + 72, pauseBkg.y + 3, "saveBttn", function(){this.saveGame(); this.game.gameMusic.stop(); this.game.state.start('main');}, this, 0, 0, 1);
-        saveBttn.anchor.setTo(0.5, 0.5);
-        saveBttn.fixedToCamera = true;
-        saveBttn.smoothed = false;
-        saveBttn.onDownSound = this.game.buttonSound;
-        saveBttn.input.priorityID = 2;
-        this.pauseMenu.add(saveBttn);
-      }
-
-      else if (this.mode == 1)
-      {
-        var pauseExit = this.game.add.button(pauseBkg.x + 72, pauseBkg.y + 3, "exitBttn", function(){this.game.gameMusic.stop();this.game.state.start('main');}, this, 0, 0, 1);
-        pauseExit.anchor.setTo(0.5, 0.5);
-        pauseExit.fixedToCamera = true;
-        pauseExit.smoothed = false;
-        pauseExit.onDownSound = this.game.buttonSound;
-        pauseExit.input.priorityID = 2;
-        this.pauseMenu.add(pauseExit);
-      }
-
-      this.pauseMenu.visible = false;
-
-    //////////////////////////////
-    //volume menu
-      this.optionsMenu = this.game.add.group();
-
-      var optionsBkg = this.game.add.sprite(this.game.camera.x + this.game.camera.width / 2, this.game.camera.y + this.game.camera.height / 2, "optionsBkg");
-      optionsBkg.anchor.setTo(.5, .5);
-      optionsBkg.fixedToCamera = true;
-      optionsBkg.smoothed = false;
-      this.optionsMenu.add(optionsBkg);
-
-      var volumeText = this.game.add.text(optionsBkg.x, optionsBkg.y - 20, this.game.volume, {font: "50px console"});
-      volumeText.anchor.setTo(0.5, 0.5);
-      volumeText.fixedToCamera = true;
-      volumeText.smoothed = false;
-      this.optionsMenu.add(volumeText);
-
-      var optionsMinus = this.game.add.button(optionsBkg.x - 77, optionsBkg.y - 20, "minusBttn", function(){updateVolume.call(this, -5);}, this, 0, 0, 1);
-      optionsMinus.anchor.setTo(0.5, 0.5);
-      optionsMinus.fixedToCamera = true;
-      optionsMinus.smoothed = false;
-      optionsMinus.onDownSound = this.game.buttonSound;
-      optionsMinus.input.priorityID = 2;
-      this.optionsMenu.add(optionsMinus);
-      
-      var optionsPlus = this.game.add.button(optionsBkg.x + 77, optionsBkg.y - 20, "plusBttn", function(){updateVolume.call(this, 5);}, this, 0, 0, 1);
-      optionsPlus.anchor.setTo(0.5, 0.5);
-      optionsPlus.fixedToCamera = true;
-      optionsPlus.smoothed = false;
-      optionsPlus.onDownSound = this.game.buttonSound;
-      optionsPlus.input.priorityID = 2;
-      this.optionsMenu.add(optionsPlus);
-
-      var optionsBack = this.game.add.button(optionsBkg.x - 47, optionsBkg.y + 48, "backBttn", function(){this.optionsMenu.visible = false; this.pauseMenu.visible = true; this.game.world.bringToTop(this.pauseMenu);}, this, 0, 0, 1);
-      optionsBack.anchor.setTo(0.5, 0.5);
-      optionsBack.fixedToCamera = true;
-      optionsBack.smoothed = false;
-      optionsBack.onDownSound = this.game.buttonSound;
-      optionsPlus.input.priorityID = 2;
-      this.optionsMenu.add(optionsBack);
-
-      var optionsMute = this.game.add.button(optionsBkg.x + 47, optionsBkg.y + 48, "muteBttn", function(){mute.call(this);}, this, 0, 0, 1);
-      optionsMute.anchor.setTo(0.5, 0.5);
-      optionsMute.fixedToCamera = true;
-      optionsMute.smoothed = false;
-      optionsMute.onDownSound = this.game.buttonSound;
-      optionsMute.input.priorityID = 2;
-      this.optionsMenu.add(optionsMute);
-
-      this.optionsMenu.visible = false;
-
-      function updateVolume(update){
-        if(this.game.volume + update >= 0 && this.game.volume + update <= 100){
-
-          this.game.volume += update;
-          this.game.gameMusic.volume = this.game.volume / 100;
-
-          this.optionsMenu.forEach(function(text){
-            if (text.text !== null)
-              text.text = this.game.volume;
-            }, this);
+    function mute(){
+      this.game.sound.mute = !this.game.sound.mute;
+      this.optionsMenu.forEach(function(button){
+        if(button.key == "muteBttn"){
+          if(this.game.sound.mute)
+            button.setFrames(2, 2, 3);
+          else
+            button.setFrames(0, 0, 1);
         }
-      }
-
-      function mute(){
-        this.game.sound.mute = !this.game.sound.mute;
-        this.optionsMenu.forEach(function(button){
-          if(button.key == "muteBttn"){
-            if(this.game.sound.mute)
-              button.setFrames(2, 2, 3);
-            else
-              button.setFrames(0, 0, 1);
-          }
-        }, this);
-      }
-
-
-    //////////////////////////////
-    //UI elements
-
-      this.UI = this.game.add.group();
-
-      this.UIBkg = this.game.add.sprite(0, 0, "UI");
-      this.UIBkg.fixedToCamera = true;
-      this.UIBkg.smoothed = false;
-      this.UIBkg.inputEnabled = true;
-      this.UIBkg.input.useHandCursor = false;
-
-      this.UI.add(this.UIBkg);
-
-    //////////////////////////////
-    //UI buttons
-
-      var escapeBttn = this.game.add.button(this.UIBkg.right - 5, 5, "exitBttn", function(){this.escape();}, this, 0, 0, 1);
-      escapeBttn.anchor.setTo(1, 0);
-      escapeBttn.fixedToCamera = true;
-      escapeBttn.smoothed = false;
-      escapeBttn.scale.setTo(0.7, 0.7);
-      escapeBttn.onDownSound = this.game.buttonSound;
-      escapeBttn.input.priorityID = 2;
-      this.UI.add(escapeBttn);
-
-      var numberOfButtons = 11;
-      var buttonX = 55;
-      var buttonLimit = 637;
-      var scale = 1;
-      if(buttonLimit < 60 * numberOfButtons)
-        scale = buttonLimit / ((buttonX + 5) * numberOfButtons);
-
-      var buttonOffset = buttonLimit / numberOfButtons - (buttonX * scale) + (buttonX * scale)/2; // 11 = número de botones, 55 = tamaño x del botón
-      
-
-      this.roadBttn = this.game.add.button(5 + buttonOffset - (buttonOffset - (55 * scale)/2)/2, this.UIBkg.bottom - 30, "roadBttn", function(){this.buildMode(this, this.roadGroup);}, this, 0, 0, 1);
-      this.roadBttn.anchor.setTo(.5, .5);
-      this.roadBttn.fixedToCamera = true;
-      this.roadBttn.smoothed = false;
-      this.roadBttn.scale.setTo(scale, scale);
-      this.roadBttn.onDownSound = this.game.buttonSound;
-      this.roadBttn.input.priorityID = 2;
-      if (this.mode == 1)
-      {
-        this.roadBttn.visible = false;
-        this.roadBttn.input.enabled = false;
-      }
-      this.UI.add(this.roadBttn);
-
-      this.houseBttn = this.game.add.button(this.roadBttn.right + buttonOffset, this.roadBttn.centerY, "houseBttn", function(){this.buildMode(this, this.houseGroup);}, this, 0, 0, 1);
-      this.houseBttn.anchor.setTo(.5, .5);
-      this.houseBttn.fixedToCamera = true;
-      this.houseBttn.smoothed = false;
-      this.houseBttn.scale.setTo(scale, scale);
-      this.houseBttn.onDownSound = this.game.buttonSound;
-      this.houseBttn.input.priorityID = 2;
-      if (this.mode == 1)
-      {
-        this.houseBttn.visible = false;
-        this.houseBttn.input.enabled = false;
-      }
-      this.UI.add(this.houseBttn);
-
-      this.waterBttn = this.game.add.button(this.houseBttn.right + buttonOffset, this.roadBttn.centerY, "waterBttn", function(){this.buildMode(this, this.waterGroup);}, this, 0, 0, 1);
-      this.waterBttn.anchor.setTo(.5, .5);
-      this.waterBttn.fixedToCamera = true;
-      this.waterBttn.smoothed = false;
-      this.waterBttn.scale.setTo(scale, scale);
-      this.waterBttn.onDownSound = this.game.buttonSound;
-      this.waterBttn.input.priorityID = 2;
-      if (this.mode == 1)
-      {
-        this.waterBttn.visible = false;
-        this.waterBttn.input.enabled = false;
-      }
-      this.UI.add(this.waterBttn);
-
-      this.cropBttn = this.game.add.button(this.waterBttn.right + buttonOffset,  this.roadBttn.centerY, "cropBttn", function(){this.buildMode(this, this.cropGroup);}, this, 0, 0, 1);
-      this.cropBttn.anchor.setTo(.5, .5);
-      this.cropBttn.fixedToCamera = true;
-      this.cropBttn.smoothed = false;
-      this.cropBttn.scale.setTo(scale, scale);
-      this.cropBttn.onDownSound = this.game.buttonSound;
-      this.cropBttn.input.priorityID = 2;
-      if (this.mode == 1)
-      {
-        this.cropBttn.visible = false;
-        this.cropBttn.input.enabled = false;
-      }
-      this.UI.add(this.cropBttn);
-
-      this.woodBttn = this.game.add.button(this.cropBttn.right + buttonOffset,  this.roadBttn.centerY, "woodBttn", function(){this.buildMode(this, this.woodGroup);}, this, 0, 0, 1);
-      this.woodBttn.anchor.setTo(.5, .5);
-      this.woodBttn.fixedToCamera = true;
-      this.woodBttn.smoothed = false;
-      this.woodBttn.scale.setTo(scale, scale);
-      this.woodBttn.onDownSound = this.game.buttonSound;
-      this.woodBttn.input.priorityID = 2;
-      if (this.mode == 1)
-      {
-        this.woodBttn.visible = false;
-        this.woodBttn.input.enabled = false;
-      }
-      this.UI.add(this.woodBttn);
-
-      this.stoneBttn = this.game.add.button(this.woodBttn.right + buttonOffset,  this.roadBttn.centerY, "stoneBttn", function(){this.buildMode(this, this.stoneGroup);}, this, 0, 0, 1);
-      this.stoneBttn.anchor.setTo(.5, .5);
-      this.stoneBttn.fixedToCamera = true;
-      this.stoneBttn.smoothed = false;
-      this.stoneBttn.scale.setTo(scale, scale);
-      this.stoneBttn.onDownSound = this.game.buttonSound;
-      this.stoneBttn.input.priorityID = 2;
-      if (this.mode == 1)
-      {
-        this.stoneBttn.visible = false;
-        this.stoneBttn.input.enabled = false;
-      }
-      this.UI.add(this.stoneBttn);
-
-      this.uraniumBttn = this.game.add.button(this.stoneBttn.right + buttonOffset,  this.roadBttn.centerY, "uraniumBttn", function(){this.buildMode(this, this.uraniumGroup);}, this, 0, 0, 1);
-      this.uraniumBttn.anchor.setTo(.5, .5);
-      this.uraniumBttn.fixedToCamera = true;
-      this.uraniumBttn.smoothed = false;
-      this.uraniumBttn.scale.setTo(scale, scale);
-      this.uraniumBttn.onDownSound = this.game.buttonSound;
-      this.uraniumBttn.input.priorityID = 2;
-      if (this.mode == 1)
-      {
-        this.uraniumBttn.visible = false;
-        this.uraniumBttn.input.enabled = false;
-      }
-      this.UI.add(this.uraniumBttn);
-
-      this.energyBttn = this.game.add.button(this.uraniumBttn.right + buttonOffset,  this.roadBttn.centerY, "energyBttn", function(){this.buildMode(this, this.energyGroup);}, this, 0, 0, 1);
-      this.energyBttn.anchor.setTo(.5, .5);
-      this.energyBttn.fixedToCamera = true;
-      this.energyBttn.smoothed = false;
-      this.energyBttn.scale.setTo(scale, scale);
-      this.energyBttn.onDownSound = this.game.buttonSound;
-      this.energyBttn.input.priorityID = 2;
-      if (this.mode == 1)
-      {
-        this.energyBttn.visible = false;
-        this.energyBttn.input.enabled = false;
-      }
-      this.UI.add(this.energyBttn);
-
-      this.windBttn = this.game.add.button(this.energyBttn.right + buttonOffset,  this.roadBttn.centerY, "windBttn", function(){this.buildMode(this, this.windGroup);}, this, 0, 0, 1);
-      this.windBttn.anchor.setTo(.5, .5);
-      this.windBttn.fixedToCamera = true;
-      this.windBttn.smoothed = false;
-      this.windBttn.scale.setTo(scale, scale);
-      this.windBttn.onDownSound = this.game.buttonSound;
-      this.windBttn.input.priorityID = 2;
-      if (this.mode == 1)
-      {
-        this.windBttn.visible = false;
-        this.windBttn.input.enabled = false;
-      }
-      this.UI.add(this.windBttn);
-
-      this.hospitalBttn = this.game.add.button(this.windBttn.right + buttonOffset,  this.roadBttn.centerY, "hospitalBttn", function(){this.buildMode(this, this.hospitalGroup);}, this, 0, 0, 1);
-      this.hospitalBttn.anchor.setTo(.5, .5);
-      this.hospitalBttn.fixedToCamera = true;
-      this.hospitalBttn.smoothed = false;
-      this.hospitalBttn.scale.setTo(scale, scale);
-      this.hospitalBttn.onDownSound = this.game.buttonSound;
-      this.hospitalBttn.input.priorityID = 2;
-      if (this.mode == 1)
-      {
-        this.hospitalBttn.visible = false;
-        this.hospitalBttn.input.enabled = false;
-      }
-      this.UI.add(this.hospitalBttn);
-
-      this.bulldozeBttn = this.game.add.button(this.hospitalBttn.right + buttonOffset,  this.roadBttn.centerY, "bulldozeBttn", function(){this.destroyMode();}, this, 0, 0, 1);
-      this.bulldozeBttn.anchor.setTo(.5, .5);
-      this.bulldozeBttn.fixedToCamera = true;
-      this.bulldozeBttn.smoothed = false;
-      this.bulldozeBttn.scale.setTo(scale, scale);
-      this.bulldozeBttn.onDownSound = this.game.buttonSound;
-      this.bulldozeBttn.input.priorityID = 2;
-      if (this.mode == 1)
-      {
-        this.bulldozeBttn.visible = false;
-        this.bulldozeBttn.input.enabled = false;
-      }
-      this.UI.add(this.bulldozeBttn);
-
-    //////////////////////////////
-    //UI Txt
-
-      this.timeTxt = this.game.add.text(719, 50, this.currentTime.hour + ":00", {font: "50px console", fill: "red"});
-      this.timeTxt.anchor.setTo(.5, 0);
-      this.timeTxt.fixedToCamera = true;
-      this.timeTxt.smoothed = false;
-
-      this.UI.add(this.timeTxt);
-
-      this.timescaleTxt = this.game.add.text(this.timeTxt.x, this.timeTxt.bottom + 5, "Speed: " + this.timeScale, {font: "30px console"});
-      this.timescaleTxt.anchor.setTo(.5, 0);
-      this.timescaleTxt.fixedToCamera = true;
-      this.timescaleTxt.smoothed = false;
-
-      this.UI.add(this.timescaleTxt);
-
-    //////////////////////////////
-    //UI Resources
-
-      this.foodTxtGroup = this.game.add.group();
-
-      this.foodIcon = this.game.add.sprite(this.timeTxt.left, this.timescaleTxt.bottom + 350/5, "cropIcon");
-      this.foodIcon.anchor.setTo(1, 0);
-      this.foodIcon.fixedToCamera = true;
-      this.foodIcon.smoothed = false;
-      this.foodIcon.inputEnabled = true;
-      this.foodIcon.input.useHandCursor = false;
-      this.foodIcon.input.priorityID = 1;
-
-      this.foodTxtGroup.add(this.foodIcon);
-
-      
-      this.foodTxt = this.game.add.text(this.foodIcon.right + 15, this.foodIcon.centerY + 3, this.food, {font: "30px console"});
-      this.foodTxt.anchor.setTo(0, .5);
-      this.foodTxt.fixedToCamera = true;
-      this.foodTxt.smoothed = false;
-
-      this.foodTxtGroup.add(this.foodTxt);
-
-
-      var auxSymbol = "";
-      var auxColor = "#FF0000";
-      if(this.foodGain >= 0){
-        auxSymbol = "+";
-        auxColor = "#008500";
-      }
-      this.foodTxtGain = this.game.add.text(this.foodTxt.right + 18, this.foodIcon.centerY + 3, auxSymbol + this.foodGain, {font: "30px console"});
-      this.foodTxtGain.anchor.setTo(0, .5);
-      this.foodTxtGain.fixedToCamera = true;
-      this.foodTxtGain.smoothed = false;
-      this.foodTxtGain.addColor(auxColor, 0);
-
-      this.foodTxtGroup.add(this.foodTxtGain);
-
-
-      this.foodTxtTooltip = new Phasetips(this.game, {
-        targetObject: this.foodIcon,
-        context: "Food\n(Citizens eat once per day)",
-        strokeColor: 0xff0000,
-        position: "left",
-        positionOffset: 30,   
-        animation: "fade"
-      });
-
-      this.UI.add(this.foodTxtGroup);
-
-    ///////////////
-
-      this.waterTxtGroup = this.game.add.group();
-
-      this.waterIcon = this.game.add.sprite(this.foodIcon.centerX + 10, this.foodIcon.bottom + 7, "waterIcon");
-      this.waterIcon.anchor.setTo(1, 0);
-      this.waterIcon.fixedToCamera = true;
-      this.waterIcon.smoothed = false;
-      this.waterIcon.inputEnabled = true;
-      this.waterIcon.input.useHandCursor = false;
-      this.waterIcon.input.priorityID = 1;
-
-      this.waterTxtGroup.add(this.waterIcon);
-
-
-      this.waterTxt = this.game.add.text(this.foodIcon.right + 15, this.waterIcon.centerY + 3, this.water, {font: "30px console"});
-      this.waterTxt.anchor.setTo(0, .5);
-      this.waterTxt.fixedToCamera = true;
-      this.waterTxt.smoothed = false;
-
-      this.waterTxtGroup.add(this.waterTxt);
-
-
-      var auxSymbol = "";
-      var auxColor = "#FF0000";
-      if(this.waterGain >= 0){
-        auxSymbol = "+";
-        auxColor = "#008500";
-      }
-      this.waterTxtGain = this.game.add.text(this.foodTxt.right + 15, this.waterIcon.centerY + 3, auxSymbol + this.waterGain, {font: "30px console"});
-      this.waterTxtGain.anchor.setTo(0, .5);
-      this.waterTxtGain.fixedToCamera = true;
-      this.waterTxtGain.smoothed = false;
-      this.waterTxtGain.addColor(auxColor, 0);
-
-      this.waterTxtGroup.add(this.waterTxtGain);
-
-
-      this.waterTxtTooltip = new Phasetips(this.game, {
-        targetObject: this.waterIcon,
-        context: "Water\n(Citizens drink once per day)",
-        strokeColor: 0xff0000,
-        position: "left",
-        positionOffset: 30,   
-        animation: "fade"
-      });
-
-      this.UI.add(this.waterTxtGroup);
-
-    ///////////////
-
-      this.woodTxtGroup = this.game.add.group();
-
-      this.woodIcon = this.game.add.sprite(this.foodIcon.centerX, this.waterIcon.bottom + 7, "woodIcon");
-      this.woodIcon.anchor.setTo(.5, 0);
-      this.woodIcon.fixedToCamera = true;
-      this.woodIcon.smoothed = false;
-      this.woodIcon.inputEnabled = true;
-      this.woodIcon.input.useHandCursor = false;
-      this.woodIcon.input.priorityID = 1;
-
-      this.woodTxtGroup.add(this.woodIcon);
-
-      
-      this.woodTxt = this.game.add.text(this.foodTxt.x, this.woodIcon.centerY + 4, this.wood, {font: "30px console"});
-      this.woodTxt.anchor.setTo(0, .5);
-      this.woodTxt.fixedToCamera = true;
-      this.woodTxt.smoothed = false;
-
-      this.woodTxtGroup.add(this.woodTxt);
-
-
-      auxSymbol = "";
-      auxColor = "#FF0000";
-      if(this.woodGain >= 0){
-        auxSymbol = "+";
-        auxColor = "#008500";
-      }
-
-      this.woodTxtGain = this.game.add.text(this.foodTxtGain.x, this.woodIcon.centerY + 3, auxSymbol + this.woodGain, {font: "30px console"});
-      this.woodTxtGain.anchor.setTo(0, .5);
-      this.woodTxtGain.fixedToCamera = true;
-      this.woodTxtGain.smoothed = false;
-      this.woodTxtGain.addColor(auxColor, 0);
-
-      this.woodTxtGroup.add(this.woodTxtGain);
-
-
-      this.woodTxtTooltip = new Phasetips(this.game, {
-        targetObject: this.woodIcon,
-        context: "Wood",
-        strokeColor: 0xff0000,
-        position: "left",
-        positionOffset: 30,   
-        animation: "fade"
-      });
-
-      this.UI.add(this.woodTxtGroup);
-
-    ///////////////
-
-      this.stoneTxtGroup = this.game.add.group();
-
-      this.stoneIcon = this.game.add.sprite(this.foodIcon.centerX, this.woodIcon.bottom + 7, "stoneIcon");
-      this.stoneIcon.anchor.setTo(.5, 0);
-      this.stoneIcon.fixedToCamera = true;
-      this.stoneIcon.smoothed = false;
-      this.stoneIcon.inputEnabled = true;
-      this.stoneIcon.input.useHandCursor = false;
-      this.stoneIcon.input.priorityID = 1;
-      
-      this.stoneTxtGroup.add(this.stoneIcon);
-
-
-      this.stoneTxt = this.game.add.text(this.foodTxt.x, this.stoneIcon.centerY + 4, this.stone, {font: "30px console"});
-      this.stoneTxt.anchor.setTo(0, .5);
-      this.stoneTxt.fixedToCamera = true;
-      this.stoneTxt.smoothed = false;
-
-      this.stoneTxtGroup.add(this.stoneTxt);
-
-
-      auxSymbol = "";
-      auxColor = "#FF0000";
-      if(this.stoneGain >= 0){
-        auxSymbol = "+";
-        auxColor = "#008500";
-      }
-
-      this.stoneTxtGain = this.game.add.text(this.foodTxtGain.x, this.stoneIcon.centerY + 3, auxSymbol + this.stoneGain, {font: "30px console"});
-      this.stoneTxtGain.anchor.setTo(0, .5);
-      this.stoneTxtGain.fixedToCamera = true;
-      this.stoneTxtGain.smoothed = false;
-      this.stoneTxtGain.addColor(auxColor, 0);
-
-      this.stoneTxtGroup.add(this.stoneTxtGain);
-
-
-      this.stoneTxtTooltip = new Phasetips(this.game, {
-        targetObject: this.stoneIcon,
-        context: "Stone",
-        strokeColor: 0xff0000,
-        position: "left",
-        positionOffset: 30,   
-        animation: "fade"
-      });
-
-      this.UI.add(this.stoneTxtGroup);
-
-    ///////////////
-
-      this.uraniumTxtGroup = this.game.add.group();
-
-      this.uraniumIcon = this.game.add.sprite(this.foodIcon.centerX, this.stoneIcon.bottom + 7, "uraniumIcon");
-      this.uraniumIcon.anchor.setTo(.5, 0);
-      this.uraniumIcon.fixedToCamera = true;
-      this.uraniumIcon.smoothed = false;
-      this.uraniumIcon.inputEnabled = true;
-      this.uraniumIcon.input.useHandCursor = false;
-      this.uraniumIcon.input.priorityID = 1;
-
-      this.uraniumTxtGroup.add(this.uraniumIcon);
-      
-
-      this.uraniumTxt = this.game.add.text(this.foodTxt.x, this.uraniumIcon.centerY + 4, this.uranium, {font: "30px console"});
-      this.uraniumTxt.anchor.setTo(0, .5);
-      this.uraniumTxt.fixedToCamera = true;
-      this.uraniumTxt.smoothed = false;
-
-      this.uraniumTxtGroup.add(this.uraniumTxt);
-
-
-      auxSymbol = "";
-      auxColor = "#FF0000";
-      if(this.uraniumGain >= 0){
-        auxSymbol = "+";
-        auxColor = "#008500";
-      }
-
-      this.uraniumTxtGain = this.game.add.text(this.foodTxtGain.x, this.uraniumIcon.centerY + 3, auxSymbol + this.uraniumGain, {font: "30px console"});
-      this.uraniumTxtGain.anchor.setTo(0, .5);
-      this.uraniumTxtGain.fixedToCamera = true;
-      this.uraniumTxtGain.smoothed = false;
-      this.uraniumTxtGain.addColor(auxColor, 0);
-
-      this.uraniumTxtGroup.add(this.uraniumTxtGain);
-
-
-      this.uraniumTxtTooltip = new Phasetips(this.game, {
-        targetObject: this.uraniumIcon,
-        context: "Uranium",
-        strokeColor: 0xff0000,
-        position: "left",
-        positionOffset: 30,   
+      }, this);
+    }
+
+
+  //////////////////////////////
+  //UI elements
+
+    this.UI = this.game.add.group();
+
+    this.UIBkg = this.game.add.sprite(0, 0, "UI");
+    this.UIBkg.fixedToCamera = true;
+    this.UIBkg.smoothed = false;
+    this.UIBkg.inputEnabled = true;
+    this.UIBkg.input.useHandCursor = false;
+
+    this.UI.add(this.UIBkg);
+
+  //////////////////////////////
+  //UI buttons
+
+    var escapeBttn = this.game.add.button(this.UIBkg.right - 5, 5, "exitBttn", function(){this.escape();}, this, 0, 0, 1);
+    escapeBttn.anchor.setTo(1, 0);
+    escapeBttn.fixedToCamera = true;
+    escapeBttn.smoothed = false;
+    escapeBttn.scale.setTo(0.7, 0.7);
+    escapeBttn.onDownSound = this.game.buttonSound;
+    escapeBttn.input.priorityID = 2;
+    this.UI.add(escapeBttn);
+
+    var numberOfButtons = 11;
+    var buttonX = 55;
+    var buttonLimit = 637;
+    var scale = 1;
+    if(buttonLimit < 60 * numberOfButtons)
+      scale = buttonLimit / ((buttonX + 5) * numberOfButtons);
+
+    var buttonOffset = buttonLimit / numberOfButtons - (buttonX * scale) + (buttonX * scale)/2; // 11 = número de botones, 55 = tamaño x del botón
+    
+
+    this.roadBttn = this.game.add.button(5 + buttonOffset - (buttonOffset - (55 * scale)/2)/2, this.UIBkg.bottom - 30, "roadBttn", function(){this.buildMode(this, this.roadGroup);}, this, 0, 0, 1);
+    this.roadBttn.anchor.setTo(.5, .5);
+    this.roadBttn.fixedToCamera = true;
+    this.roadBttn.smoothed = false;
+    this.roadBttn.scale.setTo(scale, scale);
+    this.roadBttn.onDownSound = this.game.buttonSound;
+    this.roadBttn.input.priorityID = 2;
+    if (this.mode == 1)
+    {
+      this.roadBttn.visible = false;
+      this.roadBttn.input.enabled = false;
+    }
+    this.UI.add(this.roadBttn);
+
+    this.houseBttn = this.game.add.button(this.roadBttn.right + buttonOffset, this.roadBttn.centerY, "houseBttn", function(){this.buildMode(this, this.houseGroup);}, this, 0, 0, 1);
+    this.houseBttn.anchor.setTo(.5, .5);
+    this.houseBttn.fixedToCamera = true;
+    this.houseBttn.smoothed = false;
+    this.houseBttn.scale.setTo(scale, scale);
+    this.houseBttn.onDownSound = this.game.buttonSound;
+    this.houseBttn.input.priorityID = 2;
+    if (this.mode == 1)
+    {
+      this.houseBttn.visible = false;
+      this.houseBttn.input.enabled = false;
+    }
+    this.UI.add(this.houseBttn);
+
+    this.waterBttn = this.game.add.button(this.houseBttn.right + buttonOffset, this.roadBttn.centerY, "waterBttn", function(){this.buildMode(this, this.waterGroup);}, this, 0, 0, 1);
+    this.waterBttn.anchor.setTo(.5, .5);
+    this.waterBttn.fixedToCamera = true;
+    this.waterBttn.smoothed = false;
+    this.waterBttn.scale.setTo(scale, scale);
+    this.waterBttn.onDownSound = this.game.buttonSound;
+    this.waterBttn.input.priorityID = 2;
+    if (this.mode == 1)
+    {
+      this.waterBttn.visible = false;
+      this.waterBttn.input.enabled = false;
+    }
+    this.UI.add(this.waterBttn);
+
+    this.cropBttn = this.game.add.button(this.waterBttn.right + buttonOffset,  this.roadBttn.centerY, "cropBttn", function(){this.buildMode(this, this.cropGroup);}, this, 0, 0, 1);
+    this.cropBttn.anchor.setTo(.5, .5);
+    this.cropBttn.fixedToCamera = true;
+    this.cropBttn.smoothed = false;
+    this.cropBttn.scale.setTo(scale, scale);
+    this.cropBttn.onDownSound = this.game.buttonSound;
+    this.cropBttn.input.priorityID = 2;
+    if (this.mode == 1)
+    {
+      this.cropBttn.visible = false;
+      this.cropBttn.input.enabled = false;
+    }
+    this.UI.add(this.cropBttn);
+
+    this.woodBttn = this.game.add.button(this.cropBttn.right + buttonOffset,  this.roadBttn.centerY, "woodBttn", function(){this.buildMode(this, this.woodGroup);}, this, 0, 0, 1);
+    this.woodBttn.anchor.setTo(.5, .5);
+    this.woodBttn.fixedToCamera = true;
+    this.woodBttn.smoothed = false;
+    this.woodBttn.scale.setTo(scale, scale);
+    this.woodBttn.onDownSound = this.game.buttonSound;
+    this.woodBttn.input.priorityID = 2;
+    if (this.mode == 1)
+    {
+      this.woodBttn.visible = false;
+      this.woodBttn.input.enabled = false;
+    }
+    this.UI.add(this.woodBttn);
+
+    this.stoneBttn = this.game.add.button(this.woodBttn.right + buttonOffset,  this.roadBttn.centerY, "stoneBttn", function(){this.buildMode(this, this.stoneGroup);}, this, 0, 0, 1);
+    this.stoneBttn.anchor.setTo(.5, .5);
+    this.stoneBttn.fixedToCamera = true;
+    this.stoneBttn.smoothed = false;
+    this.stoneBttn.scale.setTo(scale, scale);
+    this.stoneBttn.onDownSound = this.game.buttonSound;
+    this.stoneBttn.input.priorityID = 2;
+    if (this.mode == 1)
+    {
+      this.stoneBttn.visible = false;
+      this.stoneBttn.input.enabled = false;
+    }
+    this.UI.add(this.stoneBttn);
+
+    this.uraniumBttn = this.game.add.button(this.stoneBttn.right + buttonOffset,  this.roadBttn.centerY, "uraniumBttn", function(){this.buildMode(this, this.uraniumGroup);}, this, 0, 0, 1);
+    this.uraniumBttn.anchor.setTo(.5, .5);
+    this.uraniumBttn.fixedToCamera = true;
+    this.uraniumBttn.smoothed = false;
+    this.uraniumBttn.scale.setTo(scale, scale);
+    this.uraniumBttn.onDownSound = this.game.buttonSound;
+    this.uraniumBttn.input.priorityID = 2;
+    if (this.mode == 1)
+    {
+      this.uraniumBttn.visible = false;
+      this.uraniumBttn.input.enabled = false;
+    }
+    this.UI.add(this.uraniumBttn);
+
+    this.energyBttn = this.game.add.button(this.uraniumBttn.right + buttonOffset,  this.roadBttn.centerY, "energyBttn", function(){this.buildMode(this, this.energyGroup);}, this, 0, 0, 1);
+    this.energyBttn.anchor.setTo(.5, .5);
+    this.energyBttn.fixedToCamera = true;
+    this.energyBttn.smoothed = false;
+    this.energyBttn.scale.setTo(scale, scale);
+    this.energyBttn.onDownSound = this.game.buttonSound;
+    this.energyBttn.input.priorityID = 2;
+    if (this.mode == 1)
+    {
+      this.energyBttn.visible = false;
+      this.energyBttn.input.enabled = false;
+    }
+    this.UI.add(this.energyBttn);
+
+    this.windBttn = this.game.add.button(this.energyBttn.right + buttonOffset,  this.roadBttn.centerY, "windBttn", function(){this.buildMode(this, this.windGroup);}, this, 0, 0, 1);
+    this.windBttn.anchor.setTo(.5, .5);
+    this.windBttn.fixedToCamera = true;
+    this.windBttn.smoothed = false;
+    this.windBttn.scale.setTo(scale, scale);
+    this.windBttn.onDownSound = this.game.buttonSound;
+    this.windBttn.input.priorityID = 2;
+    if (this.mode == 1)
+    {
+      this.windBttn.visible = false;
+      this.windBttn.input.enabled = false;
+    }
+    this.UI.add(this.windBttn);
+
+    this.hospitalBttn = this.game.add.button(this.windBttn.right + buttonOffset,  this.roadBttn.centerY, "hospitalBttn", function(){this.buildMode(this, this.hospitalGroup);}, this, 0, 0, 1);
+    this.hospitalBttn.anchor.setTo(.5, .5);
+    this.hospitalBttn.fixedToCamera = true;
+    this.hospitalBttn.smoothed = false;
+    this.hospitalBttn.scale.setTo(scale, scale);
+    this.hospitalBttn.onDownSound = this.game.buttonSound;
+    this.hospitalBttn.input.priorityID = 2;
+    if (this.mode == 1)
+    {
+      this.hospitalBttn.visible = false;
+      this.hospitalBttn.input.enabled = false;
+    }
+    this.UI.add(this.hospitalBttn);
+
+    this.bulldozeBttn = this.game.add.button(this.hospitalBttn.right + buttonOffset,  this.roadBttn.centerY, "bulldozeBttn", function(){this.destroyMode();}, this, 0, 0, 1);
+    this.bulldozeBttn.anchor.setTo(.5, .5);
+    this.bulldozeBttn.fixedToCamera = true;
+    this.bulldozeBttn.smoothed = false;
+    this.bulldozeBttn.scale.setTo(scale, scale);
+    this.bulldozeBttn.onDownSound = this.game.buttonSound;
+    this.bulldozeBttn.input.priorityID = 2;
+    if (this.mode == 1)
+    {
+      this.bulldozeBttn.visible = false;
+      this.bulldozeBttn.input.enabled = false;
+    }
+    this.UI.add(this.bulldozeBttn);
+
+  //////////////////////////////
+  //UI Txt
+
+    this.timeTxtGroup = this.game.add.group();
+
+    this.timeTxt = this.game.add.text(719, 50, this.currentTime.hour + ":00", {font: "50px console", fill: "red"});
+    this.timeTxt.anchor.setTo(.5, 0);
+    this.timeTxt.fixedToCamera = true;
+    this.timeTxt.smoothed = false;
+
+    this.timeTxtGroup.add(this.timeTxt);
+
+    this.timescaleTxt = this.game.add.text(this.timeTxt.x, this.timeTxt.bottom + 5, "Speed: " + this.timeScale, {font: "30px console"});
+    this.timescaleTxt.anchor.setTo(.5, 0);
+    this.timescaleTxt.fixedToCamera = true;
+    this.timescaleTxt.smoothed = false;
+
+    this.timeTxtGroup.add(this.timescaleTxt);
+
+    if(this.mode == 1)
+      this.timeTxtGroup.visible = false;
+
+    this.UI.add(this.timeTxtGroup);
+
+  //////////////////////////////
+  //UI Resources
+
+    this.foodTxtGroup = this.game.add.group();
+
+    this.foodIcon = this.game.add.sprite(this.timeTxt.left, this.timescaleTxt.bottom + 350/5, "cropIcon");
+    this.foodIcon.anchor.setTo(1, 0);
+    this.foodIcon.fixedToCamera = true;
+    this.foodIcon.smoothed = false;
+    this.foodIcon.inputEnabled = true;
+    this.foodIcon.input.useHandCursor = false;
+    this.foodIcon.input.priorityID = 1;
+
+    this.foodTxtGroup.add(this.foodIcon);
+
+    
+    this.foodTxt = this.game.add.text(this.foodIcon.right + 15, this.foodIcon.centerY + 3, this.food, {font: "30px console"});
+    this.foodTxt.anchor.setTo(0, .5);
+    this.foodTxt.fixedToCamera = true;
+    this.foodTxt.smoothed = false;
+
+    this.foodTxtGroup.add(this.foodTxt);
+
+
+    var auxSymbol = "";
+    var auxColor = "#FF0000";
+    if(this.foodGain >= 0){
+      auxSymbol = "+";
+      auxColor = "#008500";
+    }
+    this.foodTxtGain = this.game.add.text(this.foodTxt.right + 18, this.foodIcon.centerY + 3, auxSymbol + this.foodGain, {font: "30px console"});
+    this.foodTxtGain.anchor.setTo(0, .5);
+    this.foodTxtGain.fixedToCamera = true;
+    this.foodTxtGain.smoothed = false;
+    this.foodTxtGain.addColor(auxColor, 0);
+
+    this.foodTxtGroup.add(this.foodTxtGain);
+
+
+    this.foodTxtTooltip = new Phasetips(this.game, {
+      targetObject: this.foodIcon,
+      context: "Food\n(Citizens eat once per day)",
+      strokeColor: 0xff0000,
+      position: "left",
+      positionOffset: 30,   
       animation: "fade"
-      });
+    });
 
-      this.UI.add(this.uraniumTxtGroup);
+    if(this.mode == 1)
+      this.foodTxtGroup.visible = false;
 
-    ///////////////
+    this.UI.add(this.foodTxtGroup);
 
-      this.energyTxtGroup = this.game.add.group();
+  ///////////////
 
-      this.energyIcon = this.game.add.sprite(this.foodIcon.centerX, this.uraniumIcon.bottom + 7, "energyIcon");
-      this.energyIcon.anchor.setTo(.5, 0);
-      this.energyIcon.fixedToCamera = true;
-      this.energyIcon.smoothed = false;
-      this.energyIcon.inputEnabled = true;
-      this.energyIcon.input.useHandCursor = false;
-      this.energyIcon.input.priorityID = 1;
+    this.waterTxtGroup = this.game.add.group();
 
-      this.energyTxtGroup.add(this.energyIcon);
+    this.waterIcon = this.game.add.sprite(this.foodIcon.centerX + 10, this.foodIcon.bottom + 7, "waterIcon");
+    this.waterIcon.anchor.setTo(1, 0);
+    this.waterIcon.fixedToCamera = true;
+    this.waterIcon.smoothed = false;
+    this.waterIcon.inputEnabled = true;
+    this.waterIcon.input.useHandCursor = false;
+    this.waterIcon.input.priorityID = 1;
 
-
-      this.energyTxt = this.game.add.text(this.foodTxt.x, this.energyIcon.centerY + 4, this.energy, {font: "30px console"});
-      this.energyTxt.anchor.setTo(0, .5);
-      this.energyTxt.fixedToCamera = true;
-      this.energyTxt.smoothed = false;
-
-      this.energyTxtGroup.add(this.energyTxt);
+    this.waterTxtGroup.add(this.waterIcon);
 
 
-      auxSymbol = "";
-      auxColor = "#FF0000";
-      if(this.energyGain >= 0){
-        auxSymbol = "+";
-        auxColor = "#008500";
-      }
+    this.waterTxt = this.game.add.text(this.foodIcon.right + 15, this.waterIcon.centerY + 3, this.water, {font: "30px console"});
+    this.waterTxt.anchor.setTo(0, .5);
+    this.waterTxt.fixedToCamera = true;
+    this.waterTxt.smoothed = false;
 
-      this.energyTxtGain = this.game.add.text(this.foodTxtGain.x, this.energyIcon.centerY + 3, auxSymbol + this.energyGain, {font: "30px console"});
-      this.energyTxtGain.anchor.setTo(0, .5);
-      this.energyTxtGain.fixedToCamera = true;
-      this.energyTxtGain.smoothed = false;
-      this.energyTxtGain.addColor(auxColor, 0);
-
-      this.energyTxtGroup.add(this.energyTxtGain);
+    this.waterTxtGroup.add(this.waterTxt);
 
 
-      this.energyTxtTooltip = new Phasetips(this.game, {
-        targetObject: this.energyIcon,
-        context: "Energy",
-        strokeColor: 0xff0000,
-        position: "left",
-        positionOffset: 30,   
-        animation: "fade"
-      });
+    var auxSymbol = "";
+    var auxColor = "#FF0000";
+    if(this.waterGain >= 0){
+      auxSymbol = "+";
+      auxColor = "#008500";
+    }
+    this.waterTxtGain = this.game.add.text(this.foodTxt.right + 15, this.waterIcon.centerY + 3, auxSymbol + this.waterGain, {font: "30px console"});
+    this.waterTxtGain.anchor.setTo(0, .5);
+    this.waterTxtGain.fixedToCamera = true;
+    this.waterTxtGain.smoothed = false;
+    this.waterTxtGain.addColor(auxColor, 0);
 
-      this.UI.add(this.energyTxtGroup);
-
-    ///////////////
-
-      this.citizensTxtGroup = this.game.add.group();
-
-      this.citizensIcon = this.game.add.sprite(this.foodIcon.centerX, this.stoneIcon.bottom + 550/5, "citizenIcon");
-      this.citizensIcon.anchor.setTo(.5, 0);
-      this.citizensIcon.fixedToCamera = true;
-      this.citizensIcon.smoothed = false;
-      this.citizensIcon.inputEnabled = true;
-      this.citizensIcon.input.useHandCursor = false;
-      this.citizensIcon.input.priorityID = 1;
-      
-      this.citizensTxtGroup.add(this.citizensIcon);
+    this.waterTxtGroup.add(this.waterTxtGain);
 
 
-      this.citizensTxt = this.game.add.text(this.foodTxt.x, this.citizensIcon.centerY + 3, "5", {font: "30px console"});
-      this.citizensTxt.anchor.setTo(0, .5);
-      this.citizensTxt.fixedToCamera = true;
-      this.citizensTxt.smoothed = false;
+    this.waterTxtTooltip = new Phasetips(this.game, {
+      targetObject: this.waterIcon,
+      context: "Water\n(Citizens drink once per day)",
+      strokeColor: 0xff0000,
+      position: "left",
+      positionOffset: 30,   
+      animation: "fade"
+    });
 
-      this.citizensTxtGroup.add(this.citizensTxt);
+    if(this.mode == 1)
+      this.waterTxtGroup.visible = false;
 
+    this.UI.add(this.waterTxtGroup);
 
-      this.citizensTxtTooltip = new Phasetips(this.game, {
-        targetObject: this.citizensIcon,
-        context: "Citizen Total",
-        strokeColor: 0xff0000,
-        position: "left",
-        positionOffset: 30,   
-        animation: "fade"
-      });
+  ///////////////
 
-      this.UI.add(this.citizensTxtGroup);
+    this.woodTxtGroup = this.game.add.group();
 
-    ///////////////
+    this.woodIcon = this.game.add.sprite(this.foodIcon.centerX, this.waterIcon.bottom + 7, "woodIcon");
+    this.woodIcon.anchor.setTo(.5, 0);
+    this.woodIcon.fixedToCamera = true;
+    this.woodIcon.smoothed = false;
+    this.woodIcon.inputEnabled = true;
+    this.woodIcon.input.useHandCursor = false;
+    this.woodIcon.input.priorityID = 1;
 
-      this.homelessTxtGroup = this.game.add.group();
+    this.woodTxtGroup.add(this.woodIcon);
 
-      this.homelessIcon = this.game.add.sprite(this.foodIcon.centerX, this.citizensIcon.bottom + 7, "noHouseIcon");
-      this.homelessIcon.anchor.setTo(.5, 0);
-      this.homelessIcon.fixedToCamera = true;
-      this.homelessIcon.smoothed = false;
-      this.homelessIcon.inputEnabled = true;
-      this.homelessIcon.input.useHandCursor = false;
-      this.homelessIcon.input.priorityID = 1;
+    
+    this.woodTxt = this.game.add.text(this.foodTxt.x, this.woodIcon.centerY + 4, this.wood, {font: "30px console"});
+    this.woodTxt.anchor.setTo(0, .5);
+    this.woodTxt.fixedToCamera = true;
+    this.woodTxt.smoothed = false;
 
-      this.homelessTxtGroup.add(this.homelessIcon);
-
-
-      this.homelessTxt = this.game.add.text(this.foodTxt.x, this.homelessIcon.centerY + 4, "5", {font: "30px console"});
-      this.homelessTxt.anchor.setTo(0, .5);
-      this.homelessTxt.fixedToCamera = true;
-      this.homelessTxt.smoothed = false;
-
-      this.homelessTxtGroup.add(this.homelessTxt);
+    this.woodTxtGroup.add(this.woodTxt);
 
 
-      this.homelessTxtTooltip = new Phasetips(this.game, {
-        targetObject: this.homelessIcon,
-        context: "Homeless Citizens",
-        strokeColor: 0xff0000,
-        position: "left",
-        positionOffset: 30,   
-        animation: "fade"
-      });
+    auxSymbol = "";
+    auxColor = "#FF0000";
+    if(this.woodGain >= 0){
+      auxSymbol = "+";
+      auxColor = "#008500";
+    }
+
+    this.woodTxtGain = this.game.add.text(this.foodTxtGain.x, this.woodIcon.centerY + 3, auxSymbol + this.woodGain, {font: "30px console"});
+    this.woodTxtGain.anchor.setTo(0, .5);
+    this.woodTxtGain.fixedToCamera = true;
+    this.woodTxtGain.smoothed = false;
+    this.woodTxtGain.addColor(auxColor, 0);
+
+    this.woodTxtGroup.add(this.woodTxtGain);
+
+
+    this.woodTxtTooltip = new Phasetips(this.game, {
+      targetObject: this.woodIcon,
+      context: "Wood",
+      strokeColor: 0xff0000,
+      position: "left",
+      positionOffset: 30,   
+      animation: "fade"
+    });
+
+    if(this.mode == 1)
+      this.woodTxtGroup.visible = false;
+
+    this.UI.add(this.woodTxtGroup);
+
+  ///////////////
+
+    this.stoneTxtGroup = this.game.add.group();
+
+    this.stoneIcon = this.game.add.sprite(this.foodIcon.centerX, this.woodIcon.bottom + 7, "stoneIcon");
+    this.stoneIcon.anchor.setTo(.5, 0);
+    this.stoneIcon.fixedToCamera = true;
+    this.stoneIcon.smoothed = false;
+    this.stoneIcon.inputEnabled = true;
+    this.stoneIcon.input.useHandCursor = false;
+    this.stoneIcon.input.priorityID = 1;
+    
+    this.stoneTxtGroup.add(this.stoneIcon);
+
+
+    this.stoneTxt = this.game.add.text(this.foodTxt.x, this.stoneIcon.centerY + 4, this.stone, {font: "30px console"});
+    this.stoneTxt.anchor.setTo(0, .5);
+    this.stoneTxt.fixedToCamera = true;
+    this.stoneTxt.smoothed = false;
+
+    this.stoneTxtGroup.add(this.stoneTxt);
+
+
+    auxSymbol = "";
+    auxColor = "#FF0000";
+    if(this.stoneGain >= 0){
+      auxSymbol = "+";
+      auxColor = "#008500";
+    }
+
+    this.stoneTxtGain = this.game.add.text(this.foodTxtGain.x, this.stoneIcon.centerY + 3, auxSymbol + this.stoneGain, {font: "30px console"});
+    this.stoneTxtGain.anchor.setTo(0, .5);
+    this.stoneTxtGain.fixedToCamera = true;
+    this.stoneTxtGain.smoothed = false;
+    this.stoneTxtGain.addColor(auxColor, 0);
+
+    this.stoneTxtGroup.add(this.stoneTxtGain);
+
+
+    this.stoneTxtTooltip = new Phasetips(this.game, {
+      targetObject: this.stoneIcon,
+      context: "Stone",
+      strokeColor: 0xff0000,
+      position: "left",
+      positionOffset: 30,   
+      animation: "fade"
+    });
+
+    if(this.mode == 1)
+      this.stoneTxtGroup.visible = false;
+
+    this.UI.add(this.stoneTxtGroup);
+
+  ///////////////
+
+    this.uraniumTxtGroup = this.game.add.group();
+
+    this.uraniumIcon = this.game.add.sprite(this.foodIcon.centerX, this.stoneIcon.bottom + 7, "uraniumIcon");
+    this.uraniumIcon.anchor.setTo(.5, 0);
+    this.uraniumIcon.fixedToCamera = true;
+    this.uraniumIcon.smoothed = false;
+    this.uraniumIcon.inputEnabled = true;
+    this.uraniumIcon.input.useHandCursor = false;
+    this.uraniumIcon.input.priorityID = 1;
+
+    this.uraniumTxtGroup.add(this.uraniumIcon);
+    
+
+    this.uraniumTxt = this.game.add.text(this.foodTxt.x, this.uraniumIcon.centerY + 4, this.uranium, {font: "30px console"});
+    this.uraniumTxt.anchor.setTo(0, .5);
+    this.uraniumTxt.fixedToCamera = true;
+    this.uraniumTxt.smoothed = false;
+
+    this.uraniumTxtGroup.add(this.uraniumTxt);
+
+
+    auxSymbol = "";
+    auxColor = "#FF0000";
+    if(this.uraniumGain >= 0){
+      auxSymbol = "+";
+      auxColor = "#008500";
+    }
+
+    this.uraniumTxtGain = this.game.add.text(this.foodTxtGain.x, this.uraniumIcon.centerY + 3, auxSymbol + this.uraniumGain, {font: "30px console"});
+    this.uraniumTxtGain.anchor.setTo(0, .5);
+    this.uraniumTxtGain.fixedToCamera = true;
+    this.uraniumTxtGain.smoothed = false;
+    this.uraniumTxtGain.addColor(auxColor, 0);
+
+    this.uraniumTxtGroup.add(this.uraniumTxtGain);
+
+
+    this.uraniumTxtTooltip = new Phasetips(this.game, {
+      targetObject: this.uraniumIcon,
+      context: "Uranium",
+      strokeColor: 0xff0000,
+      position: "left",
+      positionOffset: 30,   
+    animation: "fade"
+    });
+
+    if(this.mode == 1)
+      this.uraniumTxtGroup.visible = false;
+
+    this.UI.add(this.uraniumTxtGroup);
+
+  ///////////////
+
+    this.energyTxtGroup = this.game.add.group();
+
+    this.energyIcon = this.game.add.sprite(this.foodIcon.centerX, this.uraniumIcon.bottom + 7, "energyIcon");
+    this.energyIcon.anchor.setTo(.5, 0);
+    this.energyIcon.fixedToCamera = true;
+    this.energyIcon.smoothed = false;
+    this.energyIcon.inputEnabled = true;
+    this.energyIcon.input.useHandCursor = false;
+    this.energyIcon.input.priorityID = 1;
+
+    this.energyTxtGroup.add(this.energyIcon);
+
+
+    this.energyTxt = this.game.add.text(this.foodTxt.x, this.energyIcon.centerY + 4, this.energy, {font: "30px console"});
+    this.energyTxt.anchor.setTo(0, .5);
+    this.energyTxt.fixedToCamera = true;
+    this.energyTxt.smoothed = false;
+
+    this.energyTxtGroup.add(this.energyTxt);
+
+
+    auxSymbol = "";
+    auxColor = "#FF0000";
+    if(this.energyGain >= 0){
+      auxSymbol = "+";
+      auxColor = "#008500";
+    }
+
+    this.energyTxtGain = this.game.add.text(this.foodTxtGain.x, this.energyIcon.centerY + 3, auxSymbol + this.energyGain, {font: "30px console"});
+    this.energyTxtGain.anchor.setTo(0, .5);
+    this.energyTxtGain.fixedToCamera = true;
+    this.energyTxtGain.smoothed = false;
+    this.energyTxtGain.addColor(auxColor, 0);
+
+    this.energyTxtGroup.add(this.energyTxtGain);
+
+
+    this.energyTxtTooltip = new Phasetips(this.game, {
+      targetObject: this.energyIcon,
+      context: "Energy",
+      strokeColor: 0xff0000,
+      position: "left",
+      positionOffset: 30,   
+      animation: "fade"
+    });
+
+    if(this.mode == 1)
+      this.energyTxtGroup.visible = false;
+
+    this.UI.add(this.energyTxtGroup);
+
+  ///////////////
+
+    this.citizensTxtGroup = this.game.add.group();
+
+    this.citizensIcon = this.game.add.sprite(this.foodIcon.centerX, this.stoneIcon.bottom + 550/5, "citizenIcon");
+    this.citizensIcon.anchor.setTo(.5, 0);
+    this.citizensIcon.fixedToCamera = true;
+    this.citizensIcon.smoothed = false;
+    this.citizensIcon.inputEnabled = true;
+    this.citizensIcon.input.useHandCursor = false;
+    this.citizensIcon.input.priorityID = 1;
+    
+    this.citizensTxtGroup.add(this.citizensIcon);
+
+
+    this.citizensTxt = this.game.add.text(this.foodTxt.x, this.citizensIcon.centerY + 3, "5", {font: "30px console"});
+    this.citizensTxt.anchor.setTo(0, .5);
+    this.citizensTxt.fixedToCamera = true;
+    this.citizensTxt.smoothed = false;
+
+    this.citizensTxtGroup.add(this.citizensTxt);
+
+
+    this.citizensTxtTooltip = new Phasetips(this.game, {
+      targetObject: this.citizensIcon,
+      context: "Citizen Total",
+      strokeColor: 0xff0000,
+      position: "left",
+      positionOffset: 30,   
+      animation: "fade"
+    });
+
+    if(this.mode == 1)
+      this.citizensTxtGroup.visible = false;
+
+    this.UI.add(this.citizensTxtGroup);
+
+  ///////////////
+
+    this.homelessTxtGroup = this.game.add.group();
+
+    this.homelessIcon = this.game.add.sprite(this.foodIcon.centerX, this.citizensIcon.bottom + 7, "noHouseIcon");
+    this.homelessIcon.anchor.setTo(.5, 0);
+    this.homelessIcon.fixedToCamera = true;
+    this.homelessIcon.smoothed = false;
+    this.homelessIcon.inputEnabled = true;
+    this.homelessIcon.input.useHandCursor = false;
+    this.homelessIcon.input.priorityID = 1;
+
+    this.homelessTxtGroup.add(this.homelessIcon);
+
+
+    this.homelessTxt = this.game.add.text(this.foodTxt.x, this.homelessIcon.centerY + 4, "5", {font: "30px console"});
+    this.homelessTxt.anchor.setTo(0, .5);
+    this.homelessTxt.fixedToCamera = true;
+    this.homelessTxt.smoothed = false;
+
+    this.homelessTxtGroup.add(this.homelessTxt);
+
+
+    this.homelessTxtTooltip = new Phasetips(this.game, {
+      targetObject: this.homelessIcon,
+      context: "Homeless Citizens",
+      strokeColor: 0xff0000,
+      position: "left",
+      positionOffset: 30,   
+      animation: "fade"
+    });
+
+    if(this.mode == 1)
+      this.homelessTxtGroup.visible = false;
 
     this.UI.add(this.homelessTxtGroup);
 
@@ -921,6 +952,9 @@ var PlayScene = {
       positionOffset: 30,   
       animation: "fade"
     });
+
+    if(this.mode == 1)
+      this.unemployedTxtGroup.visible = false;
 
     this.UI.add(this.unemployedTxtGroup);
 
@@ -1037,9 +1071,9 @@ var PlayScene = {
 
     this.tipHospital = new Phasetips(this.game, {
       targetObject: this.hospitalBttn,
-      width: 250,
-      height: 80,
-      context: "Hospital:\n  Used to heal your citizens.\nCost:\n  25 Wood, 25 Stone",
+      width: 270,
+      height: 100,
+      context: "Hospital:\n  Used to heal your citizens.\nCost:\n  25 Wood, 25 Stone, 4 daily energy",
       strokeColor: 0xff0000,
       position: "top",
       positionOffset: 50,   
@@ -1051,7 +1085,7 @@ var PlayScene = {
       targetObject: this.bulldozeBttn,
       width: 400,
       height: 60,
-      context: "Bulldozer:\n  Used to destroy buildings and\n  roads.",
+      context: "Bulldozer:\n  Used to destroy buildings and\n  roads, returns some resources",
       strokeColor: 0xff0000,
       position: "top",
       positionOffset: 50,   
@@ -1060,15 +1094,15 @@ var PlayScene = {
     });
 
   //////////////////////////////
-  //Tutorial-specific tooltips
+  //Tutorial tooltips
 
     if (this.mode == 1){
 
       this.tipTutorial1 = new Phasetips(this.game, {
         targetObject: this.UIBkg, 
-        context: "Welcome to Project Settlers! \n First, to move the camera around you'll need to use the WASD keys",
-        x: this.game.camera.x + this.game.camera.width / 2 - 81,
-        y: this.game.camera.y + this.game.camera.height / 2 - 40,
+        context: "Welcome to Project Settlers! \nAs a research subject in the project, your job will be to test this new and incredible software, and thus help the government! \n\nPlease note that payment won't be provided unless you manage to \"win\", contact your nearest overseer for more information. \n\n\nFirst, to move the camera around you'll need to use the WASD keys",
+        x: this.game.camera.x + this.game.camera.width / 2 - 130,
+        y: this.game.camera.y + this.game.camera.height / 2 - 180,
         strokeColor: 0xff0000,
         position: "center",
         width: 162,
@@ -1090,9 +1124,9 @@ var PlayScene = {
 
       this.tipTutorialRoad = new Phasetips(this.game, {
         targetObject: this.roadBttn,  
-        context: "Roads are the core of Project Settlers, as they allow you to build above them",
+        context: "Roads are the core of Project Settlers, as they allow you to build above them and across bodies of water",
         width: 100,
-        height: 100,
+        height: 120,
         strokeColor: 0xff0000,
         position: "top",
         positionOffset: 115,   
@@ -1167,9 +1201,9 @@ var PlayScene = {
 
       this.tipTutorialEnergy = new Phasetips(this.game, {
         targetObject: this.energyBttn,
-        context: "Energy is a need. With this you can produce it from uranium",
+        context: "Energy is a need. Without energy to power your buildings, their production will be halved! \nWith this you can produce energy from uranium",
         width: 250,
-        height: 115,
+        height: 170,
         strokeColor: 0xff0000,
         position: "top",
         positionOffset: 100,  
@@ -1178,7 +1212,7 @@ var PlayScene = {
 
       this.tipTutorialWind = new Phasetips(this.game, {
         targetObject: this.windBttn,
-        context: "This building allows you to obtain energy without uranium, thanks to wind",
+        context: "This building allows you to obtain energy without uranium, thanks to the power of wind",
         width: 250,
         height: 115,
         strokeColor: 0xff0000,
@@ -1189,9 +1223,9 @@ var PlayScene = {
 
       this.tipTutorialHospital = new Phasetips(this.game, {
         targetObject: this.hospitalBttn,
-        context: "Hospitals allow you to improve the health of citizens",
+        context: "Hospitals allow you to improve the health of citizens. Sadly, energy is required for them to work",
         width: 315,
-        height: 95,
+        height: 125,
         strokeColor: 0xff0000,
         position: "top",
         positionOffset: 100,  
@@ -1200,7 +1234,7 @@ var PlayScene = {
     
       this.tipTutorialBulldoze = new Phasetips(this.game, {
         targetObject: this.bulldozeBttn,
-        context: "If you want to replace a building, you should bulldoze it first",
+        context: "If you want to replace a building, you should bulldoze it first. You'll get some of the resources you spent building it back.",
         width: 420,
         height: 90,
         strokeColor: 0xff0000,
@@ -1211,9 +1245,9 @@ var PlayScene = {
     
       this.tipTutorialTime = new Phasetips(this.game, {
         targetObject: this.timeTxt,
-        context: "Now you know the basic mechanics to survive. Press SPACE to get the clock running, and 1, 2 or 3 to change the speed",
-        width: 0,
-        height: 0,
+        context: "Now you know the basic mechanics to survive. Press SPACE to get the clock running, and 1, 2 or 3 to change the speed. \nKeep testing if you want to, or jump right into the real simulation by exiting this tutorial with the Esc key",
+        width: 200,
+        height: -30,
         strokeColor: 0xff0000,
         position: "left",
         positionOffset: 100,   
@@ -1938,17 +1972,15 @@ var PlayScene = {
 
     if (this.cameraCheck)
     {
-      this.citizensIcon.visible = true;
-      this.citizensTxt.visible = true;
-      this.homelessIcon.visible = true;
-      this.homelessTxt.visible = true;
-      this.unemployedIcon.visible = true;
-      this.unemployedTxt.visible = true;
+      this.citizensTxtGroup.visible = true;
+      this.homelessTxtGroup.visible = true;
+      this.unemployedTxtGroup.visible = true;
       this.roadCheck = true;
+      this.tipTutorial1.destroy();
     }  
     
     if (this.roadCheck)
-    {    
+    {
       this.roadBttn.visible = true;
       this.roadBttn.input.enabled = true;
     }
@@ -1963,54 +1995,42 @@ var PlayScene = {
     {
       this.waterBttn.visible = true;
       this.waterBttn.input.enabled = true;
-      this.waterIcon.visible = true;
-      this.waterTxt.visible = true;
-      this.waterTxtGain.visible = true;
+      this.waterTxtGroup.visible = true;
     }
 
     if (this.cropCheck)
     {
       this.cropBttn.visible = true;
       this.cropBttn.input.enabled = true;
-      this.foodIcon.visible = true;
-      this.foodTxt.visible = true;
-      this.foodTxtGain.visible = true;
+      this.foodTxtGroup.visible = true;
     }
 
     if (this.woodCheck)
     {
       this.woodBttn.visible = true;
       this.woodBttn.input.enabled = true;
-      this.woodIcon.visible = true;
-      this.woodTxt.visible = true;
-      this.woodTxtGain.visible = true;
+      this.woodTxtGroup.visible = true;
     }
 
     if (this.stoneCheck)
     {
       this.stoneBttn.visible = true;
       this.stoneBttn.input.enabled = true;
-      this.stoneIcon.visible = true;
-      this.stoneTxt.visible = true;
-      this.stoneTxtGain.visible = true;
+      this.stoneTxtGroup.visible = true;
     }
 
     if (this.uraniumCheck) 
     {
       this.uraniumBttn.visible = true;
       this.uraniumBttn.input.enabled = true;
-      this.uraniumIcon.visible = true;
-      this.uraniumTxt.visible = true;
-      this.uraniumTxtGain.visible = true;
+      this.uraniumTxtGroup.visible = true;
     }
 
     if (this.energyCheck) 
     {
       this.energyBttn.visible = true;
       this.energyBttn.input.enabled = true;
-      this.energyIcon.visible = true;
-      this.energyTxt.visible = true;
-      this.energyTxtGain.visible = true;
+      this.energyTxtGroup.visible = true;
     }
 
     if (this.windCheck) 
@@ -2161,6 +2181,8 @@ var PlayScene = {
         this.roadSpriteStack.push(this.roadSpriteVisible[0]);
         this.roadSpriteVisible.splice(0, 1);
       }
+
+      this.updateTutorialChecks();
     }
     
     this.buildMode(this, this._buildingModeType);
