@@ -403,10 +403,11 @@ Producer.unserialize = function(state, game) {
 
 function Hospital(game, x, y, img, amount) {
     Phaser.Sprite.call(this, game, x, y, img);
-    this.area = 16; //en tiles
+    this.area = 16; //in tiles
     this.full = false;
     this.consume = amount;
     this.workers = false;
+    this.img = img;
 
     this.off = true;
 

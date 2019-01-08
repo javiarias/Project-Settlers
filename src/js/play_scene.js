@@ -1385,6 +1385,10 @@ var PlayScene = {
       return JSON.parse(prod.serialize());
     }, this);
     
+    saveObject.buildings.waterGroup = this.waterGroup.children.map(function(prod){
+      return JSON.parse(prod.serialize());
+    }, this);
+    
     saveObject.buildings.woodGroup = this.woodGroup.children.map(function(prod){
       return JSON.parse(prod.serialize());
     }, this);
@@ -1481,6 +1485,21 @@ var PlayScene = {
       auxBuilding.over = false;
 
       this.woodGroup.add(auxBuilding);
+    }, this);
+
+    saveobject.buildings.waterGroup.forEach(function(prod){
+      var auxBuilding = Classes.Producer.unserialize(prod, this.game);
+
+      auxBuilding.anchor.setTo(0.5, 0.5);
+
+      auxBuilding.inputEnabled = true;
+      auxBuilding.input.priorityID = 1;
+      auxBuilding.events.onInputOver.add(this.mouseOver, this, 0, auxBuilding);
+      auxBuilding.events.onInputOut.add(this.mouseOut, this, 0, auxBuilding);
+      auxBuilding.events.onInputDown.add(this.destroy, this);
+      auxBuilding.over = false;
+
+      this.waterGroup.add(auxBuilding);
     }, this);
     
     saveobject.buildings.windGroup.forEach(function(prod){
@@ -2157,7 +2176,7 @@ var PlayScene = {
       auxSprite = this._buildingModeSprite;
 
 
-    this.resetRoadstack();
+    this.resetRoadStack();
 
     var stopLoop = false;
 
@@ -2268,7 +2287,7 @@ var PlayScene = {
   escape: function(key){
     if(key !== undefined && (this._buildModeActive || this._destroyModeActive)){
       if(this._buildModeActive)
-        buildMode.call(this);
+        this.buildMode();
       this._destroyModeActive = false;
     }
 
@@ -2376,19 +2395,19 @@ var PlayScene = {
     if(!this._escapeMenu){
       if(this.game.input.mousePointer.x < 6 || this.game.input.mousePointer.x > 640 || this.game.input.mousePointer.y < 44 || this.game.input.mousePointer.y > 539){
         if(this._buildModeActive)
-          buildMode.call(this);
+          this.buildMode();
         this._destroyModeActive = false;
       }
       else if(this._buildModeActive)
         if(this._buildingModeType == this.roadGroup && !this.roadBuilding && this.buildAllowed(this._buildingModeSprite)){
           this.roadBuilding = true;
           this._buildingModeSprite.visible = false;
-          this.resetRoadstack();
+          this.resetRoadStack();
         }
         else if(this.roadBuilding)
           this.buildRoads();
         else
-          build.call(this);
+          this.build();
     }
   },
 
@@ -2403,7 +2422,7 @@ var PlayScene = {
     if(!this._escapeMenu) {
       this.paused = !this.paused;
       if(!this.paused && this._buildModeActive)
-        buildMode.call(this);
+        this.buildMode();
       this._destroyModeActive = false;
       if(this.paused)
         this.timeTxt.addColor("#ff0000", 0);
@@ -2481,7 +2500,7 @@ var PlayScene = {
 
         this._buildModeActive = false;
         
-        this.resetRoadstack();
+        this.resetRoadStack();
       }
     }
   },
