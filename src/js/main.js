@@ -62,6 +62,7 @@ var PreloaderScene = {
     this.game.load.image('pauseTutorial', 'images/menu/UI/pauseMenuTutorial.png');
     this.game.load.image('mainBkg', 'images/menu/UI/mainBkg.png');
     this.game.load.image('optionsBkg', 'images/menu/UI/optionsMenu.png');
+    
 
     this.game.load.image('cropIcon', 'images/menu/Icons/cropIcon.png');
     this.game.load.image('stoneIcon', 'images/menu/Icons/stoneIcon.png');
@@ -84,6 +85,8 @@ var PreloaderScene = {
     this.game.load.spritesheet('playBttn', 'images/menu/MenuButtons/play.png', 55, 48);
     this.game.load.spritesheet('tutorialBttn', 'images/menu/MenuButtons/tuto.png', 55, 48);
     this.game.load.spritesheet('saveBttn', 'images/menu/MenuButtons/save.png', 55, 48);
+    this.game.load.spritesheet('infoBttn', 'images/menu/MenuButtons/info.png', 55, 48);
+
 
     this.game.load.spritesheet('houseBttn', 'images/menu/UIButtons/house.png', 55, 48);
     this.game.load.spritesheet('roadBttn', 'images/menu/UIButtons/road.png', 55, 48);
@@ -164,11 +167,23 @@ var MainMenu = {
     this.menuMusic.play();
     this.menuMusic.volume = this.volume / 100;
 
-    this.options = this.game.add.button(this.game.camera.x + (this.game.width/2), this.game.camera.y + 3.55 * (this.game.height/4), "settBttn", function(){this.optionsMain.visible = true; this.game.world.bringToTop(this.optionsMain); this.play.inputEnabled = false; this.options.inputEnabled = false;}, this, 0, 0, 1);
+    this.options = this.game.add.button(this.game.camera.x + (this.game.width/1.625), this.game.camera.y + 3.55 * (this.game.height/4), "settBttn", function(){this.optionsMain.visible = true; this.game.world.bringToTop(this.optionsMain); this.play.inputEnabled = false; this.options.inputEnabled = false;}, this, 0, 0, 1);
     this.options.anchor.setTo(.5, .5);
     this.options.smoothed = false;
     this.options.onDownSound = this.buttonSound;
 
+    this.optionsTxt = this.game.add.text(this.options.x, this.options.y + this.game.height/15, "Options", {font: "console", fontSize: 40, fill: "#000000", align: "center" });
+    this.optionsTxt.anchor.setTo(0.5, 0.5);
+    this.optionsTxt.smoothed = false;
+
+    this.info = this.game.add.button(this.game.camera.x + (this.game.width/2.6), this.game.camera.y + 3.55 * (this.game.height/4), "infoBttn", goinfo, this, 0, 0, 1);
+    this.info.anchor.setTo(.5, .5);
+    this.info.smoothed = false;
+    this.info.onDownSound = this.buttonSound;
+
+    this.infoTxt = this.game.add.text(this.info.x, this.info.y + this.game.height/15, "Info", {font: "console", fontSize: 40, fill: "#000000", align: "center" });
+    this.infoTxt.anchor.setTo(0.5, 0.5);
+    this.infoTxt.smoothed = false;
 
     //volume menu
     this.optionsMain = this.game.add.group();
@@ -258,6 +273,12 @@ var MainMenu = {
       this.menuMusic.stop();
       this.optionsMain.destroy();
       this.game.state.start('tutorial', true, false, 1, false);
+    }
+
+    function goinfo() {
+      this.menuMusic.stop();
+      this.optionsMain.destroy();
+      this.game.state.start('info');
     }
 
     function gameLoad() {
@@ -537,7 +558,162 @@ var WinState = {
       this.game.state.start('main');
     }
   }
+  };
 
+  var infoState = {
+    create: function(){
+     this.buttonSound = this.game.add.audio('buttonSound');
+     
+     this.background = this.game.add.sprite(0, 0, "mainBkg");
+      this.background.smoothed = false;
+  
+      this.volume = 20;
+      this.menuMusic = this.game.add.sound('menuSound', .2, true);
+      this.menuMusic.play();
+      this.menuMusic.volume = this.volume / 100;
+  
+      this.options = this.game.add.button(this.game.camera.x + (this.game.width/1.625), this.game.camera.y + 3.55 * (this.game.height/4), "settBttn", function(){this.optionsMain.visible = true; this.game.world.bringToTop(this.optionsMain); this.options.inputEnabled = false;}, this, 0, 0, 1);
+      this.options.anchor.setTo(.5, .5);
+      this.options.smoothed = false;
+      this.options.onDownSound = this.buttonSound;
+  
+      this.optionsTxt = this.game.add.text(this.options.x, this.options.y + this.game.height/15, "Options", {font: "console", fontSize: 40, fill: "#000000", align: "center" });
+      this.optionsTxt.anchor.setTo(0.5, 0.5);
+      this.optionsTxt.smoothed = false;
+  
+      this.infoTxt = this.game.add.text(this.game.width/2, this.game.height/5, ("Project Settlers is a resource management game in \nwhich you will have to guide your citizens after a \nnuclear war, which has made life even more difficult\n(and turned water green). BLABLABLA"), {font: "console", fontSize: 40, fill: "#000000"});
+      this.infoTxt.anchor.setTo(0.5, 0.5);
+      this.infoTxt.smoothed = false;
+  
+      this.creatorsTxt = this.game.add.text(this.infoTxt.x, this.infoTxt.y + 100, ("Project Settlers has been created by:"), {font: "console", fontSize: 40, fill: "#000000", align: "center"});
+      this.creatorsTxt.anchor.setTo(0.5, 0.5);
+      this.creatorsTxt.smoothed = false;
+  
+      this.javiTxt = this.game.add.text(this.infoTxt.x - 100, this.creatorsTxt.y + 50, ("Javier Arias"), {font: "console", fontSize: 40, fill: "#000000", align: "center"});
+      this.javiTxt.anchor.setTo(0.5, 0.5);
+      this.javiTxt.smoothed = false;
+      this.javiTxt.inputEnabled = true;
+      this.javiTxt.events.onInputOver.add(over, this);
+      this.javiTxt.events.onInputOut.add(out, this);
+      this.javiTxt.events.onInputDown.add(down1, this);
+  
+      this.ignacioTxt = this.game.add.text(this.infoTxt.x + 100, this.creatorsTxt.y + 50, ("Ignacio Ory"), {font: "console", fontSize: 40, fill: "#000000", align: "center"});
+      this.ignacioTxt.anchor.setTo(0.5, 0.5);
+      this.ignacioTxt.smoothed = false;
+      this.ignacioTxt.inputEnabled = true;
+      this.ignacioTxt.events.onInputOver.add(over, this);
+      this.ignacioTxt.events.onInputOut.add(out, this);
+      this.ignacioTxt.events.onInputDown.add(down2, this);
+  
+      this.back = this.game.add.button(this.game.camera.x + (this.game.width/2.6), this.game.camera.y + 3.55 * (this.game.height/4), "backBttn", goMenu, this, 0, 0, 1);
+      this.back.anchor.setTo(0.5, 0.5);
+      this.back.fixedToCamera = true;
+      this.back.smoothed = false;
+      this.back.onDownSound = this.buttonSound;
+  
+      this.backTxt = this.game.add.text(this.back.x, this.back.y + this.game.height/15, "Back", {font: "console", fontSize: 40, fill: "#000000", align: "center" });
+      this.backTxt.anchor.setTo(0.5, 0.5);
+      this.backTxt.smoothed = false;
+      
+      this.optionsMain = this.game.add.group();
+  
+      var optionsBkg = this.game.add.sprite(this.game.camera.x + this.game.camera.width / 2, this.game.camera.y + this.game.camera.height / 2, "optionsBkg");
+      optionsBkg.anchor.setTo(.5, .5);
+      optionsBkg.fixedToCamera = true;
+      optionsBkg.smoothed = false;
+  
+      this.optionsMain.add(optionsBkg);
+  
+      var volumeText = this.game.add.text(optionsBkg.x, optionsBkg.y - 20, this.volume, {font: "50px console"});
+      volumeText.anchor.setTo(0.5, 0.5);
+      volumeText.fixedToCamera = true;
+      volumeText.smoothed = false;
+  
+      this.optionsMain.add(volumeText);
+  
+      var optionsMinus = this.game.add.button(optionsBkg.x - 77, optionsBkg.y - 20, "minusBttn", function(){updateVolume.call(this, -5);}, this, 0, 0, 1);
+      optionsMinus.anchor.setTo(0.5, 0.5);
+      optionsMinus.fixedToCamera = true;
+      optionsMinus.smoothed = false;
+      optionsMinus.onDownSound = this.buttonSound;
+  
+      this.optionsMain.add(optionsMinus);
+      
+      var optionsPlus = this.game.add.button(optionsBkg.x + 77, optionsBkg.y - 20, "plusBttn", function(){updateVolume.call(this, 5);}, this, 0, 0, 1);
+      optionsPlus.anchor.setTo(0.5, 0.5);
+      optionsPlus.fixedToCamera = true;
+      optionsPlus.smoothed = false;
+      optionsPlus.onDownSound = this.buttonSound;
+  
+      this.optionsMain.add(optionsPlus);
+  
+      var optionsBack = this.game.add.button(optionsBkg.x - 47, optionsBkg.y + 48, "backBttn", function(){this.optionsMain.visible = false; this.options.inputEnabled = true;}, this, 0, 0, 1);
+      optionsBack.anchor.setTo(0.5, 0.5);
+      optionsBack.fixedToCamera = true;
+      optionsBack.smoothed = false;
+      optionsBack.onDownSound = this.buttonSound;
+  
+      this.optionsMain.add(optionsBack);
+  
+      var optionsMute = this.game.add.button(optionsBkg.x + 47, optionsBkg.y + 48, "muteBttn", function(){mute.call(this);}, this, 0, 0, 1);
+      if(this.game.sound.mute)
+        optionsMute.setFrames(2, 2, 3);
+      optionsMute.anchor.setTo(0.5, 0.5);
+      optionsMute.fixedToCamera = true;
+      optionsMute.smoothed = false;
+      optionsMute.onDownSound = this.buttonSound;
+  
+      this.optionsMain.add(optionsMute);
+  
+      this.optionsMain.visible = false;
+  
+      function updateVolume(update){
+        if(this.volume + update >= 0 && this.volume + update <= 100){
+  
+          this.volume += update;
+          this.menuMusic.volume = this.volume / 100;
+  
+          this.optionsMain.forEach(function(text){
+            if (text.text !== null)
+              text.text = this.volume;
+            }, this);
+        }
+      }
+  
+      function mute(){
+        this.game.sound.mute = !this.game.sound.mute;
+        this.optionsMain.forEach(function(button){
+          if(button.key == "muteBttn"){
+            if(this.game.sound.mute)
+              button.setFrames(2, 2, 3);
+            else
+              button.setFrames(0, 0, 1);
+          }
+        }, this);
+      }
+  
+      function goMenu() {
+        this.menuMusic.stop();
+        this.optionsMain.destroy();
+        this.game.state.start('main');
+      }
+  
+      function over(item) {
+        item.fill = "#ff0044";
+    }
+    
+    function out(item) {
+        item.fill = "#000000";
+    }
+    
+    function down1(item) {
+      window.open("http://github.com/javiarias", "_blank");
+    }
+  
+    function down2(item) {
+      window.open("http://github.com/IgnOry", "_blank");
+    }
+  }
 };
 
 window.onload = function () {
@@ -553,6 +729,8 @@ window.onload = function () {
   game.state.add('play', PlayScene);
   game.state.add('defeat', DefeatState);
   game.state.add('win', WinState);
+  game.state.add('info', infoState);
+
 
   game.state.start('boot');
 };
