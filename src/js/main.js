@@ -263,10 +263,9 @@ var MainMenu = {
     function gameLoad() {
       var state = localStorage.getItem('save');
       if (state) {
-        this.game = JSON.parse(state);
         this.menuMusic.stop();
         this.optionsMain.destroy();
-        this.game.state.start('play', true, false, 1, true);
+        this.game.state.start('play', true, false, 0, true);
       }
     }
 

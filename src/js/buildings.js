@@ -8,6 +8,8 @@ function House(game, x, y, img, hospitalNear = false) {
     this.full = false;
     this.numberOfBirths = 0;
 
+    this.img = img;
+
     this.tooltip = new Phasetips(this.game, {
         targetObject: this,
         context: "Hospital in range! aaaaaaa: 100 old (Not Great) aaaaaaa: 100 old (Not Great)",
@@ -189,8 +191,10 @@ House.prototype.serializeCitizens = function(){
 
     var obj = {};
 
-    obj.residentA = JSON.parse(residentA.serialize());
-    obj.residentB = JSON.parse(residentB.serialize());
+    if(this.residentA !== undefined)
+        obj.residentA = JSON.parse(this.residentA.serialize());
+    if(this.residentB !== undefined)
+        obj.residentB = JSON.parse(this.residentB.serialize());
 
     return JSON.stringify(obj);
 
@@ -203,8 +207,7 @@ House.prototype.serialize = function() {
             "y",
             "img",
             'hospitalNear',
-            'full',
-            'off'
+            'full'
         ];
     
         var obj = {};
@@ -485,9 +488,44 @@ Hospital.prototype.unserialize = function(state, game) {
 function Road(game, x, y, img) {
     Phaser.Sprite.call(this, game, x, y, img);
     this.get = "fucked";
+
+    this.img = img;
 }
 Road.prototype = Object.create(Phaser.Sprite.prototype);
 Road.constructor = Road;
+
+Road.prototype.serialize = function() {
+
+        var fields = [
+            "x",
+            "y",
+            "img"
+        ];
+    
+        var obj = {};
+    
+        for (var i in fields) {
+            var field = fields[i];
+            obj[field] = this[field];
+        }
+
+        return JSON.stringify(obj);
+};
+
+Road.prototype.unserialize = function(state, game) {
+    
+	if (typeof state === 'string') {
+		state = JSON.parse(state);
+    }
+    
+	var instance = new Road(game, state.x, state.y, state.img);
+    
+	for (var i in state) {
+		instance[i] = state[i];
+    }
+
+	return instance;
+};
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

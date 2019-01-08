@@ -300,8 +300,18 @@ var Phasetips = function(localGame, options) {
             if (/*worldPos.x !== mainGroup.initialWorldX &&*/ !_fixedToCamera) {
                 //updatePosition();
 
-                var auxX = Math.round((10* Math.round(this.game.input.worldX / 16) * 16)/_this.originalPosition.x);
-                var auxY = Math.round((10* Math.round(this.game.input.worldX / 16) * 16)/_this.originalPosition.y);
+                var auxX = Math.round((10 * Math.round(this.game.input.worldX / 16) * 16)/_this.originalPosition.x);
+                var auxY = Math.round((10 * Math.round(this.game.input.worldY / 16) * 16)/_this.originalPosition.y);
+
+                if(worldPos.x < mainGroup.width/2.5)
+                    auxX = mainGroup.width/2.5 - worldPos.x/2 + 5;
+                else if(worldPos.x + mainGroup.width/2 > 1430){
+                    auxX = 1430 - (worldPos.x + mainGroup.width/2 + 10);
+                }
+
+                if(worldPos.y - mainGroup.height + auxY < 47)
+                    auxY = 47 - mainGroup.height - worldPos.y + 25;
+                    
 
                 _this.tooltipContent.x = auxX;
                 _this.tooltipContent.y = auxY;

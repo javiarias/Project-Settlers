@@ -1384,7 +1384,7 @@ var PlayScene = {
       }
     }
 
-    function destroy(sprite){
+    this.destroy = function(sprite){
       if(this._destroyModeActive){
 
         this.buildingGroup.forEach(function(sprite, group){
@@ -1531,9 +1531,9 @@ var PlayScene = {
 
         auxBuilding.inputEnabled = true;
         auxBuilding.input.priorityID = 1;
-        auxBuilding.events.onInputOver.add(mouseOver, this, 0, auxBuilding);
-        auxBuilding.events.onInputOut.add(mouseOut, this, 0, auxBuilding);
-        auxBuilding.events.onInputDown.add(destroy, this);
+        auxBuilding.events.onInputOver.add(this.mouseOver, this, 0, auxBuilding);
+        auxBuilding.events.onInputOut.add(this.mouseOut, this, 0, auxBuilding);
+        auxBuilding.events.onInputDown.add(this.destroy, this);
         auxBuilding.over = false;
 
         
@@ -1555,14 +1555,14 @@ var PlayScene = {
       }
     }
 
-    function mouseOver(sprite){
+    this.mouseOver = function(sprite){
       if(this._destroyModeActive && !this._escapeMenu){
         sprite.tint = 0xFF0000;
         this.over = true;
       }
     }
 
-    function mouseOut(sprite){
+    this.mouseOut = function(sprite){
         sprite.tint = 0xFFFFFF;
         this.over = false;
     }
@@ -1661,9 +1661,6 @@ var PlayScene = {
 
       var auxAngle = Phaser.Point.angle(pointA, pointB);
 
-      console.log(a.x + ", " + a.y);
-      console.log(b.worldX + ", " + b.y);
-
       
       var angleCos = Math.round(Math.cos(auxAngle));
       var angleSin = Math.round(Math.sin(auxAngle));
@@ -1748,9 +1745,9 @@ var PlayScene = {
   
           auxBuilding.inputEnabled = true;
           auxBuilding.input.priorityID = 1;
-          auxBuilding.events.onInputOver.add(mouseOver, this, 0, auxBuilding);
-          auxBuilding.events.onInputOut.add(mouseOut, this, 0, auxBuilding);
-          auxBuilding.events.onInputDown.add(destroy, this);
+          auxBuilding.events.onInputOver.add(this.mouseOver, this, 0, auxBuilding);
+          auxBuilding.events.onInputOut.add(this.mouseOut, this, 0, auxBuilding);
+          auxBuilding.events.onInputDown.add(this.destroy, this);
           auxBuilding.over = false;
           auxBuilding.visible = true;
   
@@ -1772,10 +1769,19 @@ var PlayScene = {
     }
 
   //////////////////////////////
-  //initial creation of citizens
+  //initialitzation of a new game
 
-    for(var i = 0; i < 5; i++)
-      addCitizen.call(this);
+    if(!this.loading){
+
+      for(var i = 0; i < 5; i++)
+        addCitizen.call(this);
+    }
+
+  //////////////////////////////
+  //loading a saved game
+
+    else 
+      this.loadGame();
   },
 
 
@@ -2310,6 +2316,10 @@ var PlayScene = {
     saveObject.buildings = {};
 
     saveObject.buildings.woodGroup = {};
+
+    saveObject.buildings.roadGroup = this.roadGroup.children.map(function(prod){
+      return JSON.parse(prod.serialize());
+    }, this);
     
     saveObject.buildings.woodGroup = this.woodGroup.children.map(function(prod){
       return JSON.parse(prod.serialize());
@@ -2343,7 +2353,7 @@ var PlayScene = {
       return JSON.parse(house.serialize());
     }, this);
 
-    saveObject.citizens = this.houseGroup.map(function(house){
+    saveObject.citizens = this.houseGroup.children.map(function(house){
       return JSON.parse(house.serializeCitizens());
     }, this);
 
@@ -2357,11 +2367,165 @@ var PlayScene = {
 
   loadGame:function()
   {
-    localStorage.getItem("save");
-    //load buildings
-    //load houses (con esto ya se guardan los ciudadanos (?))
+    var state = localStorage.getItem("save");
 
-    //update arrays
+    var saveobject = JSON.parse(state);
+
+    saveobject.buildings.roadGroup.forEach(function(prod){
+      var auxBuilding = new Classes.Road(this.game, 40, 40, "Road");
+      auxBuilding = auxBuilding.unserialize(prod, this.game);
+
+      auxBuilding.anchor.setTo(0.5, 0.5);
+
+      auxBuilding.inputEnabled = true;
+      auxBuilding.input.priorityID = 1;
+      auxBuilding.events.onInputOver.add(this.mouseOver, this, 0, auxBuilding);
+      auxBuilding.events.onInputOut.add(this.mouseOut, this, 0, auxBuilding);
+      auxBuilding.events.onInputDown.add(this.destroy, this);
+      auxBuilding.over = false;
+
+      this.roadGroup.add(auxBuilding);
+    }, this);
+    
+    saveobject.buildings.woodGroup.forEach(function(prod){
+      var auxBuilding = new Classes.Producer(this.game, 40, 40, "Road", 0, 0);
+      auxBuilding = auxBuilding.unserialize(prod, this.game);
+
+      auxBuilding.anchor.setTo(0.5, 0.5);
+
+      auxBuilding.inputEnabled = true;
+      auxBuilding.input.priorityID = 1;
+      auxBuilding.events.onInputOver.add(this.mouseOver, this, 0, auxBuilding);
+      auxBuilding.events.onInputOut.add(this.mouseOut, this, 0, auxBuilding);
+      auxBuilding.events.onInputDown.add(this.destroy, this);
+      auxBuilding.over = false;
+
+      this.woodGroup.add(auxBuilding);
+    }, this);
+    
+    saveobject.buildings.windGroup.forEach(function(prod){
+      var auxBuilding = new Classes.Producer(this.game, 40, 40, "Road", 0, 0);
+      auxBuilding = auxBuilding.unserialize(prod, this.game);
+
+      auxBuilding.anchor.setTo(0.5, 0.5);
+
+      auxBuilding.inputEnabled = true;
+      auxBuilding.input.priorityID = 1;
+      auxBuilding.events.onInputOver.add(this.mouseOver, this, 0, auxBuilding);
+      auxBuilding.events.onInputOut.add(this.mouseOut, this, 0, auxBuilding);
+      auxBuilding.events.onInputDown.add(this.destroy, this);
+      auxBuilding.over = false;
+
+      this.windGroup.add(auxBuilding);
+    }, this);
+    
+    saveobject.buildings.uraniumGroup.forEach(function(prod){
+      var auxBuilding = new Classes.Producer(this.game, 40, 40, "Road", 0, 0);
+      auxBuilding = auxBuilding.unserialize(prod, this.game);
+
+      auxBuilding.anchor.setTo(0.5, 0.5);
+
+      auxBuilding.inputEnabled = true;
+      auxBuilding.input.priorityID = 1;
+      auxBuilding.events.onInputOver.add(this.mouseOver, this, 0, auxBuilding);
+      auxBuilding.events.onInputOut.add(this.mouseOut, this, 0, auxBuilding);
+      auxBuilding.events.onInputDown.add(this.destroy, this);
+      auxBuilding.over = false;
+
+      this.uraniumGroup.add(auxBuilding);
+    }, this);
+    
+    saveobject.buildings.cropGroup.forEach(function(prod){
+      var auxBuilding = new Classes.Producer(this.game, 40, 40, "Road", 0, 0);
+      auxBuilding = auxBuilding.unserialize(prod, this.game);
+
+      auxBuilding.anchor.setTo(0.5, 0.5);
+
+      auxBuilding.inputEnabled = true;
+      auxBuilding.input.priorityID = 1;
+      auxBuilding.events.onInputOver.add(this.mouseOver, this, 0, auxBuilding);
+      auxBuilding.events.onInputOut.add(this.mouseOut, this, 0, auxBuilding);
+      auxBuilding.events.onInputDown.add(this.destroy, this);
+      auxBuilding.over = false;
+
+      this.cropGroup.add(auxBuilding);
+    }, this);
+    
+    saveobject.buildings.stoneGroup.forEach(function(prod){
+      var auxBuilding = new Classes.Producer(this.game, 40, 40, "Road", 0, 0);
+      auxBuilding = auxBuilding.unserialize(prod, this.game);
+
+      auxBuilding.anchor.setTo(0.5, 0.5);
+
+      auxBuilding.inputEnabled = true;
+      auxBuilding.input.priorityID = 1;
+      auxBuilding.events.onInputOver.add(this.mouseOver, this, 0, auxBuilding);
+      auxBuilding.events.onInputOut.add(this.mouseOut, this, 0, auxBuilding);
+      auxBuilding.events.onInputDown.add(this.destroy, this);
+      auxBuilding.over = false;
+
+      this.stoneGroup.add(auxBuilding);
+    }, this);
+    
+    saveobject.buildings.energyGroup.forEach(function(prod){
+      var auxBuilding = new Classes.Producer(this.game, 40, 40, "Road", 0, 0);
+      auxBuilding = auxBuilding.unserialize(prod, this.game);
+
+      auxBuilding.anchor.setTo(0.5, 0.5);
+
+      auxBuilding.inputEnabled = true;
+      auxBuilding.input.priorityID = 1;
+      auxBuilding.events.onInputOver.add(this.mouseOver, this, 0, auxBuilding);
+      auxBuilding.events.onInputOut.add(this.mouseOut, this, 0, auxBuilding);
+      auxBuilding.events.onInputDown.add(this.destroy, this);
+      auxBuilding.over = false;
+
+      this.energyGroup.add(auxBuilding);
+    }, this);
+    
+    saveobject.buildings.hospitalGroup.forEach(function(prod){
+      var auxBuilding = new Classes.Hospital(this.game, 40, 40, "Road", 0);
+      auxBuilding = auxBuilding.unserialize(prod, this.game);
+
+      auxBuilding.anchor.setTo(0.5, 0.5);
+
+      auxBuilding.inputEnabled = true;
+      auxBuilding.input.priorityID = 1;
+      auxBuilding.events.onInputOver.add(this.mouseOver, this, 0, auxBuilding);
+      auxBuilding.events.onInputOut.add(this.mouseOut, this, 0, auxBuilding);
+      auxBuilding.events.onInputDown.add(this.destroy, this);
+      auxBuilding.over = false;
+
+      this.hospitalGroup.add(auxBuilding);
+    }, this);
+    
+    saveobject.buildings.houseGroup.forEach(function(prod){
+      var auxBuilding = new Classes.House(this.game, 40, 40, "Road", false);
+      auxBuilding = auxBuilding.unserialize(prod, this.game);
+
+      auxBuilding.anchor.setTo(0.5, 0.5);
+
+      auxBuilding.inputEnabled = true;
+      auxBuilding.input.priorityID = 1;
+      auxBuilding.events.onInputOver.add(this.mouseOver, this, 0, auxBuilding);
+      auxBuilding.events.onInputOut.add(this.mouseOut, this, 0, auxBuilding);
+      auxBuilding.events.onInputDown.add(this.destroy, this);
+      auxBuilding.over = false;
+
+      this.houseGroup.add(auxBuilding);
+    }, this);
+
+
+
+
+
+    /*if(this._buildingModeType == this.hospitalGroup){
+          this.houseGroup.forEach(function (house) { house.updateSingleHospital(auxBuilding); }, this);
+        }
+        else if(this._buildingModeType == this.houseGroup)
+        {
+          auxBuilding.updateHospitals(this.hospitalGroup);
+        }*/
   },
 };
 
