@@ -209,7 +209,7 @@ var PlayScene = {
       pauseSettings.input.priorityID = 2;
       this.pauseMenu.add(pauseSettings);
 
-      var pauseMinimize = this.game.add.button(pauseBkg.x, pauseBkg.y + 3, "minBttn", escape, this, 0, 0, 1);
+      var pauseMinimize = this.game.add.button(pauseBkg.x, pauseBkg.y + 3, "minBttn", this.escape, this, 0, 0, 1);
       pauseMinimize.anchor.setTo(0.5, 0.5);
       pauseMinimize.fixedToCamera = true;
       pauseMinimize.smoothed = false;
@@ -333,7 +333,7 @@ var PlayScene = {
     //////////////////////////////
     //UI buttons
 
-      var escapeBttn = this.game.add.button(this.UIBkg.right - 5, 5, "exitBttn", function(){escape.call(this);}, this, 0, 0, 1);
+      var escapeBttn = this.game.add.button(this.UIBkg.right - 5, 5, "exitBttn", function(){this.escape();}, this, 0, 0, 1);
       escapeBttn.anchor.setTo(1, 0);
       escapeBttn.fixedToCamera = true;
       escapeBttn.smoothed = false;
@@ -352,7 +352,7 @@ var PlayScene = {
       var buttonOffset = buttonLimit / numberOfButtons - (buttonX * scale) + (buttonX * scale)/2; // 11 = número de botones, 55 = tamaño x del botón
       
 
-      this.roadBttn = this.game.add.button(5 + buttonOffset - (buttonOffset - (55 * scale)/2)/2, this.UIBkg.bottom - 30, "roadBttn", function(){buildMode.call(this, this, this.roadGroup);}, this, 0, 0, 1);
+      this.roadBttn = this.game.add.button(5 + buttonOffset - (buttonOffset - (55 * scale)/2)/2, this.UIBkg.bottom - 30, "roadBttn", function(){this.buildMode(this, this.roadGroup);}, this, 0, 0, 1);
       this.roadBttn.anchor.setTo(.5, .5);
       this.roadBttn.fixedToCamera = true;
       this.roadBttn.smoothed = false;
@@ -366,7 +366,7 @@ var PlayScene = {
       }
       this.UI.add(this.roadBttn);
 
-      this.houseBttn = this.game.add.button(this.roadBttn.right + buttonOffset, this.roadBttn.centerY, "houseBttn", function(){buildMode.call(this, this, this.houseGroup);}, this, 0, 0, 1);
+      this.houseBttn = this.game.add.button(this.roadBttn.right + buttonOffset, this.roadBttn.centerY, "houseBttn", function(){this.buildMode(this, this.houseGroup);}, this, 0, 0, 1);
       this.houseBttn.anchor.setTo(.5, .5);
       this.houseBttn.fixedToCamera = true;
       this.houseBttn.smoothed = false;
@@ -380,7 +380,7 @@ var PlayScene = {
       }
       this.UI.add(this.houseBttn);
 
-      this.waterBttn = this.game.add.button(this.houseBttn.right + buttonOffset, this.roadBttn.centerY, "waterBttn", function(){buildMode.call(this, this, this.waterGroup);}, this, 0, 0, 1);
+      this.waterBttn = this.game.add.button(this.houseBttn.right + buttonOffset, this.roadBttn.centerY, "waterBttn", function(){this.buildMode(this, this.waterGroup);}, this, 0, 0, 1);
       this.waterBttn.anchor.setTo(.5, .5);
       this.waterBttn.fixedToCamera = true;
       this.waterBttn.smoothed = false;
@@ -394,7 +394,7 @@ var PlayScene = {
       }
       this.UI.add(this.waterBttn);
 
-      this.cropBttn = this.game.add.button(this.waterBttn.right + buttonOffset,  this.roadBttn.centerY, "cropBttn", function(){buildMode.call(this, this, this.cropGroup);}, this, 0, 0, 1);
+      this.cropBttn = this.game.add.button(this.waterBttn.right + buttonOffset,  this.roadBttn.centerY, "cropBttn", function(){this.buildMode(this, this.cropGroup);}, this, 0, 0, 1);
       this.cropBttn.anchor.setTo(.5, .5);
       this.cropBttn.fixedToCamera = true;
       this.cropBttn.smoothed = false;
@@ -408,7 +408,7 @@ var PlayScene = {
       }
       this.UI.add(this.cropBttn);
 
-      this.woodBttn = this.game.add.button(this.cropBttn.right + buttonOffset,  this.roadBttn.centerY, "woodBttn", function(){buildMode.call(this, this, this.woodGroup);}, this, 0, 0, 1);
+      this.woodBttn = this.game.add.button(this.cropBttn.right + buttonOffset,  this.roadBttn.centerY, "woodBttn", function(){this.buildMode(this, this.woodGroup);}, this, 0, 0, 1);
       this.woodBttn.anchor.setTo(.5, .5);
       this.woodBttn.fixedToCamera = true;
       this.woodBttn.smoothed = false;
@@ -422,7 +422,7 @@ var PlayScene = {
       }
       this.UI.add(this.woodBttn);
 
-      this.stoneBttn = this.game.add.button(this.woodBttn.right + buttonOffset,  this.roadBttn.centerY, "stoneBttn", function(){buildMode.call(this, this, this.stoneGroup);}, this, 0, 0, 1);
+      this.stoneBttn = this.game.add.button(this.woodBttn.right + buttonOffset,  this.roadBttn.centerY, "stoneBttn", function(){this.buildMode(this, this.stoneGroup);}, this, 0, 0, 1);
       this.stoneBttn.anchor.setTo(.5, .5);
       this.stoneBttn.fixedToCamera = true;
       this.stoneBttn.smoothed = false;
@@ -436,7 +436,7 @@ var PlayScene = {
       }
       this.UI.add(this.stoneBttn);
 
-      this.uraniumBttn = this.game.add.button(this.stoneBttn.right + buttonOffset,  this.roadBttn.centerY, "uraniumBttn", function(){buildMode.call(this, this, this.uraniumGroup);}, this, 0, 0, 1);
+      this.uraniumBttn = this.game.add.button(this.stoneBttn.right + buttonOffset,  this.roadBttn.centerY, "uraniumBttn", function(){this.buildMode(this, this.uraniumGroup);}, this, 0, 0, 1);
       this.uraniumBttn.anchor.setTo(.5, .5);
       this.uraniumBttn.fixedToCamera = true;
       this.uraniumBttn.smoothed = false;
@@ -450,7 +450,7 @@ var PlayScene = {
       }
       this.UI.add(this.uraniumBttn);
 
-      this.energyBttn = this.game.add.button(this.uraniumBttn.right + buttonOffset,  this.roadBttn.centerY, "energyBttn", function(){buildMode.call(this, this, this.energyGroup);}, this, 0, 0, 1);
+      this.energyBttn = this.game.add.button(this.uraniumBttn.right + buttonOffset,  this.roadBttn.centerY, "energyBttn", function(){this.buildMode(this, this.energyGroup);}, this, 0, 0, 1);
       this.energyBttn.anchor.setTo(.5, .5);
       this.energyBttn.fixedToCamera = true;
       this.energyBttn.smoothed = false;
@@ -464,7 +464,7 @@ var PlayScene = {
       }
       this.UI.add(this.energyBttn);
 
-      this.windBttn = this.game.add.button(this.energyBttn.right + buttonOffset,  this.roadBttn.centerY, "windBttn", function(){buildMode.call(this, this, this.windGroup);}, this, 0, 0, 1);
+      this.windBttn = this.game.add.button(this.energyBttn.right + buttonOffset,  this.roadBttn.centerY, "windBttn", function(){this.buildMode(this, this.windGroup);}, this, 0, 0, 1);
       this.windBttn.anchor.setTo(.5, .5);
       this.windBttn.fixedToCamera = true;
       this.windBttn.smoothed = false;
@@ -478,7 +478,7 @@ var PlayScene = {
       }
       this.UI.add(this.windBttn);
 
-      this.hospitalBttn = this.game.add.button(this.windBttn.right + buttonOffset,  this.roadBttn.centerY, "hospitalBttn", function(){buildMode.call(this, this, this.hospitalGroup);}, this, 0, 0, 1);
+      this.hospitalBttn = this.game.add.button(this.windBttn.right + buttonOffset,  this.roadBttn.centerY, "hospitalBttn", function(){this.buildMode(this, this.hospitalGroup);}, this, 0, 0, 1);
       this.hospitalBttn.anchor.setTo(.5, .5);
       this.hospitalBttn.fixedToCamera = true;
       this.hospitalBttn.smoothed = false;
@@ -492,7 +492,7 @@ var PlayScene = {
       }
       this.UI.add(this.hospitalBttn);
 
-      this.bulldozeBttn = this.game.add.button(this.hospitalBttn.right + buttonOffset,  this.roadBttn.centerY, "bulldozeBttn", function(){destroyMode.call(this);}, this, 0, 0, 1);
+      this.bulldozeBttn = this.game.add.button(this.hospitalBttn.right + buttonOffset,  this.roadBttn.centerY, "bulldozeBttn", function(){this.destroyMode();}, this, 0, 0, 1);
       this.bulldozeBttn.anchor.setTo(.5, .5);
       this.bulldozeBttn.fixedToCamera = true;
       this.bulldozeBttn.smoothed = false;
@@ -1224,21 +1224,21 @@ var PlayScene = {
   //////////////////////////////
   //Keys and inputs
     var key_One = this.game.input.keyboard.addKey(Phaser.Keyboard.ONE);
-    key_One.onDown.add(setTimescale, this);
+    key_One.onDown.add(this.setTimescale, this);
 
     var key_Two = this.game.input.keyboard.addKey(Phaser.Keyboard.TWO);
-    key_Two.onDown.add(setTimescale, this);
+    key_Two.onDown.add(this.setTimescale, this);
 
     var key_Three = this.game.input.keyboard.addKey(Phaser.Keyboard.THREE);
-    key_Three.onDown.add(setTimescale, this);
+    key_Three.onDown.add(this.setTimescale, this);
 
     var key_Space = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-    key_Space.onDown.add(pauseTime, this);
+    key_Space.onDown.add(this.pauseTime, this);
 
     var key_ESC = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
-    key_ESC.onDown.add(escape, this);
+    key_ESC.onDown.add(this.escape, this);
 
-    this.game.input.onDown.add(click, this);
+    this.game.input.onDown.add(this.click, this);
 
     this.cursors = this.game.input.keyboard.createCursorKeys();
 
@@ -1269,512 +1269,11 @@ var PlayScene = {
     }
 
   //////////////////////////////
-  //Functions
-
-    function setTimescale(key){
-      this.timeScale = parseInt(key.event.key);
-      this.currentTime.buffer = 0;
-      this.timescaleTxt.text = "Speed: " + this.timeScale;
-    }
-
-    function pauseTime(){
-      
-      if(!this._escapeMenu) {
-        this.paused = !this.paused;
-        if(!this.paused && this._buildModeActive)
-          buildMode.call(this);
-        this._destroyModeActive = false;
-        if(this.paused)
-          this.timeTxt.addColor("#ff0000", 0);
-        else
-          this.timeTxt.addColor("#000000", 0);
-      }
-    }
-
-    function destroyMode(){
-      if(!this._escapeMenu) {
-        if(this._buildModeActive){
-          this._buildModeActive = false;
-          if(this._buildingModeSprite !== undefined)
-            this._buildingModeSprite.destroy();
-          if(this._buildingModeArea !== undefined)
-            this._buildingModeArea.destroy();
-        }
-
-
-        if(!this._destroyModeActive){
-          this.paused = true;
-          this._destroyModeActive = true;
-          this.timeTxt.addColor("#ff0000", 0);
-        }
-
-        else{
-          this._destroyModeActive = false;
-        }
-      }
-    }
-
-    function buildMode(key = undefined, group){
-      if(!this._escapeMenu) {
-
-        if(this._destroyModeActive)
-          this._destroyModeActive = false;
-
-
-        if(!this._buildModeActive){
-
-          this._buildingModeSprite = this.game.add.sprite(this.game.input.mousePointer.x, this.game.input.mousePointer.y, group.sprite);
-          this._buildingModeSprite.anchor.setTo(0.5, 0.5);
-          this._buildingModeSprite.alpha = 0.7;
-          this._buildingModeSprite.visible = true;
-
-          this._buildingModeType = group;
-          
-          this.paused = true;
-          this._buildModeActive = true;
-          this.timeTxt.addColor("#ff0000", 0);
-
-          this.game.world.bringToTop(this._buildingModeSprite);
-
-          if(group == this.hospitalGroup){
-            this._buildingModeArea = this.game.add.sprite(this.game.input.mousePointer.x, this.game.input.mousePointer.y, "area");
-            this._buildingModeArea.anchor.setTo(0.5, 0.5);
-            this._buildingModeArea.alpha = 0.35;
-
-            this._buildingModeArea.width = 16*this._tileSize;
-            this._buildingModeArea.height = 16*this._tileSize;
-
-            this.game.world.bringToTop(this._buildingModeArea);
-          }
-          
-          if(this.roadBuilding)
-            this.roadBuilding = false;
-        }
-
-        else {
-          if(this._buildingModeSprite !== undefined)
-            this._buildingModeSprite.destroy();
-            
-          if(this._buildingModeArea !== undefined)
-            this._buildingModeArea.destroy();
-
-          this._buildModeActive = false;
-          
-          resetRoadStack.call(this);
-        }
-      }
-    }
-
-    function click(){
-      if(!this._escapeMenu){
-        if(this.game.input.mousePointer.x < 6 || this.game.input.mousePointer.x > 640 || this.game.input.mousePointer.y < 44 || this.game.input.mousePointer.y > 539){
-          if(this._buildModeActive)
-            buildMode.call(this);
-          this._destroyModeActive = false;
-        }
-        else if(this._buildModeActive)
-          if(this._buildingModeType == this.roadGroup && !this.roadBuilding && this.buildAllowed(this._buildingModeSprite)){
-            this.roadBuilding = true;
-            this._buildingModeSprite.visible = false;
-            resetRoadStack.call(this);
-          }
-          else if(this.roadBuilding)
-            buildRoads.call(this);
-          else
-            build.call(this);
-      }
-    }
-
-    this.destroy = function(sprite){
-      if(this._destroyModeActive){
-
-        this.buildingGroup.forEach(function(sprite, group){
-          if(group.children.indexOf(sprite) != -1){
-            this.wood += Math.round(group.wood/2);
-            this.stone += Math.round(group.stone/2);
-          }
-        }.bind(this, sprite));
-        
-        this.woodTxt.text = this.wood;
-        this.stoneTxt.text = this.stone;
-
-        if(sprite.full !== undefined){
-          if(sprite.area !== undefined){
-            this.houseGroup.forEach(function (house) { house.updateSingleHospital(sprite, false); }, this);
-            sprite.bulldoze(this.unemployedArray);
-          }
-          
-          else if(sprite.hospitalNear !== undefined)
-            sprite.bulldoze(this.homelessArray);
-          else
-            sprite.bulldoze(this.unemployedArray);
-        }
-        sprite.destroy();
-
-        if (this.mode == 1 && !this.timeCheck)
-          this.timeCheck = true;
-      }
-    }
-
-    this.buildAllowed = function(sprite){
-      var overlap = false;
-
-      this.buildingGroup.forEach(function (group){
-        group.forEach(function(building){
-          overlap = overlap || this.checkOverlap.call(this, sprite, building);
-        }, this);
-      }, this);
-
-      overlap = overlap || sprite.left < 6 + this.game.camera.x || sprite.right > 640 + this.game.camera.x || sprite.top < 44 + this.game.camera.y || sprite.bottom > 539 + this.game.camera.y;
-
-      var roadAdjacency;
-      this.roadGroup.forEach(function (road){
-        roadAdjacency = roadAdjacency || this.checkAdjacency.call(this, sprite, road);
-      }, this);
-
-      var waterObstacle = this.checkObstacles.call(this, sprite, "water");
-      var mountainObstacle = this.checkObstacles.call(this, sprite, "mountain");
-
-
-      return(!overlap && !mountainObstacle && (this._buildingModeType == this.roadGroup && this.stone >= (this._buildingModeType.stone * this.roadSpriteVisible.length) || (roadAdjacency && this.wood >= this._buildingModeType.wood && this.stone >= this._buildingModeType.stone && !waterObstacle)))
-    }
-
-    function build(){
-      
-      if(this.buildAllowed(this._buildingModeSprite)){
-        var auxBuilding;
-
-        var offset = 0;
-
-        if((this._buildingModeSprite.height / 16) % 2 == 0)
-          offset = 8;
-
-        if(this._buildingModeType == this.houseGroup)
-        {
-          auxBuilding = new Classes.House(this.game, Math.round(this.game.input.worldX / this._tileSize) * this._tileSize, offset + Math.round(this.game.input.worldY / this._tileSize) * this._tileSize, this._buildingModeType.sprite);
-          
-          if (this.mode == 1 && !this.waterCheck)
-            this.waterCheck = true;
-        }        
-        else if(this._buildingModeType == this.roadGroup)
-        {
-            auxBuilding = new Classes.Road(this.game, Math.round(this.game.input.worldX / this._tileSize) * this._tileSize, offset + Math.round(this.game.input.worldY / this._tileSize) * this._tileSize, this._buildingModeType.sprite);
-
-            if (this.mode == 1 && this._buildingModeType == this.roadGroup && !this.houseCheck)
-          {
-
-            this.houseCheck = true;
-          }
-        }
-
-        else if(this._buildingModeType == this.hospitalGroup){
-          auxBuilding = new Classes.Hospital(this.game, Math.round(this.game.input.worldX / this._tileSize) * this._tileSize, offset + Math.round(this.game.input.worldY / this._tileSize) * this._tileSize, this._buildingModeType.sprite, 2);
-
-          if (this.mode == 1 && !this.bulldozeCheck)
-            this.bulldozeCheck = true;
-        }
-
-        else
-        {
-            auxBuilding = new Classes.Producer(this.game, Math.round(this.game.input.worldX / this._tileSize) * this._tileSize, offset + Math.round(this.game.input.worldY / this._tileSize) * this._tileSize, this._buildingModeType.sprite, this._buildingModeType.produce, this._buildingModeType.consume);
-
-            if (this._buildingModeType.sprite == 'Water')
-            {
-              if (this.mode == 1 && !this.cropCheck)
-                this.cropCheck = true;
-            }
-
-          if (this._buildingModeType.sprite == 'Crops')
-            {
-              if (this.mode == 1 && !this.woodCheck)
-                this.woodCheck = true;
-            }
-            
-          if (this._buildingModeType.sprite == 'Wood')
-            {
-              if (this.mode == 1 && !this.stoneCheck)
-                this.stoneCheck = true;
-            }
-
-          if (this._buildingModeType.sprite == 'Stone')
-            {
-
-              if (this.mode == 1 && !this.uraniumCheck)
-                this.uraniumCheck = true;
-            }
-
-          if (this._buildingModeType.sprite == 'Uranium')
-            {
-
-              if (this.mode == 1 && !this.energyCheck)
-                this.energyCheck = true;
-            }
-
-          if (this._buildingModeType.sprite == 'Energy')
-            {
-
-              if (this.mode == 1 && !this.windCheck)
-                this.windCheck = true;
-            }
-
-          if (this._buildingModeType.sprite == 'Wind')
-            {
-
-              if (this.mode == 1 && !this.hospitalCheck)
-                this.hospitalCheck = true;
-            }
-        }
-
-        this.wood -= this._buildingModeType.wood;
-        this.stone -= this._buildingModeType.stone;
-
-        auxBuilding.anchor.setTo(0.5, 0.5);
-
-        auxBuilding.inputEnabled = true;
-        auxBuilding.input.priorityID = 1;
-        auxBuilding.events.onInputOver.add(this.mouseOver, this, 0, auxBuilding);
-        auxBuilding.events.onInputOut.add(this.mouseOut, this, 0, auxBuilding);
-        auxBuilding.events.onInputDown.add(this.destroy, this);
-        auxBuilding.over = false;
-
-        
-        this.woodTxt.text = this.wood;
-        this.stoneTxt.text = this.stone;
-
-        this._buildingModeType.add(auxBuilding);
-
-        if(this._buildingModeType == this.hospitalGroup){
-          this.houseGroup.forEach(function (house) { house.updateSingleHospital(auxBuilding); }, this);
-        }
-        else if(this._buildingModeType == this.houseGroup)
-        {
-          auxBuilding.updateHospitals(this.hospitalGroup);
-        }
-
-        buildMode.call(this, this, this._buildingModeType);
-        buildMode.call(this, this, this._buildingModeType);
-      }
-    }
-
-    this.mouseOver = function(sprite){
-      if(this._destroyModeActive && !this._escapeMenu){
-        sprite.tint = 0xFF0000;
-        this.over = true;
-      }
-    }
-
-    this.mouseOut = function(sprite){
-        sprite.tint = 0xFFFFFF;
-        this.over = false;
-    }
-
-    function escape(key){
-      if(key !== undefined && (this._buildModeActive || this._destroyModeActive)){
-        if(this._buildModeActive)
-          buildMode.call(this);
-        this._destroyModeActive = false;
-      }
-
-      else{
-        this._escapeMenu = !this._escapeMenu;
-
-        if(this._escapeMenu) {
-          this.fade = this.game.add.sprite(this.game.camera.x, this.game.camera.y, 'fade');
-          this.fade.width = this.game.camera.width;
-          this.fade.height = this.game.camera.height;
-          this.fade.alpha = 0.5;
-          
-          this.game.world.bringToTop(this.fade);
-          this.game.world.bringToTop(this.pauseMenu);
-        }
-
-        else
-          this.fade.destroy();
-
-        this.pauseMenu.visible = this._escapeMenu;
-        if(this.optionsMenu.visible && !this._escapeMenu)
-          this.optionsMenu.visible = false;
-        this.UI.forEach(function(button){
-          button.inputEnabled = !this._escapeMenu;
-        }, this);
-        
-        this.buildingGroup.forEach(function(group){
-          group.forEach(function(a){
-            if(a.tooltip !== undefined){
-                a.tooltip.toggleTooltip(!this._escapeMenu);
-            }
-          }, this);
-        }, this);
-      }
-    }
-
-    this.checkOverlap = function(a, b){
-
-      var x = a.getBounds();
-      x.width--;
-      x.height--;
-      var y = b.getBounds();
-      y.width--;
-      y.height--;
-
-      return Phaser.Rectangle.intersects(x, y);
-    }
-
-    this.checkAdjacency = function(a, b){
-
-      var x = a.getBounds();
-      x.width = x.width / 2;
-      x.y++;
-      x.x++;
-      var y = b.getBounds();
-
-      var corners = false;
-      corners = (x.y == y.bottom || x.bottom == y.y ) && (x.x == y.right || x.right == y.x);
-
-      return Phaser.Rectangle.intersects(x, y) && !corners;
-    }
-
-    this.checkObstacles = function(a, type){
-
-      if(type == "water")
-        return this.map.getTileWorldXY(a.x, a.y, this.map.tileWidth, this.map.tileHeight, "water") !== null;
-
-      else if(type == "mountain")
-        return this.map.getTileWorldXY(a.x, a.y, this.map.tileWidth, this.map.tileHeight, "obstacles") !== null;
-      
-    }
-
-    function addCitizen()
-    {
-      var citizen = new Classes.Citizen(this.homelessArray, this.unemployedArray, this.names, this.surnames, 20);
-    } 
-
-    this.getFixedAngle = function(a, b) {
-
-      var pointA = new Phaser.Point(a.x, a.y);
-      var pointB = new Phaser.Point(b.x, b.y);
-
-      if(a.worldX !== undefined)
-        pointA = new Phaser.Point(a.worldX, a.worldY);
-
-      if(b.worldX !== undefined)
-        pointB = new Phaser.Point(b.worldX, b.worldY);
-
-      var auxAngle = Phaser.Point.angle(pointA, pointB);
-
-      
-      var angleCos = Math.round(Math.cos(auxAngle));
-      var angleSin = Math.round(Math.sin(auxAngle));
-
-      if(angleCos < 0)
-        auxAngle = 0;
-      else if(angleCos > 0)
-        auxAngle = 180;
-      else if(angleSin > 0)
-        auxAngle = 90;
-      else
-        auxAngle = 270;
-
-      return auxAngle;
-    }
-
-    function resetRoadStack(){
-      
-      while(this.roadSpriteVisible.length > 0) {
-        this.roadSpriteVisible[0].visible = false;
-        this.roadSpriteVisible[0].tint = 0xFFFFFF;
-        this.roadSpriteStack.push(this.roadSpriteVisible[0]);
-        this.roadSpriteVisible.splice(0, 1);
-      }
-    }
-
-    this.placeRoadGuide = function(){
-
-      var auxSprite;
-      if(this.roadSpriteVisible.length > 0)
-        auxSprite = this.roadSpriteVisible[this.roadSpriteVisible.length - 1];
-      else
-        auxSprite = this._buildingModeSprite;
-
-
-      resetRoadStack.call(this);
-
-      var stopLoop = false;
-
-      for(var i = 0; this.roadSpriteStack.length > 0 && !stopLoop; i++){
-
-        this.roadSpriteStack[0].x = this._buildingModeSprite.x + this._tileSize * i * Math.cos(this.currentRoadAngle * (Math.PI / -180)); //angles are inverted, so we need to fix them to calculate sin and cos
-        this.roadSpriteStack[0].y = this._buildingModeSprite.y + this._tileSize * i * Math.sin(this.currentRoadAngle * (Math.PI / -180));
-        this.roadSpriteStack[0].visible = true;
-
-        this.game.world.bringToTop(this.roadSpriteStack[0]);
-
-        this.roadSpriteVisible.push(this.roadSpriteStack[0]);
-        
-        this.roadSpriteStack.splice(0, 1);
-
-        auxSprite = this.roadSpriteVisible[this.roadSpriteVisible.length - 1];
-        stopLoop =  (this.currentRoadAngle == 0 && auxSprite.right >= this.game.input.worldX) ||
-                    (this.currentRoadAngle == 90 && auxSprite.top <= this.game.input.worldY) ||
-                    (this.currentRoadAngle == 180 && auxSprite.left <= this.game.input.worldX) ||
-                    (this.currentRoadAngle == 270 && auxSprite.bottom >= this.game.input.worldY);
-      }
-
-      var obstacle = false;
-      this.roadSpriteVisible.forEach(function(sprite){obstacle = obstacle || !this.buildAllowed(sprite);}, this);
-
-      if(obstacle)
-        this.roadSpriteVisible.forEach(function(sprite){sprite.tint = 0xFF0000;}, this);
-      else
-        this.roadSpriteVisible.forEach(function(sprite){sprite.tint = 0xFFFFFF;}, this);
-
-    }
-
-    function buildRoads() {
-
-      var obstacle = false;
-      this.roadSpriteVisible.forEach(function(sprite){obstacle = obstacle || !this.buildAllowed(sprite);}, this);
-
-      if(!obstacle){
-        while(this.roadSpriteVisible.length > 0) {
-          var auxBuilding = new Classes.Road(this.game, this.roadSpriteVisible[0].x, this.roadSpriteVisible[0].y, this._buildingModeType.sprite);
-
-          this.wood -= this._buildingModeType.wood;
-          this.stone -= this._buildingModeType.stone;
-  
-          auxBuilding.anchor.setTo(0.5, 0.5);
-  
-          auxBuilding.inputEnabled = true;
-          auxBuilding.input.priorityID = 1;
-          auxBuilding.events.onInputOver.add(this.mouseOver, this, 0, auxBuilding);
-          auxBuilding.events.onInputOut.add(this.mouseOut, this, 0, auxBuilding);
-          auxBuilding.events.onInputDown.add(this.destroy, this);
-          auxBuilding.over = false;
-          auxBuilding.visible = true;
-  
-          
-          this.woodTxt.text = this.wood;
-          this.stoneTxt.text = this.stone;
-  
-          this._buildingModeType.add(auxBuilding);
-
-          this.roadSpriteVisible[0].visible = false;
-          this.roadSpriteVisible[0].tint = 0xFFFFFF;
-          this.roadSpriteStack.push(this.roadSpriteVisible[0]);
-          this.roadSpriteVisible.splice(0, 1);
-        }
-      }
-      
-      buildMode.call(this, this, this._buildingModeType);
-      buildMode.call(this, this, this._buildingModeType);
-    }
-
-  //////////////////////////////
   //initialitzation of a new game
 
     if(!this.loading){
       for(var i = 0; i < 5; i++)
-        addCitizen.call(this);
+        var citizen = new Classes.Citizen(this.homelessArray, this.unemployedArray, this.names, this.surnames, 20);
     }
 
   //////////////////////////////
@@ -2607,6 +2106,470 @@ var PlayScene = {
     }
     this.uraniumTxtGain.text = auxSymbol + this.uraniumGain;
     this.uraniumTxtGain.addColor(auxColor, 0);
+  },
+
+  buildRoads: function() {
+
+    var obstacle = false;
+    this.roadSpriteVisible.forEach(function(sprite){obstacle = obstacle || !this.buildAllowed(sprite);}, this);
+
+    if(!obstacle){
+      while(this.roadSpriteVisible.length > 0) {
+        var auxBuilding = new Classes.Road(this.game, this.roadSpriteVisible[0].x, this.roadSpriteVisible[0].y, this._buildingModeType.sprite);
+
+        this.wood -= this._buildingModeType.wood;
+        this.stone -= this._buildingModeType.stone;
+
+        auxBuilding.anchor.setTo(0.5, 0.5);
+
+        auxBuilding.inputEnabled = true;
+        auxBuilding.input.priorityID = 1;
+        auxBuilding.events.onInputOver.add(this.mouseOver, this, 0, auxBuilding);
+        auxBuilding.events.onInputOut.add(this.mouseOut, this, 0, auxBuilding);
+        auxBuilding.events.onInputDown.add(this.destroy, this);
+        auxBuilding.over = false;
+        auxBuilding.visible = true;
+
+        
+        this.woodTxt.text = this.wood;
+        this.stoneTxt.text = this.stone;
+
+        this._buildingModeType.add(auxBuilding);
+
+        this.roadSpriteVisible[0].visible = false;
+        this.roadSpriteVisible[0].tint = 0xFFFFFF;
+        this.roadSpriteStack.push(this.roadSpriteVisible[0]);
+        this.roadSpriteVisible.splice(0, 1);
+      }
+    }
+    
+    this.buildMode(this, this._buildingModeType);
+    this.buildMode(this, this._buildingModeType);
+  },
+
+  placeRoadGuide: function(){
+
+    var auxSprite;
+    if(this.roadSpriteVisible.length > 0)
+      auxSprite = this.roadSpriteVisible[this.roadSpriteVisible.length - 1];
+    else
+      auxSprite = this._buildingModeSprite;
+
+
+    this.resetRoadstack();
+
+    var stopLoop = false;
+
+    for(var i = 0; this.roadSpriteStack.length > 0 && !stopLoop; i++){
+
+      this.roadSpriteStack[0].x = this._buildingModeSprite.x + this._tileSize * i * Math.cos(this.currentRoadAngle * (Math.PI / -180)); //angles are inverted, so we need to fix them to calculate sin and cos
+      this.roadSpriteStack[0].y = this._buildingModeSprite.y + this._tileSize * i * Math.sin(this.currentRoadAngle * (Math.PI / -180));
+      this.roadSpriteStack[0].visible = true;
+
+      this.game.world.bringToTop(this.roadSpriteStack[0]);
+
+      this.roadSpriteVisible.push(this.roadSpriteStack[0]);
+      
+      this.roadSpriteStack.splice(0, 1);
+
+      auxSprite = this.roadSpriteVisible[this.roadSpriteVisible.length - 1];
+      stopLoop =  (this.currentRoadAngle == 0 && auxSprite.right >= this.game.input.worldX) ||
+                  (this.currentRoadAngle == 90 && auxSprite.top <= this.game.input.worldY) ||
+                  (this.currentRoadAngle == 180 && auxSprite.left <= this.game.input.worldX) ||
+                  (this.currentRoadAngle == 270 && auxSprite.bottom >= this.game.input.worldY);
+    }
+
+    var obstacle = false;
+    this.roadSpriteVisible.forEach(function(sprite){obstacle = obstacle || !this.buildAllowed(sprite);}, this);
+
+    if(obstacle)
+      this.roadSpriteVisible.forEach(function(sprite){sprite.tint = 0xFF0000;}, this);
+    else
+      this.roadSpriteVisible.forEach(function(sprite){sprite.tint = 0xFFFFFF;}, this);
+
+  },
+
+  resetRoadStack: function(){
+      
+    while(this.roadSpriteVisible.length > 0) {
+      this.roadSpriteVisible[0].visible = false;
+      this.roadSpriteVisible[0].tint = 0xFFFFFF;
+      this.roadSpriteStack.push(this.roadSpriteVisible[0]);
+      this.roadSpriteVisible.splice(0, 1);
+    }
+  },
+
+  getFixedAngle: function(a, b) {
+
+    var pointA = new Phaser.Point(a.x, a.y);
+    var pointB = new Phaser.Point(b.x, b.y);
+
+    if(a.worldX !== undefined)
+      pointA = new Phaser.Point(a.worldX, a.worldY);
+
+    if(b.worldX !== undefined)
+      pointB = new Phaser.Point(b.worldX, b.worldY);
+
+    var auxAngle = Phaser.Point.angle(pointA, pointB);
+
+    
+    var angleCos = Math.round(Math.cos(auxAngle));
+    var angleSin = Math.round(Math.sin(auxAngle));
+
+    if(angleCos < 0)
+      auxAngle = 0;
+    else if(angleCos > 0)
+      auxAngle = 180;
+    else if(angleSin > 0)
+      auxAngle = 90;
+    else
+      auxAngle = 270;
+
+    return auxAngle;
+  },
+
+  checkObstacles: function(a, type){
+
+    if(type == "water")
+      return this.map.getTileWorldXY(a.x, a.y, this.map.tileWidth, this.map.tileHeight, "water") !== null;
+
+    else if(type == "mountain")
+      return this.map.getTileWorldXY(a.x, a.y, this.map.tileWidth, this.map.tileHeight, "obstacles") !== null;
+    
+  },
+
+  checkAdjacency: function(a, b){
+
+    var x = a.getBounds();
+    x.width = x.width / 2;
+    x.y++;
+    x.x++;
+    var y = b.getBounds();
+
+    var corners = false;
+    corners = (x.y == y.bottom || x.bottom == y.y ) && (x.x == y.right || x.right == y.x);
+
+    return Phaser.Rectangle.intersects(x, y) && !corners;
+  },
+
+  checkOverlap: function(a, b){
+
+    var x = a.getBounds();
+    x.width--;
+    x.height--;
+    var y = b.getBounds();
+    y.width--;
+    y.height--;
+
+    return Phaser.Rectangle.intersects(x, y);
+  },
+
+  escape: function(key){
+    if(key !== undefined && (this._buildModeActive || this._destroyModeActive)){
+      if(this._buildModeActive)
+        buildMode.call(this);
+      this._destroyModeActive = false;
+    }
+
+    else{
+      this._escapeMenu = !this._escapeMenu;
+
+      if(this._escapeMenu) {
+        this.fade = this.game.add.sprite(this.game.camera.x, this.game.camera.y, 'fade');
+        this.fade.width = this.game.camera.width;
+        this.fade.height = this.game.camera.height;
+        this.fade.alpha = 0.5;
+        
+        this.game.world.bringToTop(this.fade);
+        this.game.world.bringToTop(this.pauseMenu);
+      }
+
+      else
+        this.fade.destroy();
+
+      this.pauseMenu.visible = this._escapeMenu;
+      if(this.optionsMenu.visible && !this._escapeMenu)
+        this.optionsMenu.visible = false;
+      this.UI.forEach(function(button){
+        button.inputEnabled = !this._escapeMenu;
+      }, this);
+      
+      this.buildingGroup.forEach(function(group){
+        group.forEach(function(a){
+          if(a.tooltip !== undefined){
+              a.tooltip.toggleTooltip(!this._escapeMenu);
+          }
+        }, this);
+      }, this);
+    }
+  },
+
+  mouseOut: function(sprite){
+    sprite.tint = 0xFFFFFF;
+    this.over = false;
+  },
+
+  mouseOver: function(sprite){
+    if(this._destroyModeActive && !this._escapeMenu){
+      sprite.tint = 0xFF0000;
+      this.over = true;
+    }
+  },
+
+  buildAllowed: function(sprite){
+    var overlap = false;
+
+    this.buildingGroup.forEach(function (group){
+      group.forEach(function(building){
+        overlap = overlap || this.checkOverlap(sprite, building);
+      }, this);
+    }, this);
+
+    overlap = overlap || sprite.left < 6 + this.game.camera.x || sprite.right > 640 + this.game.camera.x || sprite.top < 44 + this.game.camera.y || sprite.bottom > 539 + this.game.camera.y;
+
+    var roadAdjacency;
+    this.roadGroup.forEach(function (road){
+      roadAdjacency = roadAdjacency || this.checkAdjacency(sprite, road);
+    }, this);
+
+    var waterObstacle = this.checkObstacles(sprite, "water");
+    var mountainObstacle = this.checkObstacles(sprite, "mountain");
+
+
+    return(!overlap && !mountainObstacle && (this._buildingModeType == this.roadGroup && this.stone >= (this._buildingModeType.stone * this.roadSpriteVisible.length) || (roadAdjacency && this.wood >= this._buildingModeType.wood && this.stone >= this._buildingModeType.stone && !waterObstacle)))
+  },
+
+  destroy: function(sprite){
+    if(this._destroyModeActive){
+
+      this.buildingGroup.forEach(function(sprite, group){
+        if(group.children.indexOf(sprite) != -1){
+          this.wood += Math.round(group.wood/2);
+          this.stone += Math.round(group.stone/2);
+        }
+      }.bind(this, sprite));
+      
+      this.woodTxt.text = this.wood;
+      this.stoneTxt.text = this.stone;
+
+      if(sprite.full !== undefined){
+        if(sprite.area !== undefined){
+          this.houseGroup.forEach(function (house) { house.updateSingleHospital(sprite, false); }, this);
+          sprite.bulldoze(this.unemployedArray);
+        }
+        
+        else if(sprite.hospitalNear !== undefined)
+          sprite.bulldoze(this.homelessArray);
+        else
+          sprite.bulldoze(this.unemployedArray);
+      }
+      sprite.destroy();
+
+      if (this.mode == 1 && !this.timeCheck)
+        this.timeCheck = true;
+    }
+  },
+
+  click: function(){
+    if(!this._escapeMenu){
+      if(this.game.input.mousePointer.x < 6 || this.game.input.mousePointer.x > 640 || this.game.input.mousePointer.y < 44 || this.game.input.mousePointer.y > 539){
+        if(this._buildModeActive)
+          buildMode.call(this);
+        this._destroyModeActive = false;
+      }
+      else if(this._buildModeActive)
+        if(this._buildingModeType == this.roadGroup && !this.roadBuilding && this.buildAllowed(this._buildingModeSprite)){
+          this.roadBuilding = true;
+          this._buildingModeSprite.visible = false;
+          this.resetRoadstack();
+        }
+        else if(this.roadBuilding)
+          this.buildRoads();
+        else
+          build.call(this);
+    }
+  },
+
+  setTimescale: function(key){
+    this.timeScale = parseInt(key.event.key);
+    this.currentTime.buffer = 0;
+    this.timescaleTxt.text = "Speed: " + this.timeScale;
+  },
+
+  pauseTime: function(){
+      
+    if(!this._escapeMenu) {
+      this.paused = !this.paused;
+      if(!this.paused && this._buildModeActive)
+        buildMode.call(this);
+      this._destroyModeActive = false;
+      if(this.paused)
+        this.timeTxt.addColor("#ff0000", 0);
+      else
+        this.timeTxt.addColor("#000000", 0);
+    }
+  },
+
+  destroyMode: function(){
+    if(!this._escapeMenu) {
+      if(this._buildModeActive){
+        this._buildModeActive = false;
+        if(this._buildingModeSprite !== undefined)
+          this._buildingModeSprite.destroy();
+        if(this._buildingModeArea !== undefined)
+          this._buildingModeArea.destroy();
+      }
+
+
+      if(!this._destroyModeActive){
+        this.paused = true;
+        this._destroyModeActive = true;
+        this.timeTxt.addColor("#ff0000", 0);
+      }
+
+      else{
+        this._destroyModeActive = false;
+      }
+    }
+  },
+
+  buildMode: function(key = undefined, group){
+    if(!this._escapeMenu) {
+
+      if(this._destroyModeActive)
+        this._destroyModeActive = false;
+
+
+      if(!this._buildModeActive){
+
+        this._buildingModeSprite = this.game.add.sprite(this.game.input.mousePointer.x, this.game.input.mousePointer.y, group.sprite);
+        this._buildingModeSprite.anchor.setTo(0.5, 0.5);
+        this._buildingModeSprite.alpha = 0.7;
+        this._buildingModeSprite.visible = true;
+
+        this._buildingModeType = group;
+        
+        this.paused = true;
+        this._buildModeActive = true;
+        this.timeTxt.addColor("#ff0000", 0);
+
+        this.game.world.bringToTop(this._buildingModeSprite);
+
+        if(group == this.hospitalGroup){
+          this._buildingModeArea = this.game.add.sprite(this.game.input.mousePointer.x, this.game.input.mousePointer.y, "area");
+          this._buildingModeArea.anchor.setTo(0.5, 0.5);
+          this._buildingModeArea.alpha = 0.35;
+
+          this._buildingModeArea.width = 16*this._tileSize;
+          this._buildingModeArea.height = 16*this._tileSize;
+
+          this.game.world.bringToTop(this._buildingModeArea);
+        }
+        
+        if(this.roadBuilding)
+          this.roadBuilding = false;
+      }
+
+      else {
+        if(this._buildingModeSprite !== undefined)
+          this._buildingModeSprite.destroy();
+          
+        if(this._buildingModeArea !== undefined)
+          this._buildingModeArea.destroy();
+
+        this._buildModeActive = false;
+        
+        this.resetRoadstack();
+      }
+    }
+  },
+
+  build: function(){
+      
+    if(this.buildAllowed(this._buildingModeSprite)){
+      var auxBuilding;
+
+      var offset = 0;
+
+      if((this._buildingModeSprite.height / 16) % 2 == 0)
+        offset = 8;
+
+      if(this._buildingModeType == this.houseGroup)
+        auxBuilding = new Classes.House(this.game, Math.round(this.game.input.worldX / this._tileSize) * this._tileSize, offset + Math.round(this.game.input.worldY / this._tileSize) * this._tileSize, this._buildingModeType.sprite);
+        
+      else if(this._buildingModeType == this.roadGroup)
+          auxBuilding = new Classes.Road(this.game, Math.round(this.game.input.worldX / this._tileSize) * this._tileSize, offset + Math.round(this.game.input.worldY / this._tileSize) * this._tileSize, this._buildingModeType.sprite);
+
+      else if(this._buildingModeType == this.hospitalGroup)
+        auxBuilding = new Classes.Hospital(this.game, Math.round(this.game.input.worldX / this._tileSize) * this._tileSize, offset + Math.round(this.game.input.worldY / this._tileSize) * this._tileSize, this._buildingModeType.sprite, 2);
+
+      else
+        auxBuilding = new Classes.Producer(this.game, Math.round(this.game.input.worldX / this._tileSize) * this._tileSize, offset + Math.round(this.game.input.worldY / this._tileSize) * this._tileSize, this._buildingModeType.sprite, this._buildingModeType.produce, this._buildingModeType.consume);
+
+      if(this.mode == 1)
+        this.updateTutorialChecks();
+      
+      this.wood -= this._buildingModeType.wood;
+      this.stone -= this._buildingModeType.stone;
+
+      auxBuilding.anchor.setTo(0.5, 0.5);
+
+      auxBuilding.inputEnabled = true;
+      auxBuilding.input.priorityID = 1;
+      auxBuilding.events.onInputOver.add(this.mouseOver, this, 0, auxBuilding);
+      auxBuilding.events.onInputOut.add(this.mouseOut, this, 0, auxBuilding);
+      auxBuilding.events.onInputDown.add(this.destroy, this);
+      auxBuilding.over = false;
+
+      
+      this.woodTxt.text = this.wood;
+      this.stoneTxt.text = this.stone;
+
+      this._buildingModeType.add(auxBuilding);
+
+      if(this._buildingModeType == this.hospitalGroup){
+        this.houseGroup.forEach(function (house) { house.updateSingleHospital(auxBuilding); }, this);
+      }
+      else if(this._buildingModeType == this.houseGroup)
+      {
+        auxBuilding.updateHospitals(this.hospitalGroup);
+      }
+
+      this.buildMode(this, this._buildingModeType);
+      this.buildMode(this, this._buildingModeType);
+    }
+  },
+
+  updateTutorialChecks: function(){
+    if (this._buildingModeType.sprite == 'Water' && !this.cropCheck)
+      this.cropCheck = true;
+
+    if (this._buildingModeType.sprite == 'Crops' && !this.woodCheck)
+      this.woodCheck = true;
+      
+    if (this._buildingModeType.sprite == 'Wood' && !this.stoneCheck)
+      this.stoneCheck = true;
+
+    if (this._buildingModeType.sprite == 'Stone' && !this.uraniumCheck)
+      this.uraniumCheck = true;
+
+    if (this._buildingModeType.sprite == 'Uranium' && !this.energyCheck)
+      this.energyCheck = true;
+
+    if (this._buildingModeType.sprite == 'Energy' && !this.windCheck)
+      this.windCheck = true;
+
+    if (this._buildingModeType.sprite == 'Wind' && !this.hospitalCheck)
+      this.hospitalCheck = true;
+          
+    if (this._buildingModeType.sprite == "Hospital" && !this.bulldozeCheck)
+      this.bulldozeCheck = true;
+
+    if (this._buildingModeType.sprite == "Road" && !this.houseCheck)
+      this.houseCheck = true;
+
+    if (this._buildingModeType.sprite == "House" && !this.waterCheck)
+      this.waterCheck = true;
   }
 };
 
